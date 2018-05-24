@@ -16,11 +16,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.doubles;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface FromDbToCoraStorage {
-	List<Map<String, String>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraConverter;
+
+public class FromDbToCoraConverterSpy implements FromDbToCoraConverter {
+
+	public List<Map<String, String>> rowsFromDb;
+	public List<Map<String, String>> returnedList;
+
+	@Override
+	public List<Map<String, String>> convertToJsonFromRowsFromDb(
+			List<Map<String, String>> rowsFromDb) {
+		this.rowsFromDb = rowsFromDb;
+
+		returnedList = new ArrayList<>();
+		Map<String, String> returnedMap = new HashMap<>();
+		returnedMap.put("keyFromDbToCoraStorageSpy", "valueFromCoraStorageSpy");
+		returnedList.add(returnedMap);
+		// TODO Auto-generated method stub
+		return returnedList;
+	}
+
 }

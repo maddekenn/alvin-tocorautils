@@ -27,16 +27,16 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
-public class CountryFromDbToCoraStorage implements FromDbToCoraStorage {
+public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 
 	private JsonBuilderFactory jsonFactory;
 
-	private CountryFromDbToCoraStorage(JsonBuilderFactory jsonFactory) {
+	private CountryFromDbToCoraConverter(JsonBuilderFactory jsonFactory) {
 		this.jsonFactory = jsonFactory;
 	}
 
-	public static CountryFromDbToCoraStorage usingJsonFactory(JsonBuilderFactory jsonFactory) {
-		return new CountryFromDbToCoraStorage(jsonFactory);
+	public static CountryFromDbToCoraConverter usingJsonFactory(JsonBuilderFactory jsonFactory) {
+		return new CountryFromDbToCoraConverter(jsonFactory);
 	}
 
 	@Override
@@ -100,6 +100,11 @@ public class CountryFromDbToCoraStorage implements FromDbToCoraStorage {
 	private ClientDataGroup getConstructedCountryItemToCreate(Map<String, String> rowFromDb) {
 		CountryCollectionItemConstructor itemConstructor = new CountryCollectionItemConstructor();
 		return itemConstructor.convert(rowFromDb);
+	}
+
+	JsonBuilderFactory getJsonBuilderFactory() {
+		// needed for tests
+		return jsonFactory;
 	}
 
 }

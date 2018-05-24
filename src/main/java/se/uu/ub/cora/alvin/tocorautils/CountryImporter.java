@@ -23,7 +23,7 @@ import java.util.Map;
 
 import se.uu.ub.cora.client.CoraClient;
 
-public class CountryImporter {
+public final class CountryImporter implements ListImporter {
 
 	private CoraClient coraClient;
 	private ImportResult importResult;

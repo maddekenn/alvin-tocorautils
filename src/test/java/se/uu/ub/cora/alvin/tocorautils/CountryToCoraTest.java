@@ -18,27 +18,44 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import static org.testng.Assert.assertEquals;
+
+import javax.naming.NamingException;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.doubles.FromDbToCoraConverterSpy;
+import se.uu.ub.cora.alvin.tocorautils.doubles.ListImporterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderFactorySpy;
-import se.uu.ub.cora.alvin.tocorautils.doubles.ToCoraStorageSpy;
-import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
+import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderSpy;
 
 public class CountryToCoraTest {
 
-	private FromDbToCoraStorage toCoraStorage;
+	private FromDbToCoraConverterSpy toCoraConverter;
+	private RecordReaderFactorySpy recordReaderFactory;
+	private ListImporterSpy importer;
+	private CountryToCora countryToCora;
 
 	@BeforeMethod
 	public void beforeMethod() {
-		toCoraStorage = new ToCoraStorageSpy();
-
+		toCoraConverter = new FromDbToCoraConverterSpy();
+		recordReaderFactory = new RecordReaderFactorySpy();
+		importer = new ListImporterSpy();
+		countryToCora = CountryToCora.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+				recordReaderFactory, toCoraConverter, importer);
 	}
 
 	@Test
-	public void testCountryToCora() {
-		RecordReaderFactory recordReaderFactory = new RecordReaderFactorySpy();
-		CountryToCora countryToCora = CountryToCora.usingFromDbToCoraStorage(toCoraStorage);
+	public void testCountryToCora() throws NamingException {
+		ImportResult importResult = countryToCora.importCountries();
 
+		RecordReaderSpy factoredReader = recordReaderFactory.factored;
+		assertEquals(factoredReader.usedTableName, "completeCountry");
+
+		assertEquals(factoredReader.returnedList, toCoraConverter.rowsFromDb);
+		assertEquals(toCoraConverter.returnedList, importer.convertedRows);
+
+		assertEquals(importResult.listOfFails.get(0), "failure from ListImporterSpy");
 	}
 }

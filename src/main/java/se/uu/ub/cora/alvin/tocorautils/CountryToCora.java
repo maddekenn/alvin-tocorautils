@@ -24,52 +24,62 @@ import java.util.Map;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import se.uu.ub.cora.client.CoraClient;
-import se.uu.ub.cora.client.CoraClientFactoryImp;
 import se.uu.ub.cora.connection.ContextConnectionProviderImp;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.sqldatabase.RecordReader;
-import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
+import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
 public class CountryToCora {
 
-	private FromDbToCoraStorage fromDbToCoraStorage;
+	private FromDbToCoraConverter fromDbToCoraConverter;
+	private RecordReaderFactory recordReaderFactory;
+	private ListImporter importer;
 
-	public CountryToCora(FromDbToCoraStorage fromDbToCoraStorage) {
-		this.fromDbToCoraStorage = fromDbToCoraStorage;
-		// TODO Auto-generated constructor stub
+	public static CountryToCora usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+			RecordReaderFactory recordReaderFactory, FromDbToCoraConverter fromDbToCoraConverter,
+			ListImporter importer) {
+		return new CountryToCora(recordReaderFactory, fromDbToCoraConverter, importer);
+	}
+
+	private CountryToCora(RecordReaderFactory recordReaderFactory,
+			FromDbToCoraConverter fromDbToCoraConverter, ListImporter importer) {
+		this.recordReaderFactory = recordReaderFactory;
+		this.fromDbToCoraConverter = fromDbToCoraConverter;
+		this.importer = importer;
+	}
+
+	public ImportResult importCountries() {
+		RecordReader recordReader = recordReaderFactory.factor();
+		List<Map<String, String>> readAllFromTable = recordReader
+				.readAllFromTable("completeCountry");
+
+		List<Map<String, String>> convertedRows = fromDbToCoraConverter
+				.convertToJsonFromRowsFromDb(readAllFromTable);
+		return importer.createInCora(convertedRows);
 	}
 
 	public void doStuff() throws NamingException {
 
 		SqlConnectionProvider sqlConnectionProvider = createConnectionProvider();
 
-		RecordReaderFactoryImp recordReaderFactory = new RecordReaderFactoryImp(
-				sqlConnectionProvider);
-
-		RecordReader recordReader = recordReaderFactory.factor();
-		List<Map<String, String>> readAllFromTable = recordReader.readAllFromTable("someTable");
-		List<Map<String, String>> readAllFromOtherTable = recordReader
-				.readAllFromTable("someOtherTable");
+		// RecordReaderFactoryImp recordReaderFactory = new RecordReaderFactoryImp(
+		// sqlConnectionProvider);
 
 		// joinTables()
 
 		// CountryFromDbToCoraStorage toCoraStorage = CountryFromDbToCoraStorage
 		// .usingCoraClientAndJsonFactory(null, null);
 
-		List<Map<String, String>> convertedRows = fromDbToCoraStorage
-				.convertToJsonFromRowsFromDb(readAllFromTable);
-
 		// create coraClient
-		String appTokenVerifierUrl = "someAppTokenVerifierUrl";
-		String baseUrl = "someBaseUrl";
-		CoraClientFactoryImp coraClientFactory = new CoraClientFactoryImp(appTokenVerifierUrl,
-				baseUrl);
-		CoraClient coraClient = coraClientFactory.factor("someUserId", "someAppToken");
+		// String appTokenVerifierUrl = "someAppTokenVerifierUrl";
+		// String baseUrl = "someBaseUrl";
+		// CoraClientFactoryImp coraClientFactory = new
+		// CoraClientFactoryImp(appTokenVerifierUrl,
+		// baseUrl);
+		// CoraClient coraClient = coraClientFactory.factor("someUserId",
+		// "someAppToken");
 
 		// import
-		CountryImporter importer = CountryImporter.usingCoraClient(coraClient);
-		ImportResult importResult = importer.createInCora(convertedRows);
 
 	}
 
@@ -79,8 +89,14 @@ public class CountryToCora {
 		return ContextConnectionProviderImp.usingInitialContextAndName(context, databaseLookupName);
 	}
 
-	public static CountryToCora usingFromDbToCoraStorage(FromDbToCoraStorage fromDbToCoraStorage) {
-		return new CountryToCora(fromDbToCoraStorage);
+	RecordReaderFactory getRecordReaderFactory() {
+		// needed for test
+		return recordReaderFactory;
+	}
+
+	FromDbToCoraConverter getFromDbToCoraConverter() {
+		// needed for test
+		return fromDbToCoraConverter;
 	}
 
 }

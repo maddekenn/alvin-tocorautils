@@ -35,7 +35,7 @@ public class CountryFromDbToCoraStorageTest {
 	List<Map<String, String>> rowsFromDb = new ArrayList<Map<String, String>>();
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
-	private CountryFromDbToCoraStorage toCoraStorage;
+	private CountryFromDbToCoraConverter toCoraStorage;
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -48,7 +48,7 @@ public class CountryFromDbToCoraStorageTest {
 
 		coraClient = new CoraClientSpy();
 		jsonFactory = new OrgJsonBuilderFactoryAdapter();
-		toCoraStorage = CountryFromDbToCoraStorage.usingJsonFactory(jsonFactory);
+		toCoraStorage = CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
 
 	}
 
