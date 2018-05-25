@@ -22,7 +22,7 @@ import se.uu.ub.cora.client.CoraClientConfig;
 
 public interface FromDbToCoraFactory {
 
-	CountryToCora factorForCountryItems(String coraClientFactoryClassName,
+	CountryFromDbToCora factorForCountryItems(String coraClientFactoryClassName,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig);
 
 }

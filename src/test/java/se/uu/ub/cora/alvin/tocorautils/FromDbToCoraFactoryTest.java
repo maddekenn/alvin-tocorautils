@@ -35,7 +35,7 @@ import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
 
 public class FromDbToCoraFactoryTest {
 
-	private CountryToCoraImp countryToCora;
+	private CountryFromDbToCoraImp countryToCora;
 	private FromDbToCoraFactoryImp countryToCoraFactory = new FromDbToCoraFactoryImp();
 	private CoraClientConfig coraClientConfig;
 	private DbConfig dbConfig;
@@ -55,7 +55,7 @@ public class FromDbToCoraFactoryTest {
 		dbConfig = new DbConfig(dbUserId, password, url);
 
 		String coraClientFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy";
-		countryToCora = (CountryToCoraImp) countryToCoraFactory
+		countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
 				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
 		// countryToCora.importCountries();
 
@@ -108,7 +108,7 @@ public class FromDbToCoraFactoryTest {
 			+ "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND")
 	public void testCoraClientFactoryCreationFail() throws Exception {
 		String coraClientFactoryClassName = "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND";
-		countryToCora = (CountryToCoraImp) countryToCoraFactory
+		countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
 				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
 
 	}

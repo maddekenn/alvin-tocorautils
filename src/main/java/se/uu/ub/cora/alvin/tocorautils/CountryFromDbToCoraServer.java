@@ -33,14 +33,22 @@ public class CountryFromDbToCoraServer {
 			String fromDbToCoraFactoryClassName = getFromDbToCoraFactoryClassName(args);
 			fromDbToCoraFactory = tryToCreateCoraClientFactory(fromDbToCoraFactoryClassName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}
 
 		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
 		DbConfig dbConfig = createDbConfig(args);
 		String coraClientFactoryClassName = "se.uu.ub.cora.client.CoraClientFactoryImp";
-		fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName, coraClientConfig,
-				dbConfig);
+		CountryFromDbToCora countryFromDbToCora = fromDbToCoraFactory
+				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
+		ImportResult importResult = countryFromDbToCora.importCountries();
+		if (!importResult.listOfFails.isEmpty()) {
+			for (String fail : importResult.listOfFails) {
+				// TODO: Join strings
+				throw new RuntimeException(importResult.listOfFails.get(0));
+			}
+		}
+
 	}
 
 	private static String getFromDbToCoraFactoryClassName(String[] args) {

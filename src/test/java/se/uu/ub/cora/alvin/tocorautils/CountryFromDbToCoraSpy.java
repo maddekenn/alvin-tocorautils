@@ -18,6 +18,21 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-public interface CountryToCora {
+public class CountryFromDbToCoraSpy implements CountryFromDbToCora {
+
+	public boolean importCountriesHasBeenCalled = false;
+	public boolean returnErrors = false;
+
+	@Override
+	public ImportResult importCountries() {
+		importCountriesHasBeenCalled = true;
+		// TODO Auto-generated method stub
+		ImportResult result = new ImportResult();
+		if (returnErrors) {
+			result.listOfFails.add("failed during import in CountryFromDbToCoraSpy");
+			result.listOfFails.add("failed again during import of CountryFromDbToCoraSpy");
+		}
+		return result;
+	}
 
 }

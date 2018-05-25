@@ -22,18 +22,26 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.client.CoraClientConfig;
 
 public class CountryFromDbToCoraServerTest {
-	@Test
-	public void testMain() throws Exception {
-		String fromDbToCoraFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy";
 
-		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
+	private String fromDbToCoraFactoryClassName;
+	private String args[];
+
+	@BeforeMethod
+	private void beforeMethod() {
+		fromDbToCoraFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy";
+
+		args = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
 				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+	}
 
+	@Test
+	public void testMainFactorsCorrectly() throws Exception {
 		CountryFromDbToCoraServer.main(args);
 		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) CountryFromDbToCoraServer.fromDbToCoraFactory;
 		assertTrue(fromDbToCoraFactory instanceof FromDbToCoraFactorySpy);
@@ -52,7 +60,42 @@ public class CountryFromDbToCoraServerTest {
 		assertEquals(dbConfig.userId, args[5]);
 		assertEquals(dbConfig.password, args[6]);
 		assertEquals(dbConfig.url, args[7]);
-
 	}
 
+	@Test
+	public void testCallingImportCountries() throws Exception {
+		CountryFromDbToCoraServer.main(args);
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) CountryFromDbToCoraServer.fromDbToCoraFactory;
+		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
+		assertTrue(countryFromDbToCoraSpy.importCountriesHasBeenCalled);
+	}
+	//
+	// @Test(expectedExceptions = RuntimeException.class,
+	// expectedExceptionsMessageRegExp = ""
+	// + "ERROR:failed during import in CountryFromDbToCoraSpy ERROR:failed again
+	// during import of CountryFromDbToCoraSpy")
+	// public void testErrorsDuringImport() throws Exception {
+	// fromDbToCoraFactoryClassName =
+	// "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy";
+	// String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId",
+	// "someAppToken",
+	// "appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+	// CountryFromDbToCoraServer.main(args);
+	// FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy)
+	// CountryFromDbToCoraServer.fromDbToCoraFactory;
+	// // CountryFromDbToCoraSpy countryFromDbToCoraSpy =
+	// fromDbToCoraFactory.factored;
+	//
+	// }
+
+	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
+			+ "se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND")
+	public void testFactoryClassNotFound() throws Exception {
+		String fromDbToCoraFactoryClassName = "se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND";
+
+		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
+				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+
+		CountryFromDbToCoraServer.main(args);
+	}
 }

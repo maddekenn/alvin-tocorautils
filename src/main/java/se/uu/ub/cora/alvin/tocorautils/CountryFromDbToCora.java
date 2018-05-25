@@ -18,6 +18,8 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-public class CountryToCoraSpy implements CountryToCora {
+public interface CountryFromDbToCora {
+
+	ImportResult importCountries();
 
 }

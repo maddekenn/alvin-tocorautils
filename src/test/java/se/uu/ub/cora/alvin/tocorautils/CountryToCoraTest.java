@@ -35,14 +35,14 @@ public class CountryToCoraTest {
 	private FromDbToCoraConverterSpy toCoraConverter;
 	private RecordReaderFactorySpy recordReaderFactory;
 	private ListImporterSpy importer;
-	private CountryToCoraImp countryToCora;
+	private CountryFromDbToCoraImp countryToCora;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		toCoraConverter = new FromDbToCoraConverterSpy();
 		recordReaderFactory = new RecordReaderFactorySpy();
 		importer = new ListImporterSpy();
-		countryToCora = (CountryToCoraImp) CountryToCoraImp
+		countryToCora = (CountryFromDbToCoraImp) CountryFromDbToCoraImp
 				.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(recordReaderFactory,
 						toCoraConverter, importer);
 	}

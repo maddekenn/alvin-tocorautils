@@ -37,7 +37,7 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 	private CoraClientFactory coraClientFactory;
 
 	@Override
-	public CountryToCora factorForCountryItems(String coraClientFactoryClassName,
+	public CountryFromDbToCora factorForCountryItems(String coraClientFactoryClassName,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
 		this.coraClientFactoryClassName = coraClientFactoryClassName;
 		this.coraClientConfig = coraClientConfig;
@@ -65,7 +65,7 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 		CoraClient coraClient = coraClientFactory.factor(coraClientConfig.userId,
 				coraClientConfig.appToken);
 		ListImporter importer = CountryImporter.usingCoraClient(coraClient);
-		return CountryToCoraImp.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+		return CountryFromDbToCoraImp.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
 				recordReaderFactory, fromDbToCoraConverter, importer);
 
 	}

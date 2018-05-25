@@ -20,7 +20,7 @@ package se.uu.ub.cora.alvin.tocorautils;
 
 import se.uu.ub.cora.client.CoraClientConfig;
 
-public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
+public class FromDbToCoraFactoryReturningErrorsSpy implements FromDbToCoraFactory {
 
 	public String coraClientFactoryClassName;
 	public CoraClientConfig coraClientConfig;
@@ -34,6 +34,7 @@ public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
 		this.coraClientConfig = coraClientConfig;
 		this.dbConfig = dbConfig;
 		factored = new CountryFromDbToCoraSpy();
+		factored.returnErrors = true;
 		return factored;
 	}
 

@@ -29,25 +29,26 @@ import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.sqldatabase.RecordReader;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
-public class CountryToCoraImp implements CountryToCora {
+public class CountryFromDbToCoraImp implements CountryFromDbToCora {
 
 	private FromDbToCoraConverter fromDbToCoraConverter;
 	private RecordReaderFactory recordReaderFactory;
 	private ListImporter importer;
 
-	public static CountryToCora usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+	public static CountryFromDbToCora usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
 			RecordReaderFactory recordReaderFactory, FromDbToCoraConverter fromDbToCoraConverter,
 			ListImporter importer) {
-		return new CountryToCoraImp(recordReaderFactory, fromDbToCoraConverter, importer);
+		return new CountryFromDbToCoraImp(recordReaderFactory, fromDbToCoraConverter, importer);
 	}
 
-	private CountryToCoraImp(RecordReaderFactory recordReaderFactory,
+	private CountryFromDbToCoraImp(RecordReaderFactory recordReaderFactory,
 			FromDbToCoraConverter fromDbToCoraConverter, ListImporter importer) {
 		this.recordReaderFactory = recordReaderFactory;
 		this.fromDbToCoraConverter = fromDbToCoraConverter;
 		this.importer = importer;
 	}
 
+	@Override
 	public ImportResult importCountries() {
 		RecordReader recordReader = recordReaderFactory.factor();
 		List<Map<String, String>> readAllFromTable = recordReader
