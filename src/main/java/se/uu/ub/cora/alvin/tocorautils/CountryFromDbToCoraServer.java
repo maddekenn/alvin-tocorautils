@@ -18,11 +18,56 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import se.uu.ub.cora.client.CoraClientConfig;
+
 public class CountryFromDbToCoraServer {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	static FromDbToCoraFactory fromDbToCoraFactory = null;
 
+	public static void main(String[] args) {
+
+		try {
+			String fromDbToCoraFactoryClassName = getFromDbToCoraFactoryClassName(args);
+			fromDbToCoraFactory = tryToCreateCoraClientFactory(fromDbToCoraFactoryClassName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
+		DbConfig dbConfig = createDbConfig(args);
+		String coraClientFactoryClassName = "se.uu.ub.cora.client.CoraClientFactoryImp";
+		fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName, coraClientConfig,
+				dbConfig);
+	}
+
+	private static String getFromDbToCoraFactoryClassName(String[] args) {
+		return args[0];
+	}
+
+	private static FromDbToCoraFactory tryToCreateCoraClientFactory(
+			String fromDbToCoraFactoryClassName)
+			throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
+			InvocationTargetException, InstantiationException {
+		Constructor<?> constructor = Class.forName(fromDbToCoraFactoryClassName).getConstructor();
+		return (FromDbToCoraFactory) constructor.newInstance();
+	}
+
+	private static CoraClientConfig createCoraClientConfig(String[] args) {
+		String userId = args[1];
+		String appToken = args[2];
+		String appTokenVerifierUrl = args[3];
+		String coraUrl = args[4];
+		return new CoraClientConfig(userId, appToken, appTokenVerifierUrl, coraUrl);
+	}
+
+	private static DbConfig createDbConfig(String[] args) {
+		String dbUserId = args[5];
+		String dbPassword = args[6];
+		String dbUrl = args[7];
+		return new DbConfig(dbUserId, dbPassword, dbUrl);
 	}
 
 }

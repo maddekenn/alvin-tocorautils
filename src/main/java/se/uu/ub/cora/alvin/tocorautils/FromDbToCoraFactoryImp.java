@@ -18,7 +18,12 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
@@ -27,9 +32,15 @@ import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
 
 public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 
+	private String coraClientFactoryClassName;
+	private CoraClientConfig coraClientConfig;
+	private CoraClientFactory coraClientFactory;
+
 	@Override
-	public CountryToCora factorForCountryItems(CoraClientConfig coraClientConfig,
-			DbConfig dbConfig) {
+	public CountryToCora factorForCountryItems(String coraClientFactoryClassName,
+			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
+		this.coraClientFactoryClassName = coraClientFactoryClassName;
+		this.coraClientConfig = coraClientConfig;
 		// TODO: should be a ParameterConnectionProviderImp
 		SqlConnectionProvider connectionProvider = null;
 		RecordReaderFactory recordReaderFactory = new RecordReaderFactoryImp(connectionProvider);
@@ -37,10 +48,41 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 		JsonBuilderFactory jsonFactory = new OrgJsonBuilderFactoryAdapter();
 		FromDbToCoraConverter fromDbToCoraConverter = CountryFromDbToCoraConverter
 				.usingJsonFactory(jsonFactory);
-		// FromDbToCoraCo();
-		ListImporter importer = null;
-		return CountryToCora.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+
+		// CoraClientFactoryImp coraClientFactoryImp = new
+		// CoraClientFactoryImp(appTokenVerifierUrl, baseUrl);
+		// coraClientFactoryImp.factor(userId, appToken)
+		//
+		// new CoraClientImp(appTokenClientFactory, restClientFactory, userId,
+		// appToken);
+
+		try {
+			coraClientFactory = tryToCreateCoraClientFactory();
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+		CoraClient coraClient = coraClientFactory.factor(coraClientConfig.userId,
+				coraClientConfig.appToken);
+		ListImporter importer = CountryImporter.usingCoraClient(coraClient);
+		return CountryToCoraImp.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
 				recordReaderFactory, fromDbToCoraConverter, importer);
+
 	}
 
+	private CoraClientFactory tryToCreateCoraClientFactory() throws NoSuchMethodException,
+			ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+		Class<?>[] cArg = new Class[2];
+		cArg[0] = String.class;
+		cArg[1] = String.class;
+		Method constructor = Class.forName(coraClientFactoryClassName)
+				.getMethod("usingAppTokenVerifierUrlAndBaseUrl", cArg);
+		return (CoraClientFactory) constructor.invoke(null, coraClientConfig.appTokenVerifierUrl,
+				coraClientConfig.coraUrl);
+	}
+
+	CoraClientFactory getCoraClientFactory() {
+		// needed for test
+		return coraClientFactory;
+	}
 }

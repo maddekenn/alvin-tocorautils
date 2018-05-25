@@ -18,16 +18,23 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-public class DbConfig {
+import se.uu.ub.cora.client.CoraClientConfig;
 
-	public final String userId;
-	public final String password;
-	public final String url;
+public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
 
-	public DbConfig(String userId, String password, String url) {
-		this.userId = userId;
-		this.password = password;
-		this.url = url;
+	public String coraClientFactoryClassName;
+	public CoraClientConfig coraClientConfig;
+	public DbConfig dbConfig;
+	public CountryToCoraSpy factored;
+
+	@Override
+	public CountryToCora factorForCountryItems(String coraClientFactoryClassName,
+			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
+		this.coraClientFactoryClassName = coraClientFactoryClassName;
+		this.coraClientConfig = coraClientConfig;
+		this.dbConfig = dbConfig;
+		factored = new CountryToCoraSpy();
+		return factored;
 	}
 
 }

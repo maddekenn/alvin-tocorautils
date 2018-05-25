@@ -36,6 +36,7 @@ public final class CountryImporter implements ListImporter {
 		this.coraClient = coraClient;
 	}
 
+	@Override
 	public ImportResult createInCora(List<Map<String, String>> listOfConvertedRows) {
 		importResult = new ImportResult();
 		for (Map<String, String> convertedRow : listOfConvertedRows) {
@@ -72,5 +73,10 @@ public final class CountryImporter implements ListImporter {
 		message += " json that failed: ";
 		message += jsonText;
 		importResult.listOfFails.add(message);
+	}
+
+	CoraClient getCoraClient() {
+		// needed for test
+		return coraClient;
 	}
 }

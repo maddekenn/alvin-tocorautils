@@ -18,16 +18,6 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-public class DbConfig {
-
-	public final String userId;
-	public final String password;
-	public final String url;
-
-	public DbConfig(String userId, String password, String url) {
-		this.userId = userId;
-		this.password = password;
-		this.url = url;
-	}
+public class CountryToCoraSpy implements CountryToCora {
 
 }

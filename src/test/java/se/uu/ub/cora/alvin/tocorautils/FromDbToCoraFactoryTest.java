@@ -18,12 +18,15 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
+import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
@@ -32,24 +35,29 @@ import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
 
 public class FromDbToCoraFactoryTest {
 
-	private CountryToCora countryToCora;
+	private CountryToCoraImp countryToCora;
+	private FromDbToCoraFactoryImp countryToCoraFactory = new FromDbToCoraFactoryImp();
+	private CoraClientConfig coraClientConfig;
+	private DbConfig dbConfig;
 
 	@BeforeMethod
 	public void beforeMethod() {
-		FromDbToCoraFactoryImp c = new FromDbToCoraFactoryImp();
 
-		String userId = "";
-		String appToken = "";
-		String appTokenVerifierUrl = "";
-		String coraUrl = "";
-		CoraClientConfig coraClientConfig = new CoraClientConfig(userId, appToken,
-				appTokenVerifierUrl, coraUrl);
+		String userId = "someCoraUserId";
+		String appToken = "someCoraAppToken";
+		String appTokenVerifierUrl = "someCoraAppTokenVierifierUrl";
+		String coraUrl = "someCoraUrl";
+		coraClientConfig = new CoraClientConfig(userId, appToken, appTokenVerifierUrl, coraUrl);
 
-		String password = "";
-		String url = "";
-		DbConfig dbConfig = new DbConfig(userId, password, url);
+		String dbUserId = "someDbUserId";
+		String password = "someDbPassword";
+		String url = "someDbUrl";
+		dbConfig = new DbConfig(dbUserId, password, url);
 
-		countryToCora = c.factorForCountryItems(coraClientConfig, dbConfig);
+		String coraClientFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy";
+		countryToCora = (CountryToCoraImp) countryToCoraFactory
+				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
+		// countryToCora.importCountries();
 
 	}
 
@@ -65,6 +73,7 @@ public class FromDbToCoraFactoryTest {
 		// assertTrue(connectionProvider instanceof ParameterConnectionProviderImp);
 
 		// assertNotNull(connectionProvider);
+
 	}
 
 	@Test
@@ -72,10 +81,35 @@ public class FromDbToCoraFactoryTest {
 		FromDbToCoraConverter createdConverter = countryToCora.getFromDbToCoraConverter();
 		assertTrue(createdConverter instanceof CountryFromDbToCoraConverter);
 
-		CountryFromDbToCoraConverter c = (CountryFromDbToCoraConverter) createdConverter;
+		CountryFromDbToCoraConverter countryConverter = (CountryFromDbToCoraConverter) createdConverter;
 
-		JsonBuilderFactory j = c.getJsonBuilderFactory();
-		assertTrue(j instanceof OrgJsonBuilderFactoryAdapter);
-		assertNotNull(j);
+		JsonBuilderFactory jsonBuilderFactory = countryConverter.getJsonBuilderFactory();
+		assertTrue(jsonBuilderFactory instanceof OrgJsonBuilderFactoryAdapter);
+		assertNotNull(jsonBuilderFactory);
+	}
+
+	@Test
+	public void testInitListImporter() throws Exception {
+		CountryImporter importer = (CountryImporter) countryToCora.getListImporter();
+		assertTrue(importer instanceof CountryImporter);
+
+		CoraClient coraClient = importer.getCoraClient();
+
+		CoraClientFactorySpy coraClientFactory = (CoraClientFactorySpy) countryToCoraFactory
+				.getCoraClientFactory();
+		assertTrue(coraClientFactory instanceof CoraClientFactorySpy);
+
+		assertEquals(coraClient, coraClientFactory.factored);
+		assertEquals(coraClientFactory.userId, coraClientConfig.userId);
+		assertEquals(coraClientFactory.appToken, coraClientConfig.appToken);
+	}
+
+	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
+			+ "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND")
+	public void testCoraClientFactoryCreationFail() throws Exception {
+		String coraClientFactoryClassName = "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND";
+		countryToCora = (CountryToCoraImp) countryToCoraFactory
+				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
+
 	}
 }
