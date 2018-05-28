@@ -22,6 +22,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -69,6 +73,11 @@ public class FromDbToCoraFactoryTest {
 
 		SqlConnectionProvider connectionProvider = createdRecordReaderFactory
 				.getConnectionProvider();
+		Connection connection = connectionProvider.getConnection();
+		PreparedStatement prepareStatement = connection.prepareStatement("select * from country");
+		ResultSet resultSet = prepareStatement.executeQuery();
+		assertNotNull(resultSet);
+		// connection.
 		// TODO: check this when class is added to sqldatabase, and fully implemented
 		// assertTrue(connectionProvider instanceof ParameterConnectionProviderImp);
 

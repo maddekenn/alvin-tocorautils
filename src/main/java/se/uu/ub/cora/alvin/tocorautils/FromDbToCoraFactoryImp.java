@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
+import se.uu.ub.cora.connection.ParameterConnectionProviderImp;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
@@ -42,7 +43,10 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 		this.coraClientFactoryClassName = coraClientFactoryClassName;
 		this.coraClientConfig = coraClientConfig;
 		// TODO: should be a ParameterConnectionProviderImp
-		SqlConnectionProvider connectionProvider = null;
+		// SqlConnectionProvider connectionProvider = null;
+		SqlConnectionProvider connectionProvider = ParameterConnectionProviderImp
+				.usingUriAndUserAndPassword("", "", "");
+		// Connection con = postgresConnectionProviderImp.getConnection();
 		RecordReaderFactory recordReaderFactory = new RecordReaderFactoryImp(connectionProvider);
 
 		JsonBuilderFactory jsonFactory = new OrgJsonBuilderFactoryAdapter();
