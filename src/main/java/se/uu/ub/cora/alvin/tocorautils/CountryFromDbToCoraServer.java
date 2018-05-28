@@ -20,6 +20,7 @@ package se.uu.ub.cora.alvin.tocorautils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.StringJoiner;
 
 import se.uu.ub.cora.client.CoraClientConfig;
 
@@ -36,19 +37,7 @@ public class CountryFromDbToCoraServer {
 			throw new RuntimeException(e.getMessage());
 		}
 
-		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
-		DbConfig dbConfig = createDbConfig(args);
-		String coraClientFactoryClassName = "se.uu.ub.cora.client.CoraClientFactoryImp";
-		CountryFromDbToCora countryFromDbToCora = fromDbToCoraFactory
-				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
-		ImportResult importResult = countryFromDbToCora.importCountries();
-		if (!importResult.listOfFails.isEmpty()) {
-			for (String fail : importResult.listOfFails) {
-				// TODO: Join strings
-				throw new RuntimeException(importResult.listOfFails.get(0));
-			}
-		}
-
+		importCountries(args);
 	}
 
 	private static String getFromDbToCoraFactoryClassName(String[] args) {
@@ -61,6 +50,20 @@ public class CountryFromDbToCoraServer {
 			InvocationTargetException, InstantiationException {
 		Constructor<?> constructor = Class.forName(fromDbToCoraFactoryClassName).getConstructor();
 		return (FromDbToCoraFactory) constructor.newInstance();
+	}
+
+	private static void importCountries(String[] args) {
+		CountryFromDbToCora countryFromDbToCora = getImporter(args);
+		ImportResult importResult = countryFromDbToCora.importCountries();
+		throwErrorWithFailMessageIfFailsDuringImport(importResult);
+	}
+
+	private static CountryFromDbToCora getImporter(String[] args) {
+		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
+		DbConfig dbConfig = createDbConfig(args);
+		String coraClientFactoryClassName = "se.uu.ub.cora.client.CoraClientFactoryImp";
+		return fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName,
+				coraClientConfig, dbConfig);
 	}
 
 	private static CoraClientConfig createCoraClientConfig(String[] args) {
@@ -76,6 +79,25 @@ public class CountryFromDbToCoraServer {
 		String dbPassword = args[6];
 		String dbUrl = args[7];
 		return new DbConfig(dbUserId, dbPassword, dbUrl);
+	}
+
+	private static void throwErrorWithFailMessageIfFailsDuringImport(ImportResult importResult) {
+		if (failsDuringImport(importResult)) {
+			StringJoiner stringJoiner = composeMessageFromImportResult(importResult);
+			throw new RuntimeException(stringJoiner.toString());
+		}
+	}
+
+	private static boolean failsDuringImport(ImportResult importResult) {
+		return !importResult.listOfFails.isEmpty();
+	}
+
+	private static StringJoiner composeMessageFromImportResult(ImportResult importResult) {
+		StringJoiner stringJoiner = new StringJoiner("\nERROR: ");
+		for (String fail : importResult.listOfFails) {
+			stringJoiner.add(fail);
+		}
+		return stringJoiner;
 	}
 
 }

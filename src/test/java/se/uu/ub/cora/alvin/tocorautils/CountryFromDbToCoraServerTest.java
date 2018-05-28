@@ -69,24 +69,16 @@ public class CountryFromDbToCoraServerTest {
 		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
 		assertTrue(countryFromDbToCoraSpy.importCountriesHasBeenCalled);
 	}
-	//
-	// @Test(expectedExceptions = RuntimeException.class,
-	// expectedExceptionsMessageRegExp = ""
-	// + "ERROR:failed during import in CountryFromDbToCoraSpy ERROR:failed again
-	// during import of CountryFromDbToCoraSpy")
-	// public void testErrorsDuringImport() throws Exception {
-	// fromDbToCoraFactoryClassName =
-	// "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy";
-	// String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId",
-	// "someAppToken",
-	// "appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
-	// CountryFromDbToCoraServer.main(args);
-	// FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy)
-	// CountryFromDbToCoraServer.fromDbToCoraFactory;
-	// // CountryFromDbToCoraSpy countryFromDbToCoraSpy =
-	// fromDbToCoraFactory.factored;
-	//
-	// }
+
+	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "failed during import in CountryFromDbToCoraSpy\n"
+			+ "ERROR: failed again during import of CountryFromDbToCoraSpy")
+	public void testErrorsDuringImport() throws Exception {
+		fromDbToCoraFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy";
+		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
+				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+
+		CountryFromDbToCoraServer.main(args);
+	}
 
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
 			+ "se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND")
