@@ -22,12 +22,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.lang.reflect.Field;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.connection.ParameterConnectionProviderImp;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
@@ -70,10 +73,22 @@ public class FromDbToCoraFactoryTest {
 		SqlConnectionProvider connectionProvider = createdRecordReaderFactory
 				.getConnectionProvider();
 		// TODO: check this when class is added to sqldatabase, and fully implemented
-		// assertTrue(connectionProvider instanceof ParameterConnectionProviderImp);
+		assertTrue(connectionProvider instanceof ParameterConnectionProviderImp);
 
-		// assertNotNull(connectionProvider);
+		Field declaredUrlField = connectionProvider.getClass().getDeclaredField("url");
+		declaredUrlField.setAccessible(true);
+		String setUrl = (String) declaredUrlField.get(connectionProvider);
+		assertEquals(setUrl, "someDbUrl");
 
+		Field declaredUserField = connectionProvider.getClass().getDeclaredField("user");
+		declaredUserField.setAccessible(true);
+		String userId = (String) declaredUserField.get(connectionProvider);
+		assertEquals(userId, "someDbUserId");
+
+		Field declaredPasswordField = connectionProvider.getClass().getDeclaredField("password");
+		declaredPasswordField.setAccessible(true);
+		String password = (String) declaredPasswordField.get(connectionProvider);
+		assertEquals(password, "someDbPassword");
 	}
 
 	@Test

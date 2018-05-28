@@ -28,39 +28,49 @@ public class CountryFromDbToCoraServer {
 
 	static FromDbToCoraFactory fromDbToCoraFactory = null;
 
-	public static void main(String[] args) {
-
+	private CountryFromDbToCoraServer(String[] args) {
+		// TODO Auto-generated constructor stub
 		try {
 			String fromDbToCoraFactoryClassName = getFromDbToCoraFactoryClassName(args);
-			fromDbToCoraFactory = tryToCreateCoraClientFactory(fromDbToCoraFactoryClassName);
+			fromDbToCoraFactory = tryToCreateFromDbToCoraFactory(fromDbToCoraFactoryClassName);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
+	}
 
-		importCountries(args);
+	// private static SqlConnectionProvider connectionProvider;
+
+	public static void main(String[] args) {
+		CountryFromDbToCoraServer countryFromDbToCoraServer = new CountryFromDbToCoraServer(args);
+
+		countryFromDbToCoraServer.importCountries(args);
 	}
 
 	private static String getFromDbToCoraFactoryClassName(String[] args) {
 		return args[0];
 	}
 
-	private static FromDbToCoraFactory tryToCreateCoraClientFactory(
-			String fromDbToCoraFactoryClassName)
+	private FromDbToCoraFactory tryToCreateFromDbToCoraFactory(String fromDbToCoraFactoryClassName)
 			throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
 			InvocationTargetException, InstantiationException {
 		Constructor<?> constructor = Class.forName(fromDbToCoraFactoryClassName).getConstructor();
 		return (FromDbToCoraFactory) constructor.newInstance();
 	}
 
-	private static void importCountries(String[] args) {
+	private void importCountries(String[] args) {
 		CountryFromDbToCora countryFromDbToCora = getImporter(args);
 		ImportResult importResult = countryFromDbToCora.importCountries();
 		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 
-	private static CountryFromDbToCora getImporter(String[] args) {
+	private CountryFromDbToCora getImporter(String[] args) {
 		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
 		DbConfig dbConfig = createDbConfig(args);
+
+		// connectionProvider =
+		// ParameterConnectionProviderImp.usingUriAndUserAndPassword(dbConfig.url,
+		// null, null);
+
 		String coraClientFactoryClassName = "se.uu.ub.cora.client.CoraClientFactoryImp";
 		return fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName,
 				coraClientConfig, dbConfig);
