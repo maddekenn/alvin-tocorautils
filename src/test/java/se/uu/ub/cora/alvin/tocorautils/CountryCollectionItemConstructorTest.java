@@ -93,8 +93,51 @@ public class CountryCollectionItemConstructorTest {
 		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
 		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha2", "SE");
 		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
-		assertCorrectExtraDataPartGroup(extraData, "numericalcode", "752");
-		assertCorrectExtraDataPartGroup(extraData, "marccode", "sw");
+		assertCorrectExtraDataPartGroup(extraData, "iso31661Numeric", "752");
+		assertCorrectExtraDataPartGroup(extraData, "marcCountryCode", "sw");
+		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 4);
+	}
+
+	@Test
+	public void testConvertCountryExtraDataNullValues() {
+		rowFromDb.put("alpha3code", null);
+		rowFromDb.put("numericalcode", null);
+		rowFromDb.put("marccode", null);
+		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
+
+		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
+		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha2", "SE");
+		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 1);
+	}
+
+	@Test
+	public void testConvertCountryExtraDataEmptyValues() {
+		rowFromDb.put("alpha3code", "");
+		rowFromDb.put("numericalcode", "");
+		rowFromDb.put("marccode", "");
+		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
+
+		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
+		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha2", "SE");
+		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 1);
+	}
+
+	@Test
+	public void testConvertCountryExtraDataAllValuesTrailingWhitespaces() {
+		rowFromDb.put("alpha2code", " SE ");
+		rowFromDb.put("alpha3code", " SWE ");
+		rowFromDb.put("numericalcode", " 752 ");
+		rowFromDb.put("marccode", " sw ");
+		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
+
+		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
+		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha2", "SE");
+		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
+		assertCorrectExtraDataPartGroup(extraData, "iso31661Numeric", "752");
+		assertCorrectExtraDataPartGroup(extraData, "marcCountryCode", "sw");
 		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 4);
 	}
 }

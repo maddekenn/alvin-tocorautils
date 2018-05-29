@@ -18,9 +18,6 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
@@ -32,23 +29,13 @@ import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
 
 public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
-
-	private String coraClientFactoryClassName;
-	private CoraClientConfig coraClientConfig;
 	private CoraClientFactory coraClientFactory;
 
 	@Override
 	public CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
 		this.coraClientFactory = coraClientFactory;
-		// this.coraClientFactoryClassName = coraClientFactory2;
-		this.coraClientConfig = coraClientConfig;
 
-		// try {
-		// coraClientFactory = tryToCreateCoraClientFactory();
-		// } catch (Exception e) {
-		// throw new RuntimeException(e.getMessage());
-		// }
 		SqlConnectionProvider connectionProvider = ParameterConnectionProviderImp
 				.usingUriAndUserAndPassword(dbConfig.url, dbConfig.userId, dbConfig.password);
 
@@ -64,17 +51,6 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 		return CountryFromDbToCoraImp.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
 				recordReaderFactory, fromDbToCoraConverter, importer);
 
-	}
-
-	private CoraClientFactory tryToCreateCoraClientFactory() throws NoSuchMethodException,
-			ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		Class<?>[] cArg = new Class[2];
-		cArg[0] = String.class;
-		cArg[1] = String.class;
-		Method constructor = Class.forName(coraClientFactoryClassName)
-				.getMethod("usingAppTokenVerifierUrlAndBaseUrl", cArg);
-		return (CoraClientFactory) constructor.invoke(null, coraClientConfig.appTokenVerifierUrl,
-				coraClientConfig.coraUrl);
 	}
 
 	CoraClientFactory getCoraClientFactory() {

@@ -115,4 +115,30 @@ public class TextFromCountryConstructorTest {
 		assertEquals(svTextPart.getFirstAtomicValueWithNameInData("text"), textValue);
 	}
 
+	@Test
+	public void testConstructTextsWithEnglishPartsNullValue() {
+		rowFromDb.put("enText", null);
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+		assertEquals(texts.size(), 2);
+		ClientDataGroup text = texts.get(0);
+		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
+
+		ClientDataGroup defText = texts.get(1);
+		assertEquals(defText.getAllGroupsWithNameInData("textPart").size(), 1);
+	}
+
+	@Test
+	public void testConstructTextsWithEnglishPartsEmptyValue() {
+		rowFromDb.put("enText", "");
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+		assertEquals(texts.size(), 2);
+		ClientDataGroup text = texts.get(0);
+		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
+
+		ClientDataGroup defText = texts.get(1);
+		assertEquals(defText.getAllGroupsWithNameInData("textPart").size(), 1);
+	}
+
 }

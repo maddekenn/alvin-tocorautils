@@ -70,11 +70,16 @@ public class TextFromCountryConstructor {
 	}
 
 	private void possiblyAddEnglishTextPart(ClientDataGroup text) {
-		if (rowFromDb.containsKey("enText")) {
+		if (nonEmptyValueExistsForKey("enText")) {
 			String enTextValue = rowFromDb.get("enText");
 			addTextPartUsingValueLangAttributeAndTypeAttribute(enTextValue, "en", "alternative",
 					text);
 		}
+	}
+
+	private boolean nonEmptyValueExistsForKey(String key) {
+		return rowFromDb.containsKey(key) && rowFromDb.get(key) != null
+				&& !"".equals(rowFromDb.get(key));
 	}
 
 	private void createDefText(List<ClientDataGroup> texts) {

@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
-public class CountryFromDbToCoraServerTest {
+public class AlvinCountryListImporterTest {
 
 	private String fromDbToCoraFactoryClassName;
 	private String args[];
@@ -43,8 +43,8 @@ public class CountryFromDbToCoraServerTest {
 
 	@Test
 	public void testMainFactorsCorrectly() throws Exception {
-		CountryFromDbToCoraServer.main(args);
-		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) CountryFromDbToCoraServer.fromDbToCoraFactory;
+		AlvinCountryListImporter.main(args);
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter.fromDbToCoraFactory;
 		assertTrue(fromDbToCoraFactory instanceof FromDbToCoraFactorySpy);
 
 		// assertEquals(fromDbToCoraFactory.coraClientFactoryClassName,
@@ -69,8 +69,8 @@ public class CountryFromDbToCoraServerTest {
 
 	@Test
 	public void testCallingImportCountries() throws Exception {
-		CountryFromDbToCoraServer.main(args);
-		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) CountryFromDbToCoraServer.fromDbToCoraFactory;
+		AlvinCountryListImporter.main(args);
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter.fromDbToCoraFactory;
 		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
 		assertTrue(countryFromDbToCoraSpy.importCountriesHasBeenCalled);
 	}
@@ -82,7 +82,7 @@ public class CountryFromDbToCoraServerTest {
 		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
 				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
 
-		CountryFromDbToCoraServer.main(args);
+		AlvinCountryListImporter.main(args);
 	}
 
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
@@ -93,6 +93,6 @@ public class CountryFromDbToCoraServerTest {
 		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
 				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
 
-		CountryFromDbToCoraServer.main(args);
+		AlvinCountryListImporter.main(args);
 	}
 }

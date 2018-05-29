@@ -41,7 +41,7 @@ public class CountryCollectionItemConstructor {
 	}
 
 	private void addChildrenToClientDataGroup(ClientDataGroup item) {
-		String alpha2 = rowFromDb.get("alpha2code");
+		String alpha2 = rowFromDb.get("alpha2code").trim();
 		addRecordInfo(alpha2, item);
 		addNameInData(alpha2, item);
 		addExtraData(alpha2, item);
@@ -76,28 +76,29 @@ public class CountryCollectionItemConstructor {
 				"iso31661Alpha2", value);
 		extraData.addChild(iso2ExtraDataPart);
 		possiblyAddExtraDataPartWithKeyAndAttribute("alpha3code", "iso31661Alpha3", extraData);
-		possiblyAddExtraDataPartWithKeyAndAttribute("numericalcode", "numericalcode", extraData);
-		possiblyAddExtraDataPartWithKeyAndAttribute("marccode", "marccode", extraData);
+		possiblyAddExtraDataPartWithKeyAndAttribute("numericalcode", "iso31661Numeric", extraData);
+		possiblyAddExtraDataPartWithKeyAndAttribute("marccode", "marcCountryCode", extraData);
 		item.addChild(extraData);
 	}
 
 	private void possiblyAddExtraDataPartWithKeyAndAttribute(String key, String attribute,
 			ClientDataGroup extraData) {
-		if (valueExistsForKey(key)) {
+		if (nonEmptyValueExistsForKey(key)) {
 			addExtraDataPartWithAttributeAndValue(key, attribute, extraData);
 		}
 	}
 
 	private void addExtraDataPartWithAttributeAndValue(String key, String attribute,
 			ClientDataGroup extraData) {
-		String alpha3 = rowFromDb.get(key);
+		String value = rowFromDb.get(key).trim();
 		ClientDataGroup iso3ExtraDataPart = createExtraDataPartWithAttributeAndValue(attribute,
-				alpha3);
+				value);
 		extraData.addChild(iso3ExtraDataPart);
 	}
 
-	private boolean valueExistsForKey(String key) {
-		return rowFromDb.containsKey(key);
+	private boolean nonEmptyValueExistsForKey(String key) {
+		return rowFromDb.containsKey(key) && rowFromDb.get(key) != null
+				&& !"".equals(rowFromDb.get(key));
 	}
 
 	private ClientDataGroup createExtraDataPartWithAttributeAndValue(String attribute,

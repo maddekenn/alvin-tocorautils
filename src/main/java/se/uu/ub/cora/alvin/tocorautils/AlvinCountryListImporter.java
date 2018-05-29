@@ -26,12 +26,13 @@ import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
-public class CountryFromDbToCoraServer {
+public class AlvinCountryListImporter {
 
 	static FromDbToCoraFactory fromDbToCoraFactory = null;
 
-	private CountryFromDbToCoraServer(String[] args) {
-		// TODO Auto-generated constructor stub
+	private FromDbToCoraFactoryImp k;
+
+	private AlvinCountryListImporter(String[] args) {
 		try {
 			String fromDbToCoraFactoryClassName = getFromDbToCoraFactoryClassName(args);
 			fromDbToCoraFactory = tryToCreateFromDbToCoraFactory(fromDbToCoraFactoryClassName);
@@ -40,12 +41,10 @@ public class CountryFromDbToCoraServer {
 		}
 	}
 
-	// private static SqlConnectionProvider connectionProvider;
-
 	public static void main(String[] args) {
-		CountryFromDbToCoraServer countryFromDbToCoraServer = new CountryFromDbToCoraServer(args);
+		AlvinCountryListImporter listImporter = new AlvinCountryListImporter(args);
 
-		countryFromDbToCoraServer.importCountries(args);
+		listImporter.importCountries(args);
 	}
 
 	private static String getFromDbToCoraFactoryClassName(String[] args) {
@@ -60,32 +59,20 @@ public class CountryFromDbToCoraServer {
 	}
 
 	private void importCountries(String[] args) {
-		CountryFromDbToCora countryFromDbToCora = getImporter(args);
+		CountryFromDbToCora countryFromDbToCora = createFromDbToCora(args);
 		ImportResult importResult = countryFromDbToCora.importCountries();
 		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 
-	private CountryFromDbToCora getImporter(String[] args) {
+	private CountryFromDbToCora createFromDbToCora(String[] args) {
 		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
 		DbConfig dbConfig = createDbConfig(args);
 
-		// connectionProvider =
-		// ParameterConnectionProviderImp.usingUriAndUserAndPassword(dbConfig.url,
-		// null, null);
-
-		// String coraClientFactoryClassName =
-		// "se.uu.ub.cora.client.CoraClientFactoryImp";
-		// return fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName,
-		// coraClientConfig, dbConfig);
-
-		// added class instead of classname
-		String appTokenVerifierUrl = args[3];
-		String baseUrl = args[4];
 		CoraClientFactory coraClientFactory = CoraClientFactoryImp
-				.usingAppTokenVerifierUrlAndBaseUrl(appTokenVerifierUrl, baseUrl);
+				.usingAppTokenVerifierUrlAndBaseUrl(coraClientConfig.appTokenVerifierUrl,
+						coraClientConfig.coraUrl);
 		return fromDbToCoraFactory.factorForCountryItems(coraClientFactory, coraClientConfig,
 				dbConfig);
-
 	}
 
 	private static CoraClientConfig createCoraClientConfig(String[] args) {
