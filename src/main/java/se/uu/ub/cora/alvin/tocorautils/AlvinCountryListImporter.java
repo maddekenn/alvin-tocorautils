@@ -30,12 +30,12 @@ import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public final class AlvinCountryListImporter {
 
-	private static String className = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory";
+	private static String defaultFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryImp";
 	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
 	private FromDbToCoraFactory fromDbToCoraFactory = null;
 
 	public static void setFromDbToCoraFactoryClassName(String className) {
-		AlvinCountryListImporter.className = className;
+		AlvinCountryListImporter.defaultFactoryClassName = className;
 	}
 
 	public static FromDbToCoraFactory getInstance() {
@@ -47,15 +47,19 @@ public final class AlvinCountryListImporter {
 	}
 
 	private AlvinCountryListImporter(String[] args) {
-		instances.add(this);
+		enableAccessToCurrentInstanceForTesting();
 		tryToCreateFromDbToCoraFactory();
 		CountryFromDbToCora countryFromDbToCora = createFromDbToCora(args);
-		importCountries(countryFromDbToCora);
+		importCountriesUsing(countryFromDbToCora);
+	}
+
+	private void enableAccessToCurrentInstanceForTesting() {
+		instances.add(this);
 	}
 
 	private void tryToCreateFromDbToCoraFactory() {
 		try {
-			fromDbToCoraFactory = createFromDbToCoraFactory(className);
+			fromDbToCoraFactory = createFromDbToCoraFactory(defaultFactoryClassName);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -80,7 +84,7 @@ public final class AlvinCountryListImporter {
 				dbConfig);
 	}
 
-	private static CoraClientConfig createCoraClientConfig(String[] args) {
+	private CoraClientConfig createCoraClientConfig(String[] args) {
 		String userId = args[0];
 		String appToken = args[1];
 		String appTokenVerifierUrl = args[2];
@@ -88,30 +92,30 @@ public final class AlvinCountryListImporter {
 		return new CoraClientConfig(userId, appToken, appTokenVerifierUrl, coraUrl);
 	}
 
-	private static DbConfig createDbConfig(String[] args) {
+	private DbConfig createDbConfig(String[] args) {
 		String dbUserId = args[4];
 		String dbPassword = args[5];
 		String dbUrl = args[6];
 		return new DbConfig(dbUserId, dbPassword, dbUrl);
 	}
 
-	private void importCountries(CountryFromDbToCora countryFromDbToCora) {
+	private void importCountriesUsing(CountryFromDbToCora countryFromDbToCora) {
 		ImportResult importResult = countryFromDbToCora.importCountries();
 		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 
-	private static void throwErrorWithFailMessageIfFailsDuringImport(ImportResult importResult) {
+	private void throwErrorWithFailMessageIfFailsDuringImport(ImportResult importResult) {
 		if (failsDuringImport(importResult)) {
 			StringJoiner stringJoiner = composeMessageFromImportResult(importResult);
 			throw new RuntimeException(stringJoiner.toString());
 		}
 	}
 
-	private static boolean failsDuringImport(ImportResult importResult) {
+	private boolean failsDuringImport(ImportResult importResult) {
 		return !importResult.listOfFails.isEmpty();
 	}
 
-	private static StringJoiner composeMessageFromImportResult(ImportResult importResult) {
+	private StringJoiner composeMessageFromImportResult(ImportResult importResult) {
 		StringJoiner stringJoiner = new StringJoiner("\nERROR: ");
 		for (String fail : importResult.listOfFails) {
 			stringJoiner.add(fail);
