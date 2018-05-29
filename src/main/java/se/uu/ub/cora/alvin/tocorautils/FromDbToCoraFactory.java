@@ -19,10 +19,11 @@
 package se.uu.ub.cora.alvin.tocorautils;
 
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.client.CoraClientFactory;
 
 public interface FromDbToCoraFactory {
 
-	CountryFromDbToCora factorForCountryItems(String coraClientFactoryClassName,
+	CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig);
 
 }

@@ -38,11 +38,17 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 	private CoraClientFactory coraClientFactory;
 
 	@Override
-	public CountryFromDbToCora factorForCountryItems(String coraClientFactoryClassName,
+	public CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		this.coraClientFactoryClassName = coraClientFactoryClassName;
+		this.coraClientFactory = coraClientFactory;
+		// this.coraClientFactoryClassName = coraClientFactory2;
 		this.coraClientConfig = coraClientConfig;
 
+		// try {
+		// coraClientFactory = tryToCreateCoraClientFactory();
+		// } catch (Exception e) {
+		// throw new RuntimeException(e.getMessage());
+		// }
 		SqlConnectionProvider connectionProvider = ParameterConnectionProviderImp
 				.usingUriAndUserAndPassword(dbConfig.url, dbConfig.userId, dbConfig.password);
 
@@ -51,12 +57,6 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 		JsonBuilderFactory jsonFactory = new OrgJsonBuilderFactoryAdapter();
 		FromDbToCoraConverter fromDbToCoraConverter = CountryFromDbToCoraConverter
 				.usingJsonFactory(jsonFactory);
-
-		try {
-			coraClientFactory = tryToCreateCoraClientFactory();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
 
 		CoraClient coraClient = coraClientFactory.factor(coraClientConfig.userId,
 				coraClientConfig.appToken);

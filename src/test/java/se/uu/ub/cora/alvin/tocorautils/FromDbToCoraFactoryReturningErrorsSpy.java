@@ -19,6 +19,7 @@
 package se.uu.ub.cora.alvin.tocorautils;
 
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.client.CoraClientFactory;
 
 public class FromDbToCoraFactoryReturningErrorsSpy implements FromDbToCoraFactory {
 
@@ -26,11 +27,24 @@ public class FromDbToCoraFactoryReturningErrorsSpy implements FromDbToCoraFactor
 	public CoraClientConfig coraClientConfig;
 	public DbConfig dbConfig;
 	public CountryFromDbToCoraSpy factored;
+	public CoraClientFactory coraClientFactory;
+
+	// @Override
+	// public CountryFromDbToCora factorForCountryItems(String
+	// coraClientFactoryClassName,
+	// CoraClientConfig coraClientConfig, DbConfig dbConfig) {
+	// this.coraClientFactoryClassName = coraClientFactoryClassName;
+	// this.coraClientConfig = coraClientConfig;
+	// this.dbConfig = dbConfig;
+	// factored = new CountryFromDbToCoraSpy();
+	// factored.returnErrors = true;
+	// return factored;
+	// }
 
 	@Override
-	public CountryFromDbToCora factorForCountryItems(String coraClientFactoryClassName,
+	public CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		this.coraClientFactoryClassName = coraClientFactoryClassName;
+		this.coraClientFactory = coraClientFactory;
 		this.coraClientConfig = coraClientConfig;
 		this.dbConfig = dbConfig;
 		factored = new CountryFromDbToCoraSpy();

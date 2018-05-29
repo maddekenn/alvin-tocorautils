@@ -27,6 +27,10 @@ public class CoraClientFactorySpy implements CoraClientFactory {
 	public String userId;
 	public String appToken;
 
+	public CoraClientFactorySpy() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public CoraClientFactorySpy(String appTokenVerifierUrl, String baseUrl) {
 		// TODO Auto-generated constructor stub
 	}

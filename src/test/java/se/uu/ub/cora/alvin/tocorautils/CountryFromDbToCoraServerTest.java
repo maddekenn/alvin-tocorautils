@@ -26,6 +26,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public class CountryFromDbToCoraServerTest {
 
@@ -46,8 +47,12 @@ public class CountryFromDbToCoraServerTest {
 		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) CountryFromDbToCoraServer.fromDbToCoraFactory;
 		assertTrue(fromDbToCoraFactory instanceof FromDbToCoraFactorySpy);
 
-		assertEquals("se.uu.ub.cora.client.CoraClientFactoryImp",
-				fromDbToCoraFactory.coraClientFactoryClassName);
+		// assertEquals(fromDbToCoraFactory.coraClientFactoryClassName,
+		// "se.uu.ub.cora.client.CoraClientFactoryImp");
+		CoraClientFactoryImp coraClientFactory = (CoraClientFactoryImp) fromDbToCoraFactory.coraClientFactory;
+		assertTrue(coraClientFactory instanceof CoraClientFactoryImp);
+		assertEquals(coraClientFactory.getAppTokenVerifierUrl(), "appTokenVerifierUrl");
+		assertEquals(coraClientFactory.getBaseUrl(), "baseUrl");
 
 		CoraClientConfig coraClientConfig = fromDbToCoraFactory.coraClientConfig;
 		assertEquals(coraClientConfig.userId, args[1]);

@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.connection.ParameterConnectionProviderImp;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
@@ -57,9 +58,14 @@ public class FromDbToCoraFactoryTest {
 		String url = "someDbUrl";
 		dbConfig = new DbConfig(dbUserId, password, url);
 
-		String coraClientFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy";
+		// String coraClientFactoryClassName =
+		// "se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy";
+		// countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
+		// .factorForCountryItems(coraClientFactoryClassName, coraClientConfig,
+		// dbConfig);
+		CoraClientFactory coraClientFactory = new CoraClientFactorySpy();
 		countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
-				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
+				.factorForCountryItems(coraClientFactory, coraClientConfig, dbConfig);
 		// countryToCora.importCountries();
 
 	}
@@ -119,12 +125,15 @@ public class FromDbToCoraFactoryTest {
 		assertEquals(coraClientFactory.appToken, coraClientConfig.appToken);
 	}
 
-	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
-			+ "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND")
-	public void testCoraClientFactoryCreationFail() throws Exception {
-		String coraClientFactoryClassName = "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND";
-		countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
-				.factorForCountryItems(coraClientFactoryClassName, coraClientConfig, dbConfig);
-
-	}
+	// @Test(expectedExceptions = RuntimeException.class,
+	// expectedExceptionsMessageRegExp = ""
+	// + "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND")
+	// public void testCoraClientFactoryCreationFail() throws Exception {
+	// String coraClientFactoryClassName =
+	// "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND";
+	// countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
+	// .factorForCountryItems(coraClientFactoryClassName, coraClientConfig,
+	// dbConfig);
+	//
+	// }
 }

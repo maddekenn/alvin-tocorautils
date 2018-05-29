@@ -23,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.StringJoiner;
 
 import se.uu.ub.cora.client.CoraClientConfig;
+import se.uu.ub.cora.client.CoraClientFactory;
+import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public class CountryFromDbToCoraServer {
 
@@ -71,9 +73,19 @@ public class CountryFromDbToCoraServer {
 		// ParameterConnectionProviderImp.usingUriAndUserAndPassword(dbConfig.url,
 		// null, null);
 
-		String coraClientFactoryClassName = "se.uu.ub.cora.client.CoraClientFactoryImp";
-		return fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName,
-				coraClientConfig, dbConfig);
+		// String coraClientFactoryClassName =
+		// "se.uu.ub.cora.client.CoraClientFactoryImp";
+		// return fromDbToCoraFactory.factorForCountryItems(coraClientFactoryClassName,
+		// coraClientConfig, dbConfig);
+
+		// added class instead of classname
+		String appTokenVerifierUrl = args[3];
+		String baseUrl = args[4];
+		CoraClientFactory coraClientFactory = CoraClientFactoryImp
+				.usingAppTokenVerifierUrlAndBaseUrl(appTokenVerifierUrl, baseUrl);
+		return fromDbToCoraFactory.factorForCountryItems(coraClientFactory, coraClientConfig,
+				dbConfig);
+
 	}
 
 	private static CoraClientConfig createCoraClientConfig(String[] args) {
