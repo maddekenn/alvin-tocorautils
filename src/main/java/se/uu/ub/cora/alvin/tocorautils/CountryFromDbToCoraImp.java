@@ -24,7 +24,7 @@ import java.util.Map;
 import se.uu.ub.cora.sqldatabase.RecordReader;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
-public class CountryFromDbToCoraImp implements CountryFromDbToCora {
+public final class CountryFromDbToCoraImp implements CountryFromDbToCora {
 
 	private FromDbToCoraConverter fromDbToCoraConverter;
 	private RecordReaderFactory recordReaderFactory;

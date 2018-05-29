@@ -28,7 +28,7 @@ import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
-public class AlvinCountryListImporter {
+public final class AlvinCountryListImporter {
 
 	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
 
@@ -51,13 +51,7 @@ public class AlvinCountryListImporter {
 
 	public static void main(String[] args) {
 		new AlvinCountryListImporter(args);
-		// instances.add(listImporter);
-		// listImporter.setUp(args);
 	}
-
-	// private void setUp(String[] args) {
-	//
-	// }
 
 	private static String getFromDbToCoraFactoryClassName(String[] args) {
 		return args[0];
@@ -83,9 +77,6 @@ public class AlvinCountryListImporter {
 		CoraClientFactory coraClientFactory = CoraClientFactoryImp
 				.usingAppTokenVerifierUrlAndBaseUrl(coraClientConfig.appTokenVerifierUrl,
 						coraClientConfig.coraUrl);
-		// CoraClientFactory coraClientFactory =
-		// fromDbToCoraFactory.factorCoraClientFactory(
-		// coraClientConfig.appTokenVerifierUrl, coraClientConfig.coraUrl);
 
 		return fromDbToCoraFactory.factorForCountryItems(coraClientFactory, coraClientConfig,
 				dbConfig);
