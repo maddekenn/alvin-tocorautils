@@ -30,15 +30,15 @@ import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public class AlvinCountryListImporterTest {
 
-	private String fromDbToCoraFactoryClassName;
 	private String args[];
 
 	@BeforeMethod
 	private void beforeMethod() {
-		fromDbToCoraFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy";
+		AlvinCountryListImporter.setFromDbToCoraFactoryClassName(
+				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy");
 
-		args = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
-				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+		args = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl", "baseUrl",
+				"dbUrl", "dbUser", "dbPassword" };
 	}
 
 	@Test
@@ -48,32 +48,27 @@ public class AlvinCountryListImporterTest {
 				.getInstance();
 		assertTrue(fromDbToCoraFactory instanceof FromDbToCoraFactorySpy);
 
-		// assertEquals(fromDbToCoraFactory.coraClientFactoryClassName,
-		// "se.uu.ub.cora.client.CoraClientFactoryImp");
 		CoraClientFactoryImp coraClientFactory = (CoraClientFactoryImp) fromDbToCoraFactory.coraClientFactory;
 		assertTrue(coraClientFactory instanceof CoraClientFactoryImp);
-		//
 		assertEquals(coraClientFactory.getAppTokenVerifierUrl(), "appTokenVerifierUrl");
 		assertEquals(coraClientFactory.getBaseUrl(), "baseUrl");
 
 		CoraClientConfig coraClientConfig = fromDbToCoraFactory.coraClientConfig;
-		assertEquals(coraClientConfig.userId, args[1]);
-		assertEquals(coraClientConfig.appToken, args[2]);
-		assertEquals(coraClientConfig.appTokenVerifierUrl, args[3]);
-		assertEquals(coraClientConfig.coraUrl, args[4]);
+		assertEquals(coraClientConfig.userId, args[0]);
+		assertEquals(coraClientConfig.appToken, args[1]);
+		assertEquals(coraClientConfig.appTokenVerifierUrl, args[2]);
+		assertEquals(coraClientConfig.coraUrl, args[3]);
 
 		DbConfig dbConfig = fromDbToCoraFactory.dbConfig;
 		assertNotNull(dbConfig);
-		assertEquals(dbConfig.userId, args[5]);
-		assertEquals(dbConfig.password, args[6]);
-		assertEquals(dbConfig.url, args[7]);
+		assertEquals(dbConfig.userId, args[4]);
+		assertEquals(dbConfig.password, args[5]);
+		assertEquals(dbConfig.url, args[6]);
 	}
 
 	@Test
 	public void testCallingImportCountries() throws Exception {
 		AlvinCountryListImporter.main(args);
-		// FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy)
-		// AlvinCountryListImporter.fromDbToCoraFactory;
 		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
 				.getInstance();
 		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
@@ -84,9 +79,10 @@ public class AlvinCountryListImporterTest {
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "failed during import in CountryFromDbToCoraSpy\n"
 			+ "ERROR: failed again during import of CountryFromDbToCoraSpy")
 	public void testErrorsDuringImport() throws Exception {
-		fromDbToCoraFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy";
-		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
-				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+		AlvinCountryListImporter.setFromDbToCoraFactoryClassName(
+				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy");
+		String args[] = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl",
+				"baseUrl", "dbUrl", "dbUser", "dbPassword" };
 
 		AlvinCountryListImporter.main(args);
 	}
@@ -94,10 +90,11 @@ public class AlvinCountryListImporterTest {
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
 			+ "se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND")
 	public void testFactoryClassNotFound() throws Exception {
-		String fromDbToCoraFactoryClassName = "se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND";
+		AlvinCountryListImporter
+				.setFromDbToCoraFactoryClassName("se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND");
 
-		String args[] = new String[] { fromDbToCoraFactoryClassName, "someUserId", "someAppToken",
-				"appTokenVerifierUrl", "baseUrl", "dbUrl", "dbUser", "dbPassword" };
+		String args[] = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl",
+				"baseUrl", "dbUrl", "dbUser", "dbPassword" };
 
 		AlvinCountryListImporter.main(args);
 	}

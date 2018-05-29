@@ -30,44 +30,42 @@ import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public final class AlvinCountryListImporter {
 
+	private static String className = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory";
 	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
+	private FromDbToCoraFactory fromDbToCoraFactory = null;
+
+	public static void setFromDbToCoraFactoryClassName(String className) {
+		AlvinCountryListImporter.className = className;
+	}
 
 	public static FromDbToCoraFactory getInstance() {
 		return instances.get(0).fromDbToCoraFactory;
-	}
-
-	private FromDbToCoraFactory fromDbToCoraFactory = null;
-
-	private AlvinCountryListImporter(String[] args) {
-		instances.add(this);
-		try {
-			String fromDbToCoraFactoryClassName = getFromDbToCoraFactoryClassName(args);
-			fromDbToCoraFactory = tryToCreateFromDbToCoraFactory(fromDbToCoraFactoryClassName);
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
-		importCountries(args);
 	}
 
 	public static void main(String[] args) {
 		new AlvinCountryListImporter(args);
 	}
 
-	private static String getFromDbToCoraFactoryClassName(String[] args) {
-		return args[0];
+	private AlvinCountryListImporter(String[] args) {
+		instances.add(this);
+		tryToCreateFromDbToCoraFactory();
+		CountryFromDbToCora countryFromDbToCora = createFromDbToCora(args);
+		importCountries(countryFromDbToCora);
 	}
 
-	private FromDbToCoraFactory tryToCreateFromDbToCoraFactory(String fromDbToCoraFactoryClassName)
+	private void tryToCreateFromDbToCoraFactory() {
+		try {
+			fromDbToCoraFactory = createFromDbToCoraFactory(className);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	private FromDbToCoraFactory createFromDbToCoraFactory(String fromDbToCoraFactoryClassName)
 			throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
 			InvocationTargetException, InstantiationException {
 		Constructor<?> constructor = Class.forName(fromDbToCoraFactoryClassName).getConstructor();
 		return (FromDbToCoraFactory) constructor.newInstance();
-	}
-
-	private void importCountries(String[] args) {
-		CountryFromDbToCora countryFromDbToCora = createFromDbToCora(args);
-		ImportResult importResult = countryFromDbToCora.importCountries();
-		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 
 	private CountryFromDbToCora createFromDbToCora(String[] args) {
@@ -83,18 +81,23 @@ public final class AlvinCountryListImporter {
 	}
 
 	private static CoraClientConfig createCoraClientConfig(String[] args) {
-		String userId = args[1];
-		String appToken = args[2];
-		String appTokenVerifierUrl = args[3];
-		String coraUrl = args[4];
+		String userId = args[0];
+		String appToken = args[1];
+		String appTokenVerifierUrl = args[2];
+		String coraUrl = args[3];
 		return new CoraClientConfig(userId, appToken, appTokenVerifierUrl, coraUrl);
 	}
 
 	private static DbConfig createDbConfig(String[] args) {
-		String dbUserId = args[5];
-		String dbPassword = args[6];
-		String dbUrl = args[7];
+		String dbUserId = args[4];
+		String dbPassword = args[5];
+		String dbUrl = args[6];
 		return new DbConfig(dbUserId, dbPassword, dbUrl);
+	}
+
+	private void importCountries(CountryFromDbToCora countryFromDbToCora) {
+		ImportResult importResult = countryFromDbToCora.importCountries();
+		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 
 	private static void throwErrorWithFailMessageIfFailsDuringImport(ImportResult importResult) {
