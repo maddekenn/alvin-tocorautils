@@ -58,16 +58,9 @@ public class FromDbToCoraFactoryTest {
 		String url = "someDbUrl";
 		dbConfig = new DbConfig(dbUserId, password, url);
 
-		// String coraClientFactoryClassName =
-		// "se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy";
-		// countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
-		// .factorForCountryItems(coraClientFactoryClassName, coraClientConfig,
-		// dbConfig);
 		CoraClientFactory coraClientFactory = new CoraClientFactorySpy();
 		countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
 				.factorForCountryItems(coraClientFactory, coraClientConfig, dbConfig);
-		// countryToCora.importCountries();
-
 	}
 
 	@Test
@@ -78,7 +71,6 @@ public class FromDbToCoraFactoryTest {
 
 		SqlConnectionProvider connectionProvider = createdRecordReaderFactory
 				.getConnectionProvider();
-		// TODO: check this when class is added to sqldatabase, and fully implemented
 		assertTrue(connectionProvider instanceof ParameterConnectionProviderImp);
 
 		Field declaredUrlField = connectionProvider.getClass().getDeclaredField("url");
@@ -124,16 +116,4 @@ public class FromDbToCoraFactoryTest {
 		assertEquals(coraClientFactory.userId, coraClientConfig.userId);
 		assertEquals(coraClientFactory.appToken, coraClientConfig.appToken);
 	}
-
-	// @Test(expectedExceptions = RuntimeException.class,
-	// expectedExceptionsMessageRegExp = ""
-	// + "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND")
-	// public void testCoraClientFactoryCreationFail() throws Exception {
-	// String coraClientFactoryClassName =
-	// "se.uu.ub.cora.CoraClientFactorySpyNOTFOUND";
-	// countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
-	// .factorForCountryItems(coraClientFactoryClassName, coraClientConfig,
-	// dbConfig);
-	//
-	// }
 }

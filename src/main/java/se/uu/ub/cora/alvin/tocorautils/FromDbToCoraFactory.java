@@ -25,5 +25,4 @@ public interface FromDbToCoraFactory {
 
 	CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig);
-
 }

@@ -29,16 +29,6 @@ public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
 	public CountryFromDbToCoraSpy factored;
 	public CoraClientFactory coraClientFactory;
 
-	// @Override
-	// public CountryFromDbToCora factorForCountryItems(String
-	// coraClientFactoryClassName,
-	// CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-	// this.coraClientFactoryClassName = coraClientFactoryClassName;
-	// this.coraClientConfig = coraClientConfig;
-	// this.dbConfig = dbConfig;
-	// factored = new CountryFromDbToCoraSpy();
-	// return factored;
-	// }
 	@Override
 	public CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
@@ -46,8 +36,6 @@ public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
 		this.coraClientConfig = coraClientConfig;
 		this.dbConfig = dbConfig;
 		factored = new CountryFromDbToCoraSpy();
-		// factored.returnErrors = false;
 		return factored;
 	}
-
 }

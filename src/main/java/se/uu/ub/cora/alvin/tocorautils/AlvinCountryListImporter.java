@@ -20,6 +20,8 @@ package se.uu.ub.cora.alvin.tocorautils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 
 import se.uu.ub.cora.client.CoraClientConfig;
@@ -28,24 +30,34 @@ import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public class AlvinCountryListImporter {
 
-	static FromDbToCoraFactory fromDbToCoraFactory = null;
+	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
 
-	private FromDbToCoraFactoryImp k;
+	public static FromDbToCoraFactory getInstance() {
+		return instances.get(0).fromDbToCoraFactory;
+	}
+
+	private FromDbToCoraFactory fromDbToCoraFactory = null;
 
 	private AlvinCountryListImporter(String[] args) {
+		instances.add(this);
 		try {
 			String fromDbToCoraFactoryClassName = getFromDbToCoraFactoryClassName(args);
 			fromDbToCoraFactory = tryToCreateFromDbToCoraFactory(fromDbToCoraFactoryClassName);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
+		importCountries(args);
 	}
 
 	public static void main(String[] args) {
-		AlvinCountryListImporter listImporter = new AlvinCountryListImporter(args);
-
-		listImporter.importCountries(args);
+		new AlvinCountryListImporter(args);
+		// instances.add(listImporter);
+		// listImporter.setUp(args);
 	}
+
+	// private void setUp(String[] args) {
+	//
+	// }
 
 	private static String getFromDbToCoraFactoryClassName(String[] args) {
 		return args[0];
@@ -71,6 +83,10 @@ public class AlvinCountryListImporter {
 		CoraClientFactory coraClientFactory = CoraClientFactoryImp
 				.usingAppTokenVerifierUrlAndBaseUrl(coraClientConfig.appTokenVerifierUrl,
 						coraClientConfig.coraUrl);
+		// CoraClientFactory coraClientFactory =
+		// fromDbToCoraFactory.factorCoraClientFactory(
+		// coraClientConfig.appTokenVerifierUrl, coraClientConfig.coraUrl);
+
 		return fromDbToCoraFactory.factorForCountryItems(coraClientFactory, coraClientConfig,
 				dbConfig);
 	}

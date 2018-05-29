@@ -44,13 +44,15 @@ public class AlvinCountryListImporterTest {
 	@Test
 	public void testMainFactorsCorrectly() throws Exception {
 		AlvinCountryListImporter.main(args);
-		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter.fromDbToCoraFactory;
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
+				.getInstance();
 		assertTrue(fromDbToCoraFactory instanceof FromDbToCoraFactorySpy);
 
 		// assertEquals(fromDbToCoraFactory.coraClientFactoryClassName,
 		// "se.uu.ub.cora.client.CoraClientFactoryImp");
 		CoraClientFactoryImp coraClientFactory = (CoraClientFactoryImp) fromDbToCoraFactory.coraClientFactory;
 		assertTrue(coraClientFactory instanceof CoraClientFactoryImp);
+		//
 		assertEquals(coraClientFactory.getAppTokenVerifierUrl(), "appTokenVerifierUrl");
 		assertEquals(coraClientFactory.getBaseUrl(), "baseUrl");
 
@@ -70,8 +72,12 @@ public class AlvinCountryListImporterTest {
 	@Test
 	public void testCallingImportCountries() throws Exception {
 		AlvinCountryListImporter.main(args);
-		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter.fromDbToCoraFactory;
+		// FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy)
+		// AlvinCountryListImporter.fromDbToCoraFactory;
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
+				.getInstance();
 		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
+
 		assertTrue(countryFromDbToCoraSpy.importCountriesHasBeenCalled);
 	}
 

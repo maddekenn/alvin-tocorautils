@@ -57,4 +57,5 @@ public class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 		// needed for test
 		return coraClientFactory;
 	}
+
 }

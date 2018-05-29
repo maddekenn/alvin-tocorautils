@@ -21,11 +21,6 @@ package se.uu.ub.cora.alvin.tocorautils;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import se.uu.ub.cora.connection.ContextConnectionProviderImp;
-import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.sqldatabase.RecordReader;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
@@ -57,37 +52,6 @@ public class CountryFromDbToCoraImp implements CountryFromDbToCora {
 		List<Map<String, String>> convertedRows = fromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(readAllFromTable);
 		return importer.createInCora(convertedRows);
-	}
-
-	public void doStuff() throws NamingException {
-
-		SqlConnectionProvider sqlConnectionProvider = createConnectionProvider();
-
-		// RecordReaderFactoryImp recordReaderFactory = new RecordReaderFactoryImp(
-		// sqlConnectionProvider);
-
-		// joinTables()
-
-		// CountryFromDbToCoraStorage toCoraStorage = CountryFromDbToCoraStorage
-		// .usingCoraClientAndJsonFactory(null, null);
-
-		// create coraClient
-		// String appTokenVerifierUrl = "someAppTokenVerifierUrl";
-		// String baseUrl = "someBaseUrl";
-		// CoraClientFactoryImp coraClientFactory = new
-		// CoraClientFactoryImp(appTokenVerifierUrl,
-		// baseUrl);
-		// CoraClient coraClient = coraClientFactory.factor("someUserId",
-		// "someAppToken");
-
-		// import
-
-	}
-
-	private SqlConnectionProvider createConnectionProvider() throws NamingException {
-		InitialContext context = new InitialContext();
-		String databaseLookupName = "";
-		return ContextConnectionProviderImp.usingInitialContextAndName(context, databaseLookupName);
 	}
 
 	RecordReaderFactory getRecordReaderFactory() {
