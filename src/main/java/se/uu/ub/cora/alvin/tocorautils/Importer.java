@@ -19,10 +19,7 @@
 package se.uu.ub.cora.alvin.tocorautils;
 
 import java.util.List;
-import java.util.Map;
 
-public interface ListImporter {
-
-	ImportResult createInCora(List<Map<String, String>> convertedRows);
-
+public interface Importer {
+	ImportResult createInCora(List<List<CoraJsonRecord>> listOfConvertedRows);
 }

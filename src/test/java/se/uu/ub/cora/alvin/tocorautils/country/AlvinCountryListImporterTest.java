@@ -23,6 +23,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.DbConfig;
@@ -33,6 +34,12 @@ import se.uu.ub.cora.client.CoraClientFactoryImp;
 public class AlvinCountryListImporterTest {
 
 	private String args[];
+	private String initialDefaultFactoryClassName;
+
+	@BeforeSuite
+	private void beforeTest() {
+		initialDefaultFactoryClassName = AlvinCountryListImporter.defaultFactoryClassName;
+	}
 
 	@BeforeMethod
 	private void beforeMethod() {
@@ -48,13 +55,8 @@ public class AlvinCountryListImporterTest {
 
 	@Test
 	public void testDefaultFactoryClassName() throws Exception {
-		assertEquals(AlvinCountryListImporter.defaultFactoryClassName,
+		assertEquals(initialDefaultFactoryClassName,
 				"se.uu.ub.cora.alvin.tocorautils.CountryFromDbToCoraFactory");
-		// AlvinCountryListImporter.main(args);
-		// FromDbToCoraFactory fromDbToCoraFactory =
-		// AlvinCountryListImporter.getInstance();
-		// assertTrue(fromDbToCoraFactory instanceof CountryFromDbToCoraFactory);
-
 	}
 
 	@Test

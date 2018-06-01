@@ -16,53 +16,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils;
 
 import java.util.List;
-import java.util.Map;
 
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.ListImporter;
 import se.uu.ub.cora.client.CoraClient;
 
-public final class CountryImporter implements ListImporter {
+public final class CoraImporter implements Importer {
 
 	private CoraClient coraClient;
 	private ImportResult importResult;
 
-	public static CountryImporter usingCoraClient(CoraClient coraClient) {
-		return new CountryImporter(coraClient);
+	public static CoraImporter usingCoraClient(CoraClient coraClient) {
+		return new CoraImporter(coraClient);
 	}
 
-	private CountryImporter(CoraClient coraClient) {
+	private CoraImporter(CoraClient coraClient) {
 		this.coraClient = coraClient;
-	}
-
-	@Override
-	public ImportResult createInCora(List<Map<String, String>> listOfConvertedRows) {
-		importResult = new ImportResult();
-		for (Map<String, String> convertedRow : listOfConvertedRows) {
-			createRecordsForRow(convertedRow);
-		}
-		return importResult;
-	}
-
-	private void createRecordsForRow(Map<String, String> convertedRow) {
-		createConvertedRowUsingRecordTypeAndKey(convertedRow, "coraText", "text");
-		createConvertedRowUsingRecordTypeAndKey(convertedRow, "coraText", "defText");
-		createConvertedRowUsingRecordTypeAndKey(convertedRow, "countryCollectionItem",
-				"countryCollectionItem");
-	}
-
-	private void createConvertedRowUsingRecordTypeAndKey(Map<String, String> convertedRow,
-			String recordType, String key) {
-		String jsonText = "";
-		try {
-			jsonText = convertedRow.get(key);
-			createRecordForJson(recordType, jsonText);
-		} catch (Exception e) {
-			addErrorImportResult(jsonText, e);
-		}
 	}
 
 	private void createRecordForJson(String recordType, String jsonText) {
@@ -80,5 +50,32 @@ public final class CountryImporter implements ListImporter {
 	public CoraClient getCoraClient() {
 		// needed for test
 		return coraClient;
+	}
+
+	@Override
+	public ImportResult createInCora(List<List<CoraJsonRecord>> listOfConvertedRows) {
+		importResult = new ImportResult();
+		createRecordsForRows(listOfConvertedRows);
+		return importResult;
+	}
+
+	private void createRecordsForRows(List<List<CoraJsonRecord>> listOfConvertedRows) {
+		for (List<CoraJsonRecord> listWithConvertedRow : listOfConvertedRows) {
+			createRecordForRow(listWithConvertedRow);
+		}
+	}
+
+	private void createRecordForRow(List<CoraJsonRecord> listWithConvertedRow) {
+		for (CoraJsonRecord coraJsonRecord : listWithConvertedRow) {
+			tryToCreateRecordForJson(coraJsonRecord);
+		}
+	}
+
+	private void tryToCreateRecordForJson(CoraJsonRecord coraJsonRecord) {
+		try {
+			createRecordForJson(coraJsonRecord.recordType, coraJsonRecord.json);
+		} catch (Exception e) {
+			addErrorImportResult(coraJsonRecord.json, e);
+		}
 	}
 }

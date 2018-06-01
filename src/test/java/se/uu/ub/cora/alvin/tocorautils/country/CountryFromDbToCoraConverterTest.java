@@ -27,16 +27,16 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
-public class CountryFromDbToCoraStorageTest {
+public class CountryFromDbToCoraConverterTest {
 	List<Map<String, String>> rowsFromDb = new ArrayList<Map<String, String>>();
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
-	private CountryFromDbToCoraConverter toCoraStorage;
+	private CountryFromDbToCoraConverter countryFromDbToCoraConverter;
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -49,29 +49,31 @@ public class CountryFromDbToCoraStorageTest {
 
 		coraClient = new CoraClientSpy();
 		jsonFactory = new OrgJsonBuilderFactoryAdapter();
-		toCoraStorage = CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
+		countryFromDbToCoraConverter = CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
 
 	}
 
 	@Test
 	public void testConvertCountryOneRow() {
-		List<Map<String, String>> convertToJsonFromRowsFromDb = toCoraStorage
+		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertToJsonFromRowsFromDb.size(), 1);
-		Map<String, String> row = convertToJsonFromRowsFromDb.get(0);
-		String jsonForText = row.get("text");
-		assertEquals(jsonForText,
+		assertEquals(convertedRows.size(), 1);
+		List<CoraJsonRecord> row = convertedRows.get(0);
+		CoraJsonRecord coraJsonRecordText = row.get(0);
+		assertEquals(coraJsonRecordText.recordType, "coraText");
+		assertEquals(coraJsonRecordText.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
 
-		String jsonForDefText = row.get("defText");
-		assertEquals(jsonForDefText,
+		CoraJsonRecord coraJsonRecordDefText = row.get(1);
+		assertEquals(coraJsonRecordDefText.recordType, "coraText");
+		assertEquals(coraJsonRecordDefText.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
 
-		String jsonForItem = row.get("countryCollectionItem");
-		assertEquals(jsonForItem,
+		CoraJsonRecord coraJsonRecordItem = row.get(2);
+		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
+		assertEquals(coraJsonRecordItem.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
-
 	}
 
 	@Test
@@ -81,32 +83,40 @@ public class CountryFromDbToCoraStorageTest {
 		rowFromDb.put("svText", "Norge");
 		rowsFromDb.add(rowFromDb);
 
-		List<Map<String, String>> convertToJsonFromRowsFromDb = toCoraStorage
+		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertToJsonFromRowsFromDb.size(), 2);
-		Map<String, String> row = convertToJsonFromRowsFromDb.get(0);
-		String jsonForText = row.get("text");
-		assertEquals(jsonForText,
+		assertEquals(convertedRows.size(), 2);
+		List<CoraJsonRecord> row = convertedRows.get(0);
+		CoraJsonRecord coraJsonRecordText = row.get(0);
+		assertEquals(coraJsonRecordText.recordType, "coraText");
+		assertEquals(coraJsonRecordText.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
 
-		String jsonForDefText = row.get("defText");
-		assertEquals(jsonForDefText,
+		CoraJsonRecord coraJsonRecordDefText = row.get(1);
+		assertEquals(coraJsonRecordDefText.recordType, "coraText");
+		assertEquals(coraJsonRecordDefText.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
 
-		String jsonForItem = row.get("countryCollectionItem");
-		assertEquals(jsonForItem,
+		CoraJsonRecord coraJsonRecordItem = row.get(2);
+		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
+		assertEquals(coraJsonRecordItem.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 
-		Map<String, String> secondRow = convertToJsonFromRowsFromDb.get(1);
-		String jsonForText2 = secondRow.get("text");
-		assertEquals(jsonForText2,
+		List<CoraJsonRecord> row2 = convertedRows.get(1);
+		CoraJsonRecord coraJsonRecordText2 = row2.get(0);
+		assertEquals(coraJsonRecordText2.recordType, "coraText");
+		assertEquals(coraJsonRecordText2.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Norge\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
-		String jsonForDefText2 = secondRow.get("defText");
-		assertEquals(jsonForDefText2,
+
+		CoraJsonRecord coraJsonRecordDefText2 = row2.get(1);
+		assertEquals(coraJsonRecordDefText2.recordType, "coraText");
+		assertEquals(coraJsonRecordDefText2.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Norge\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
-		String jsonForItem2 = secondRow.get("countryCollectionItem");
-		assertEquals(jsonForItem2,
+
+		CoraJsonRecord coraJsonRecordItem2 = row2.get(2);
+		assertEquals(coraJsonRecordItem2.recordType, "countryCollectionItem");
+		assertEquals(coraJsonRecordItem2.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"NO\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"NO\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 
 	}

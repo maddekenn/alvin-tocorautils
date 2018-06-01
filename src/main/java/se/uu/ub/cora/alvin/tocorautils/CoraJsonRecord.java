@@ -18,25 +18,17 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraSpy;
-import se.uu.ub.cora.client.CoraClientConfig;
-import se.uu.ub.cora.client.CoraClientFactory;
+public final class CoraJsonRecord {
 
-public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
+	public final String recordType;
+	public final String json;
 
-	public String coraClientFactoryClassName;
-	public CoraClientConfig coraClientConfig;
-	public DbConfig dbConfig;
-	public CountryFromDbToCoraSpy factored;
-	public CoraClientFactory coraClientFactory;
+	public static CoraJsonRecord withRecordTypeAndJson(String recordType, String json) {
+		return new CoraJsonRecord(recordType, json);
+	}
 
-	@Override
-	public FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
-			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		this.coraClientFactory = coraClientFactory;
-		this.coraClientConfig = coraClientConfig;
-		this.dbConfig = dbConfig;
-		factored = new CountryFromDbToCoraSpy();
-		return factored;
+	private CoraJsonRecord(String recordType, String json) {
+		this.recordType = recordType;
+		this.json = json;
 	}
 }

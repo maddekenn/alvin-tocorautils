@@ -16,23 +16,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.language;
+package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.DbConfig;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryImp;
-import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCora;
-import se.uu.ub.cora.client.CoraClientConfig;
-import se.uu.ub.cora.client.CoraClientFactory;
+public interface FromDbToCora {
 
-public class LanguageFromDbToCoraFactoryImp extends FromDbToCoraFactoryImp
-		implements FromDbToCoraFactory {
-
-	@Override
-	public FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
-			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	ImportResult importFromTable(String tableName);
 
 }

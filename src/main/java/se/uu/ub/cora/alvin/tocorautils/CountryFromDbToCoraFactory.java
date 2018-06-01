@@ -18,48 +18,15 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCora;
 import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraConverter;
-import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
-import se.uu.ub.cora.alvin.tocorautils.country.CountryImporter;
-import se.uu.ub.cora.client.CoraClient;
-import se.uu.ub.cora.client.CoraClientConfig;
-import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
-import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
 public class CountryFromDbToCoraFactory extends FromDbToCoraFactoryImp
 		implements FromDbToCoraFactory {
-	private CoraClientFactory coraClientFactory;
 
 	@Override
-	public FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
-			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		this.coraClientFactory = coraClientFactory;
-
-		RecordReaderFactory recordReaderFactory = createRecordReaderFactory(dbConfig);
-		FromDbToCoraConverter fromDbToCoraConverter = createConverter();
-
-		ListImporter importer = createImporter(coraClientFactory, coraClientConfig);
-
-		return FromDbToCoraImp.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
-				recordReaderFactory, fromDbToCoraConverter, importer);
-	}
-
-	private FromDbToCoraConverter createConverter() {
-		JsonBuilderFactory jsonFactory = createJsonBuilderFactory();
+	FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
 		return CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
-	}
-
-	private ListImporter createImporter(CoraClientFactory coraClientFactory,
-			CoraClientConfig coraClientConfig) {
-		CoraClient coraClient = createCoraClient(coraClientFactory, coraClientConfig);
-		return CountryImporter.usingCoraClient(coraClient);
-	}
-
-	CoraClientFactory getCoraClientFactory() {
-		// needed for test
-		return coraClientFactory;
 	}
 
 }

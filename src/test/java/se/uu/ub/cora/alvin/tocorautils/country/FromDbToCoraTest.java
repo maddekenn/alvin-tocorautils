@@ -56,7 +56,7 @@ public class FromDbToCoraTest {
 		assertEquals(factoredReader.usedTableName, "someTableName");
 
 		assertEquals(factoredReader.returnedList, toCoraConverter.rowsFromDb);
-		assertEquals(toCoraConverter.returnedList, importer.convertedRows);
+		assertEquals(toCoraConverter.returnedList2, importer.listOfConvertedRows);
 
 		assertEquals(importResult.listOfFails.get(0), "failure from ListImporterSpy");
 	}

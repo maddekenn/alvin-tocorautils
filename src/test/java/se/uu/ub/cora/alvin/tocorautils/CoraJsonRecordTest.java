@@ -16,12 +16,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
+import static org.testng.Assert.assertEquals;
 
-public interface FromDbToCora {
+import org.testng.annotations.Test;
 
-	ImportResult importFromTable(String tableName);
-
+public class CoraJsonRecordTest {
+	@Test
+	public void testClass() throws Exception {
+		String recordType = "someRecordType";
+		String json = "json";
+		CoraJsonRecord coraJsonRecord = CoraJsonRecord.withRecordTypeAndJson(recordType, json);
+		assertEquals(coraJsonRecord.recordType, recordType);
+		assertEquals(coraJsonRecord.json, json);
+	}
 }

@@ -21,17 +21,19 @@ package se.uu.ub.cora.alvin.tocorautils.doubles;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.ListImporter;
+import se.uu.ub.cora.alvin.tocorautils.Importer;
 
-public class ListImporterSpy implements ListImporter {
+public class ListImporterSpy implements Importer {
 
 	public List<Map<String, String>> convertedRows;
+	public List<List<CoraJsonRecord>> listOfConvertedRows;
 	private ImportResult importResult;
 
 	@Override
-	public ImportResult createInCora(List<Map<String, String>> convertedRows) {
-		this.convertedRows = convertedRows;
+	public ImportResult createInCora(List<List<CoraJsonRecord>> listOfConvertedRows) {
+		this.listOfConvertedRows = listOfConvertedRows;
 		importResult = new ImportResult();
 		importResult.listOfFails.add("failure from ListImporterSpy");
 		return importResult;

@@ -16,12 +16,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.language;
+package se.uu.ub.cora.alvin.tocorautils;
 
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.DbConfig;
 import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
 import se.uu.ub.cora.client.CoraClientConfig;
@@ -31,7 +29,7 @@ public class LanguageFromDbToCaraFactoryTest {
 	private CoraClientConfig coraClientConfig;
 	private DbConfig dbConfig;
 	private FromDbToCoraImp languageToCora;
-	private LanguageFromDbToCoraFactoryImp languageToCoraFactory = new LanguageFromDbToCoraFactoryImp();
+	private LanguageFromDbToCoraFactory languageToCoraFactory = new LanguageFromDbToCoraFactory();
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -52,33 +50,36 @@ public class LanguageFromDbToCaraFactoryTest {
 				.factorFromDbToCora(coraClientFactory, coraClientConfig, dbConfig);
 	}
 
-	@Test
-	public void testInitCreatedRecordReaderFactory() throws Exception {
-		// RecordReaderFactoryImp createdRecordReaderFactory = (RecordReaderFactoryImp)
-		// countryToCora
-		// .getRecordReaderFactory();
-		// assertTrue(createdRecordReaderFactory instanceof RecordReaderFactoryImp);
-		//
-		// SqlConnectionProvider connectionProvider = createdRecordReaderFactory
-		// .getConnectionProvider();
-		// assertTrue(connectionProvider instanceof ParameterConnectionProviderImp);
-		//
-		// Field declaredUrlField =
-		// connectionProvider.getClass().getDeclaredField("url");
-		// declaredUrlField.setAccessible(true);
-		// String setUrl = (String) declaredUrlField.get(connectionProvider);
-		// assertEquals(setUrl, "someDbUrl");
-		//
-		// Field declaredUserField =
-		// connectionProvider.getClass().getDeclaredField("user");
-		// declaredUserField.setAccessible(true);
-		// String userId = (String) declaredUserField.get(connectionProvider);
-		// assertEquals(userId, "someDbUserId");
-		//
-		// Field declaredPasswordField =
-		// connectionProvider.getClass().getDeclaredField("password");
-		// declaredPasswordField.setAccessible(true);
-		// String password = (String) declaredPasswordField.get(connectionProvider);
-		// assertEquals(password, "someDbPassword");
-	}
+	// @Test
+	// public void testInitFromDbToCoraConverter() throws Exception {
+	// FromDbToCoraConverter createdConverter =
+	// languageToCora.getFromDbToCoraConverter();
+	// assertTrue(createdConverter instanceof LanguageFromDbToCoraConverter);
+	//
+	// LanguageFromDbToCoraConverter languageConverter =
+	// (LanguageFromDbToCoraConverter) createdConverter;
+	//
+	// JsonBuilderFactory jsonBuilderFactory =
+	// languageConverter.getJsonBuilderFactory();
+	// assertTrue(jsonBuilderFactory instanceof OrgJsonBuilderFactoryAdapter);
+	// assertNotNull(jsonBuilderFactory);
+	// }
+	//
+	// @Test
+	// public void testInitListImporter() throws Exception {
+	// LanguageImporter importer = (LanguageImporter)
+	// languageToCora.getListImporter();
+	// assertTrue(importer instanceof LanguageImporter);
+	//
+	// CoraClient coraClient = importer.getCoraClient();
+	//
+	// CoraClientFactorySpy coraClientFactory = (CoraClientFactorySpy)
+	// languageToCoraFactory
+	// .getCoraClientFactory();
+	// assertTrue(coraClientFactory instanceof CoraClientFactorySpy);
+	//
+	// assertEquals(coraClient, coraClientFactory.factored);
+	// assertEquals(coraClientFactory.userId, coraClientConfig.userId);
+	// assertEquals(coraClientFactory.appToken, coraClientConfig.appToken);
+	// }
 }

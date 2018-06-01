@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
@@ -28,21 +29,50 @@ import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
 
-public abstract class FromDbToCoraFactoryImp {
+public abstract class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 
-	protected RecordReaderFactory createRecordReaderFactory(DbConfig dbConfig) {
+	protected CoraClientFactory coraClientFactory;
+
+	protected final RecordReaderFactory createRecordReaderFactory(DbConfig dbConfig) {
 		SqlConnectionProvider connectionProvider = ParameterConnectionProviderImp
 				.usingUriAndUserAndPassword(dbConfig.url, dbConfig.userId, dbConfig.password);
 		return new RecordReaderFactoryImp(connectionProvider);
 	}
 
-	protected JsonBuilderFactory createJsonBuilderFactory() {
+	protected final JsonBuilderFactory createJsonBuilderFactory() {
 		return new OrgJsonBuilderFactoryAdapter();
 	}
 
-	protected CoraClient createCoraClient(CoraClientFactory coraClientFactory,
+	protected final CoraClient createCoraClient(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig) {
 		return coraClientFactory.factor(coraClientConfig.userId, coraClientConfig.appToken);
+	}
+
+	@Override
+	public final FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
+			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
+		this.coraClientFactory = coraClientFactory;
+
+		RecordReaderFactory recordReaderFactory = createRecordReaderFactory(dbConfig);
+		JsonBuilderFactory jsonFactory = createJsonBuilderFactory();
+		FromDbToCoraConverter fromDbToCoraConverter = createConverter(jsonFactory);
+
+		CoraClient coraClient = createCoraClient(coraClientFactory, coraClientConfig);
+		Importer importer = createImporter(coraClient);
+
+		return FromDbToCoraImp.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+				recordReaderFactory, fromDbToCoraConverter, importer);
+	}
+
+	protected Importer createImporter(CoraClient coraClient) {
+		return CoraImporter.usingCoraClient(coraClient);
+	}
+
+	abstract FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory);
+
+	protected CoraClientFactory getCoraClientFactory() {
+		// needed for test
+		return coraClientFactory;
 	}
 
 }

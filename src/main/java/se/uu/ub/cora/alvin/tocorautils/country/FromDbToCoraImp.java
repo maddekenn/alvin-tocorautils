@@ -21,9 +21,11 @@ package se.uu.ub.cora.alvin.tocorautils.country;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
 import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.ListImporter;
+import se.uu.ub.cora.alvin.tocorautils.Importer;
 import se.uu.ub.cora.sqldatabase.RecordReader;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
@@ -31,16 +33,16 @@ public final class FromDbToCoraImp implements FromDbToCora {
 
 	private FromDbToCoraConverter fromDbToCoraConverter;
 	private RecordReaderFactory recordReaderFactory;
-	private ListImporter importer;
+	private Importer importer;
 
 	public static FromDbToCora usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
 			RecordReaderFactory recordReaderFactory, FromDbToCoraConverter fromDbToCoraConverter,
-			ListImporter importer) {
+			Importer importer) {
 		return new FromDbToCoraImp(recordReaderFactory, fromDbToCoraConverter, importer);
 	}
 
 	private FromDbToCoraImp(RecordReaderFactory recordReaderFactory,
-			FromDbToCoraConverter fromDbToCoraConverter, ListImporter importer) {
+			FromDbToCoraConverter fromDbToCoraConverter, Importer importer) {
 		this.recordReaderFactory = recordReaderFactory;
 		this.fromDbToCoraConverter = fromDbToCoraConverter;
 		this.importer = importer;
@@ -51,9 +53,9 @@ public final class FromDbToCoraImp implements FromDbToCora {
 		RecordReader recordReader = recordReaderFactory.factor();
 		List<Map<String, String>> readAllFromTable = recordReader.readAllFromTable(tableName);
 
-		List<Map<String, String>> convertedRows = fromDbToCoraConverter
+		List<List<CoraJsonRecord>> convertedRows2 = fromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(readAllFromTable);
-		return importer.createInCora(convertedRows);
+		return importer.createInCora(convertedRows2);
 	}
 
 	public RecordReaderFactory getRecordReaderFactory() {
@@ -66,7 +68,7 @@ public final class FromDbToCoraImp implements FromDbToCora {
 		return fromDbToCoraConverter;
 	}
 
-	public ListImporter getListImporter() {
+	public Importer getListImporter() {
 		// needed for test
 		return importer;
 	}

@@ -22,5 +22,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface FromDbToCoraConverter {
-	List<Map<String, String>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
+	List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import se.uu.ub.cora.alvin.tocorautils.DbConfig;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
 import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory;
 import se.uu.ub.cora.alvin.tocorautils.ImportResult;
 import se.uu.ub.cora.client.CoraClientConfig;
@@ -32,7 +33,6 @@ import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public final class AlvinCountryListImporter {
-
 	static String defaultFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.CountryFromDbToCoraFactory";
 	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
 	private FromDbToCoraFactory fromDbToCoraFactory = null;

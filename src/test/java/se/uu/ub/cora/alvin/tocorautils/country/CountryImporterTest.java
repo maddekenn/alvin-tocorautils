@@ -21,34 +21,33 @@ package se.uu.ub.cora.alvin.tocorautils.country;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.CoraImporter;
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.country.CountryImporter;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
 
 public class CountryImporterTest {
 
 	private CoraClientSpy coraClient;
-	private CountryImporter importer;
-	private List<Map<String, String>> listOfConvertedRows;
+	private CoraImporter importer;
+	private List<List<CoraJsonRecord>> listOfConvertedRows;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		coraClient = new CoraClientSpy();
-		importer = CountryImporter.usingCoraClient(coraClient);
+		importer = CoraImporter.usingCoraClient(coraClient);
 
 		listOfConvertedRows = new ArrayList<>();
 	}
 
 	@Test
 	public void testImport() {
-		createAndAddRowUsingSuffix("");
+		createAndAddRowUsingSuffix2("");
 
 		ImportResult importResult = importer.createInCora(listOfConvertedRows);
 		assertEquals(coraClient.createdRecordTypes.size(), 3);
@@ -61,8 +60,8 @@ public class CountryImporterTest {
 
 	@Test
 	public void testImportTwoRows() {
-		createAndAddRowUsingSuffix("");
-		createAndAddRowUsingSuffix("2");
+		createAndAddRowUsingSuffix2("");
+		createAndAddRowUsingSuffix2("2");
 
 		ImportResult importResult = importer.createInCora(listOfConvertedRows);
 		assertEquals(coraClient.createdRecordTypes.size(), 6);
@@ -75,9 +74,9 @@ public class CountryImporterTest {
 	@Test
 	public void testFailedImport() throws Exception {
 		coraClient = new CoraClientSpy();
-		importer = CountryImporter.usingCoraClient(coraClient);
+		importer = CoraImporter.usingCoraClient(coraClient);
 
-		createAndAddRowUsingSuffix("FAIL");
+		createAndAddRowUsingSuffix2("FAIL");
 
 		ImportResult importResult = importer.createInCora(listOfConvertedRows);
 
@@ -95,20 +94,23 @@ public class CountryImporterTest {
 	@Test
 	public void testFailedSomeImport() throws Exception {
 		coraClient = new CoraClientSpy();
-		importer = CountryImporter.usingCoraClient(coraClient);
+		importer = CoraImporter.usingCoraClient(coraClient);
 
-		createAndAddRowUsingSuffix("");
+		createAndAddRowUsingSuffix2("");
 
-		Map<String, String> convertedRow = new HashMap<>();
-		listOfConvertedRows.add(convertedRow);
-		String jsonText = "json text" + "FAIL";
-		convertedRow.put("text", jsonText);
-		String jsonDefText = "json def text" + "2";
-		convertedRow.put("defText", jsonDefText);
-		String jsonItem = "json item" + "FAIL";
-		convertedRow.put("countryCollectionItem", jsonItem);
+		List<CoraJsonRecord> convertedRow1 = new ArrayList<>();
+		listOfConvertedRows.add(convertedRow1);
 
-		createAndAddRowUsingSuffix("");
+		String jsonText1 = "json text" + "FAIL";
+		convertedRow1.add(CoraJsonRecord.withRecordTypeAndJson("coraText", jsonText1));
+
+		String jsonDefText1 = "json def text" + "2";
+		convertedRow1.add(CoraJsonRecord.withRecordTypeAndJson("coraText", jsonDefText1));
+
+		String jsonItem1 = "json item" + "FAIL";
+		convertedRow1.add(CoraJsonRecord.withRecordTypeAndJson("countryCollectionItem", jsonItem1));
+
+		createAndAddRowUsingSuffix2("");
 
 		ImportResult importResult = importer.createInCora(listOfConvertedRows);
 
@@ -134,14 +136,17 @@ public class CountryImporterTest {
 		assertEquals(coraClient.jsonStrings.get(2 + baseIndex), "json item" + suffix);
 	}
 
-	private void createAndAddRowUsingSuffix(String suffix) {
-		Map<String, String> convertedRow = new HashMap<>();
+	private void createAndAddRowUsingSuffix2(String suffix) {
+		List<CoraJsonRecord> convertedRow = new ArrayList<>();
 		listOfConvertedRows.add(convertedRow);
+
 		String jsonText = "json text" + suffix;
-		convertedRow.put("text", jsonText);
+		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", jsonText));
+
 		String jsonDefText = "json def text" + suffix;
-		convertedRow.put("defText", jsonDefText);
+		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", jsonDefText));
+
 		String jsonItem = "json item" + suffix;
-		convertedRow.put("countryCollectionItem", jsonItem);
+		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("countryCollectionItem", jsonItem));
 	}
 }
