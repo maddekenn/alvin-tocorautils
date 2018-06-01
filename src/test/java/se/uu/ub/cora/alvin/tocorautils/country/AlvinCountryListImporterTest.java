@@ -36,15 +36,30 @@ public class AlvinCountryListImporterTest {
 
 	@BeforeMethod
 	private void beforeMethod() {
-		AlvinCountryListImporter.setFromDbToCoraFactoryClassName(
-				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy");
 
 		args = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl", "baseUrl",
 				"dbUrl", "dbUser", "dbPassword" };
 	}
 
+	private void setTestFactoryClassName() {
+		AlvinCountryListImporter.setFromDbToCoraFactoryClassName(
+				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy");
+	}
+
+	@Test
+	public void testDefaultFactoryClassName() throws Exception {
+		assertEquals(AlvinCountryListImporter.defaultFactoryClassName,
+				"se.uu.ub.cora.alvin.tocorautils.CountryFromDbToCoraFactory");
+		// AlvinCountryListImporter.main(args);
+		// FromDbToCoraFactory fromDbToCoraFactory =
+		// AlvinCountryListImporter.getInstance();
+		// assertTrue(fromDbToCoraFactory instanceof CountryFromDbToCoraFactory);
+
+	}
+
 	@Test
 	public void testMainFactorsCorrectly() throws Exception {
+		setTestFactoryClassName();
 		AlvinCountryListImporter.main(args);
 		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
 				.getInstance();
@@ -70,6 +85,7 @@ public class AlvinCountryListImporterTest {
 
 	@Test
 	public void testCallingImportCountries() throws Exception {
+		setTestFactoryClassName();
 		AlvinCountryListImporter.main(args);
 		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
 				.getInstance();

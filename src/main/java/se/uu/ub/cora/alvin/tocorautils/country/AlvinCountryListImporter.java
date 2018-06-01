@@ -33,7 +33,7 @@ import se.uu.ub.cora.client.CoraClientFactoryImp;
 
 public final class AlvinCountryListImporter {
 
-	private static String defaultFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryImp";
+	static String defaultFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.CountryFromDbToCoraFactory";
 	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
 	private FromDbToCoraFactory fromDbToCoraFactory = null;
 
@@ -126,5 +126,4 @@ public final class AlvinCountryListImporter {
 		}
 		return stringJoiner;
 	}
-
 }
