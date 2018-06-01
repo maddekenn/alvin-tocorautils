@@ -16,10 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import java.util.List;
+import java.util.Map;
 
-public interface Importer {
-	ImportResult createInCora(List<List<CoraJsonRecord>> listOfConvertedRows);
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
+
+public interface FromDbToCoraConverter {
+	List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
 }

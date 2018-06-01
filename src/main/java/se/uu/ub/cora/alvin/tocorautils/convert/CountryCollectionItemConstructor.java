@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import java.util.Map;
 

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 
 public class FromDbToCoraConverterSpy implements FromDbToCoraConverter {
 

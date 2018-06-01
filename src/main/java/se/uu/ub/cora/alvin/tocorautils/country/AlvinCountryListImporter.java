@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 import se.uu.ub.cora.alvin.tocorautils.DbConfig;
 import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
 import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory;
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;

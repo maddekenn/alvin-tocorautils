@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.Importer;
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
+import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
 
 public class ListImporterSpy implements Importer {
 

@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
 public class LanguageFromDbToCoraFactory extends FromDbToCoraFactoryImp {

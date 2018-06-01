@@ -18,6 +18,8 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
+
 public interface FromDbToCora {
 
 	ImportResult importFromTable(String tableName);

@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils.importing;
 
 import static org.testng.Assert.assertEquals;
 
@@ -26,12 +26,11 @@ import java.util.List;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraImporter;
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
+import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 
-public class CountryImporterTest {
+public class CoraImporterTest {
 
 	private CoraClientSpy coraClient;
 	private CoraImporter importer;

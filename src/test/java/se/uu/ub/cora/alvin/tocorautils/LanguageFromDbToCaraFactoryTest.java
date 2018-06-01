@@ -20,7 +20,6 @@ package se.uu.ub.cora.alvin.tocorautils;
 
 import org.testng.annotations.BeforeMethod;
 
-import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;

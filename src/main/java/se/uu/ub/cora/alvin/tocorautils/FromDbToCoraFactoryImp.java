@@ -18,7 +18,9 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
+import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;

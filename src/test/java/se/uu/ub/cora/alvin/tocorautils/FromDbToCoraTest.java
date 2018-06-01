@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils;
 
 import static org.testng.Assert.assertEquals;
 
@@ -25,11 +25,12 @@ import javax.naming.NamingException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraImp;
 import se.uu.ub.cora.alvin.tocorautils.doubles.FromDbToCoraConverterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.ListImporterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderFactorySpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderSpy;
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
 
 public class FromDbToCoraTest {
 

@@ -16,16 +16,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils;
 
 import java.util.List;
 import java.util.Map;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraConverter;
-import se.uu.ub.cora.alvin.tocorautils.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.Importer;
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
+import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
 import se.uu.ub.cora.sqldatabase.RecordReader;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 

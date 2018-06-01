@@ -16,11 +16,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.importing;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public interface FromDbToCoraConverter {
-	List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
+public class ImportResult {
+
+	public int noOfImportedOk = 0;
+	public List<String> listOfFails = new ArrayList<>();
+
 }

@@ -27,9 +27,10 @@ import java.lang.reflect.Field;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraConverter;
-import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
+import se.uu.ub.cora.alvin.tocorautils.convert.CountryFromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
+import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
