@@ -16,28 +16,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.language;
 
+import se.uu.ub.cora.alvin.tocorautils.DbConfig;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryImp;
 import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCora;
-import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraSpy;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 
-public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
-
-	public String coraClientFactoryClassName;
-	public CoraClientConfig coraClientConfig;
-	public DbConfig dbConfig;
-	public CountryFromDbToCoraSpy factored;
-	public CoraClientFactory coraClientFactory;
+public class LanguageFromDbToCoraFactoryImp extends FromDbToCoraFactoryImp
+		implements FromDbToCoraFactory {
 
 	@Override
 	public FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		this.coraClientFactory = coraClientFactory;
-		this.coraClientConfig = coraClientConfig;
-		this.dbConfig = dbConfig;
-		factored = new CountryFromDbToCoraSpy();
-		return factored;
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }

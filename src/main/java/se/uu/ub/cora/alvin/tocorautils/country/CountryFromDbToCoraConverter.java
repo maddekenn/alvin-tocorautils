@@ -16,13 +16,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraConverter;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
@@ -102,7 +103,7 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 		return itemConstructor.convert(rowFromDb);
 	}
 
-	JsonBuilderFactory getJsonBuilderFactory() {
+	public JsonBuilderFactory getJsonBuilderFactory() {
 		// needed for tests
 		return jsonFactory;
 	}

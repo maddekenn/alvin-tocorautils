@@ -16,11 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
 import java.util.List;
 import java.util.Map;
 
+import se.uu.ub.cora.alvin.tocorautils.ImportResult;
+import se.uu.ub.cora.alvin.tocorautils.ListImporter;
 import se.uu.ub.cora.client.CoraClient;
 
 public final class CountryImporter implements ListImporter {
@@ -75,7 +77,7 @@ public final class CountryImporter implements ListImporter {
 		importResult.listOfFails.add(message);
 	}
 
-	CoraClient getCoraClient() {
+	public CoraClient getCoraClient() {
 		// needed for test
 		return coraClient;
 	}

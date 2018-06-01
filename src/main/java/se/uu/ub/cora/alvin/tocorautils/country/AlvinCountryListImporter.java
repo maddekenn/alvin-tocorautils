@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+import se.uu.ub.cora.alvin.tocorautils.DbConfig;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory;
+import se.uu.ub.cora.alvin.tocorautils.ImportResult;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
@@ -49,7 +52,7 @@ public final class AlvinCountryListImporter {
 	private AlvinCountryListImporter(String[] args) {
 		enableAccessToCurrentInstanceForTesting();
 		tryToCreateFromDbToCoraFactory();
-		CountryFromDbToCora countryFromDbToCora = createFromDbToCora(args);
+		FromDbToCora countryFromDbToCora = createFromDbToCora(args);
 		importCountriesUsing(countryFromDbToCora);
 	}
 
@@ -72,7 +75,7 @@ public final class AlvinCountryListImporter {
 		return (FromDbToCoraFactory) constructor.newInstance();
 	}
 
-	private CountryFromDbToCora createFromDbToCora(String[] args) {
+	private FromDbToCora createFromDbToCora(String[] args) {
 		CoraClientConfig coraClientConfig = createCoraClientConfig(args);
 		DbConfig dbConfig = createDbConfig(args);
 
@@ -80,7 +83,7 @@ public final class AlvinCountryListImporter {
 				.usingAppTokenVerifierUrlAndBaseUrl(coraClientConfig.appTokenVerifierUrl,
 						coraClientConfig.coraUrl);
 
-		return fromDbToCoraFactory.factorForCountryItems(coraClientFactory, coraClientConfig,
+		return fromDbToCoraFactory.factorFromDbToCora(coraClientFactory, coraClientConfig,
 				dbConfig);
 	}
 
@@ -99,8 +102,9 @@ public final class AlvinCountryListImporter {
 		return new DbConfig(dbUserId, dbPassword, dbUrl);
 	}
 
-	private void importCountriesUsing(CountryFromDbToCora countryFromDbToCora) {
-		ImportResult importResult = countryFromDbToCora.importCountries();
+	private void importCountriesUsing(FromDbToCora countryFromDbToCora) {
+		String tableName = "completeCountry";
+		ImportResult importResult = countryFromDbToCora.importFromTable(tableName);
 		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 

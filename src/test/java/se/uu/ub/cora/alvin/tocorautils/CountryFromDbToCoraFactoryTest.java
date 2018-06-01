@@ -27,6 +27,9 @@ import java.lang.reflect.Field;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCoraImp;
+import se.uu.ub.cora.alvin.tocorautils.country.CountryImporter;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
@@ -37,10 +40,10 @@ import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
 
-public class FromDbToCoraFactoryTest {
+public class CountryFromDbToCoraFactoryTest {
 
-	private CountryFromDbToCoraImp countryToCora;
-	private FromDbToCoraFactoryImp countryToCoraFactory = new FromDbToCoraFactoryImp();
+	private FromDbToCoraImp countryToCora;
+	private CountryFromDbToCoraFactory countryToCoraFactory = new CountryFromDbToCoraFactory();
 	private CoraClientConfig coraClientConfig;
 	private DbConfig dbConfig;
 
@@ -59,8 +62,8 @@ public class FromDbToCoraFactoryTest {
 		dbConfig = new DbConfig(dbUserId, password, url);
 
 		CoraClientFactory coraClientFactory = new CoraClientFactorySpy();
-		countryToCora = (CountryFromDbToCoraImp) countryToCoraFactory
-				.factorForCountryItems(coraClientFactory, coraClientConfig, dbConfig);
+		countryToCora = (FromDbToCoraImp) countryToCoraFactory
+				.factorFromDbToCora(coraClientFactory, coraClientConfig, dbConfig);
 	}
 
 	@Test

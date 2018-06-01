@@ -18,6 +18,8 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
+import se.uu.ub.cora.alvin.tocorautils.country.FromDbToCora;
+import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraSpy;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 
@@ -30,7 +32,7 @@ public class FromDbToCoraFactoryReturningErrorsSpy implements FromDbToCoraFactor
 	public CoraClientFactory coraClientFactory;
 
 	@Override
-	public CountryFromDbToCora factorForCountryItems(CoraClientFactory coraClientFactory,
+	public FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
 			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
 		this.coraClientFactory = coraClientFactory;
 		this.coraClientConfig = coraClientConfig;

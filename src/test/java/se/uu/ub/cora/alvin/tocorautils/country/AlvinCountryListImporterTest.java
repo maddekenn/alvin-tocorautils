@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -25,6 +25,8 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.DbConfig;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
@@ -74,6 +76,7 @@ public class AlvinCountryListImporterTest {
 		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
 
 		assertTrue(countryFromDbToCoraSpy.importCountriesHasBeenCalled);
+		assertEquals(countryFromDbToCoraSpy.usedTableName, "completeCountry");
 	}
 
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "failed during import in CountryFromDbToCoraSpy\n"

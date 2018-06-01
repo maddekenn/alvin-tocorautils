@@ -16,17 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
-public class CountryFromDbToCoraSpy implements CountryFromDbToCora {
+import se.uu.ub.cora.alvin.tocorautils.ImportResult;
+
+public class CountryFromDbToCoraSpy implements FromDbToCora {
 
 	public boolean importCountriesHasBeenCalled = false;
 	public boolean returnErrors = false;
+	public String usedTableName;
 
 	@Override
-	public ImportResult importCountries() {
+	public ImportResult importFromTable(String tableName) {
 		importCountriesHasBeenCalled = true;
-		// TODO Auto-generated method stub
+		usedTableName = tableName;
 		ImportResult result = new ImportResult();
 		if (returnErrors) {
 			result.listOfFails.add("failed during import in CountryFromDbToCoraSpy");

@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
 import static org.testng.Assert.assertEquals;
 
@@ -25,34 +25,35 @@ import javax.naming.NamingException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.ImportResult;
 import se.uu.ub.cora.alvin.tocorautils.doubles.FromDbToCoraConverterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.ListImporterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderFactorySpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderSpy;
 
-public class CountryToCoraTest {
+public class FromDbToCoraTest {
 
 	private FromDbToCoraConverterSpy toCoraConverter;
 	private RecordReaderFactorySpy recordReaderFactory;
 	private ListImporterSpy importer;
-	private CountryFromDbToCoraImp countryToCora;
+	private FromDbToCoraImp countryToCora;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		toCoraConverter = new FromDbToCoraConverterSpy();
 		recordReaderFactory = new RecordReaderFactorySpy();
 		importer = new ListImporterSpy();
-		countryToCora = (CountryFromDbToCoraImp) CountryFromDbToCoraImp
+		countryToCora = (FromDbToCoraImp) FromDbToCoraImp
 				.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(recordReaderFactory,
 						toCoraConverter, importer);
 	}
 
 	@Test
 	public void testCountryToCora() throws NamingException {
-		ImportResult importResult = countryToCora.importCountries();
+		ImportResult importResult = countryToCora.importFromTable("someTableName");
 
 		RecordReaderSpy factoredReader = recordReaderFactory.factored;
-		assertEquals(factoredReader.usedTableName, "completeCountry");
+		assertEquals(factoredReader.usedTableName, "someTableName");
 
 		assertEquals(factoredReader.returnedList, toCoraConverter.rowsFromDb);
 		assertEquals(toCoraConverter.returnedList, importer.convertedRows);
