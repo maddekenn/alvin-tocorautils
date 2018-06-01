@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.country;
+package se.uu.ub.cora.alvin.tocorautils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -24,45 +24,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import se.uu.ub.cora.alvin.tocorautils.DbConfig;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactory;
 import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
-public final class AlvinCountryListImporter {
-	static String defaultFactoryClassName = "se.uu.ub.cora.alvin.tocorautils.CountryFromDbToCoraFactory";
-	private static List<AlvinCountryListImporter> instances = new ArrayList<>();
+public final class AlvinFromDbImporter {
+	private static List<AlvinFromDbImporter> instances = new ArrayList<>();
 	private FromDbToCoraFactory fromDbToCoraFactory = null;
-
-	public static void setFromDbToCoraFactoryClassName(String className) {
-		AlvinCountryListImporter.defaultFactoryClassName = className;
-	}
+	String tableName;
 
 	public static FromDbToCoraFactory getInstance() {
 		return instances.get(0).fromDbToCoraFactory;
 	}
 
 	public static void main(String[] args) {
-		new AlvinCountryListImporter(args);
+		new AlvinFromDbImporter(args);
 	}
 
-	private AlvinCountryListImporter(String[] args) {
+	private AlvinFromDbImporter(String[] args) {
+		tableName = args[7];
+		importFromDbToCora(args);
+	}
+
+	private void importFromDbToCora(String[] args) {
 		enableAccessToCurrentInstanceForTesting();
-		tryToCreateFromDbToCoraFactory();
-		FromDbToCora countryFromDbToCora = createFromDbToCora(args);
-		importCountriesUsing(countryFromDbToCora);
+		tryToCreateFromDbToCoraFactory(args[8]);
+		FromDbToCora fromDbToCora = createFromDbToCora(args);
+		importRowsUsing(fromDbToCora);
 	}
 
 	private void enableAccessToCurrentInstanceForTesting() {
 		instances.add(this);
 	}
 
-	private void tryToCreateFromDbToCoraFactory() {
+	private void tryToCreateFromDbToCoraFactory(String fromDbToCoraFactoryClassName) {
 		try {
-			fromDbToCoraFactory = createFromDbToCoraFactory(defaultFactoryClassName);
+			fromDbToCoraFactory = createFromDbToCoraFactory(fromDbToCoraFactoryClassName);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -102,9 +100,8 @@ public final class AlvinCountryListImporter {
 		return new DbConfig(dbUserId, dbPassword, dbUrl);
 	}
 
-	private void importCountriesUsing(FromDbToCora countryFromDbToCora) {
-		String tableName = "completeCountry";
-		ImportResult importResult = countryFromDbToCora.importFromTable(tableName);
+	private void importRowsUsing(FromDbToCora fromDbToCora) {
+		ImportResult importResult = fromDbToCora.importFromTable(tableName);
 		throwErrorWithFailMessageIfFailsDuringImport(importResult);
 	}
 
