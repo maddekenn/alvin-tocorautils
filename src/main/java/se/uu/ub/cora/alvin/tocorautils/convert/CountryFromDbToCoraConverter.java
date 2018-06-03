@@ -52,7 +52,7 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 	}
 
 	private ClientDataGroup getConstructedCountryItemToCreate(Map<String, String> rowFromDb) {
-		CountryCollectionItemConstructor itemConstructor = new CountryCollectionItemConstructor();
+		CollectionItemConstructor itemConstructor = new CountryCollectionItemConstructor();
 		return itemConstructor.convert(rowFromDb);
 	}
 
