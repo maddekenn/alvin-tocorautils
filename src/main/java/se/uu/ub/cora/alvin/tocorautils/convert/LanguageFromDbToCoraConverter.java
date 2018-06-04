@@ -124,4 +124,8 @@ public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 		CollectionItemConstructor itemConstructor = new LanguageCollectionItemConstructor();
 		return itemConstructor.convert(rowFromDb);
 	}
+
+	public JsonBuilderFactory getJsonBuilderFactory() {
+		return jsonFactory;
+	}
 }

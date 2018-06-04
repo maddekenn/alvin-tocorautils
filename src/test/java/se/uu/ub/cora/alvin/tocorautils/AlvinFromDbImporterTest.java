@@ -37,9 +37,16 @@ public class AlvinFromDbImporterTest {
 	private void beforeMethod() {
 
 		args = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl", "baseUrl",
-				"dbUrl", "dbUser", "dbPassword", "tableName",
+				"dbUser", "dbPassword", "dbUrl", "tableName",
 				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy" };
 	}
+
+	/**
+	 * create view completelanguage as select l.alpha3code, l.alpha2code,
+	 * l.defaultname as "svText", ll.name as "enText" from language l left join
+	 * language_localisednames ll on l.alpha3code=ll.language_alpha3code where
+	 * l.alpha3code='9ft';
+	 */
 
 	@Test
 	public void testMainFactorsCorrectly() throws Exception {
