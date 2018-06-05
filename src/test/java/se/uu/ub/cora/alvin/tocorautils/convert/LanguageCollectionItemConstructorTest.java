@@ -31,12 +31,14 @@ import se.uu.ub.cora.clientdata.ClientDataAttribute;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class LanguageCollectionItemConstructorTest {
+	private static final String ALPHA2_ATTRIBUTE = "iso639Alpha2";
+	private static final String ALPHA3_ATTRIBUTE = "iso639Alpha3";
 	private Map<String, String> rowFromDb;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		rowFromDb = new HashMap<>();
-		rowFromDb.put("alpha3code", "SWE");
+		rowFromDb.put("alpha3code", "swe");
 	}
 
 	@Test
@@ -50,7 +52,7 @@ public class LanguageCollectionItemConstructorTest {
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "sweLanguageItem");
 		assertCorrectDataDivider(recordInfo);
 
-		assertEquals(langaugeItem.getFirstAtomicValueWithNameInData("nameInData"), "SWE");
+		assertEquals(langaugeItem.getFirstAtomicValueWithNameInData("nameInData"), "swe");
 	}
 
 	private void assertCorrectDataDivider(ClientDataGroup recordInfo) {
@@ -67,7 +69,7 @@ public class LanguageCollectionItemConstructorTest {
 		ClientDataGroup languageItem = languageItemConstructor.convert(rowFromDb);
 
 		ClientDataGroup extraData = languageItem.getFirstGroupWithNameInData("extraData");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA3_ATTRIBUTE, "swe");
 		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 1);
 	}
 
@@ -83,13 +85,13 @@ public class LanguageCollectionItemConstructorTest {
 
 	@Test
 	public void testConvertLanguageExtraDataAllValues() {
-		rowFromDb.put("alpha2code", "SW");
+		rowFromDb.put("alpha2code", "sw");
 		CollectionItemConstructor languageItemConstructor = new LanguageCollectionItemConstructor();
 		ClientDataGroup languageItem = languageItemConstructor.convert(rowFromDb);
 
 		ClientDataGroup extraData = languageItem.getFirstGroupWithNameInData("extraData");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha2", "SW");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA3_ATTRIBUTE, "swe");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA2_ATTRIBUTE, "sw");
 		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 2);
 	}
 
@@ -100,7 +102,7 @@ public class LanguageCollectionItemConstructorTest {
 		ClientDataGroup languageItem = languageItemConstructor.convert(rowFromDb);
 
 		ClientDataGroup extraData = languageItem.getFirstGroupWithNameInData("extraData");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA3_ATTRIBUTE, "swe");
 		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 1);
 	}
 
@@ -111,20 +113,20 @@ public class LanguageCollectionItemConstructorTest {
 		ClientDataGroup languageItem = languageItemConstructor.convert(rowFromDb);
 
 		ClientDataGroup extraData = languageItem.getFirstGroupWithNameInData("extraData");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA3_ATTRIBUTE, "swe");
 		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 1);
 	}
 
 	@Test
 	public void testConvertLanguageExtraDataAllValuesTrailingWhitespaces() {
-		rowFromDb.put("alpha3code", " SWE ");
-		rowFromDb.put("alpha2code", " SE ");
+		rowFromDb.put("alpha3code", " swe ");
+		rowFromDb.put("alpha2code", " sw ");
 		CollectionItemConstructor languageItemConstructor = new LanguageCollectionItemConstructor();
 		ClientDataGroup languageItem = languageItemConstructor.convert(rowFromDb);
 
 		ClientDataGroup extraData = languageItem.getFirstGroupWithNameInData("extraData");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha3", "SWE");
-		assertCorrectExtraDataPartGroup(extraData, "iso31661Alpha2", "SE");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA3_ATTRIBUTE, "swe");
+		assertCorrectExtraDataPartGroup(extraData, ALPHA2_ATTRIBUTE, "sw");
 		assertEquals(extraData.getAllGroupsWithNameInData("extraDataPart").size(), 2);
 	}
 }

@@ -72,7 +72,7 @@ public class LanguageFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
 		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 		assertEquals(row.size(), 3);
 	}
 
@@ -96,7 +96,7 @@ public class LanguageFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
 		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 		assertEquals(row.size(), 3);
 	}
 
@@ -120,7 +120,7 @@ public class LanguageFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
 		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 		assertEquals(row.size(), 3);
 	}
 
@@ -143,7 +143,7 @@ public class LanguageFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
 		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 
 	}
 
@@ -172,7 +172,7 @@ public class LanguageFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
 		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 
 		List<CoraJsonRecord> row2 = convertedRows.get(1);
 		CoraJsonRecord coraJsonRecordText2 = row2.get(0);
@@ -188,7 +188,7 @@ public class LanguageFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonRecordItem2 = row2.get(2);
 		assertEquals(coraJsonRecordItem2.recordType, "languageCollectionItem");
 		assertEquals(coraJsonRecordItem2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"norLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"NOR\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"NOR\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"norLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"NOR\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"NOR\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 
 	}
 }

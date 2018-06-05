@@ -38,10 +38,10 @@ public class LanguageCollectionItemConstructor extends CollectionItemConstructor
 	@Override
 	protected void addExtraData(String value, ClientDataGroup item) {
 		ClientDataGroup extraData = ClientDataGroup.withNameInData("extraData");
-		ClientDataGroup iso3ExtraDataPart = createExtraDataPartWithAttributeAndValue(
-				"iso31661Alpha3", value);
+		ClientDataGroup iso3ExtraDataPart = createExtraDataPartWithAttributeAndValue("iso639Alpha3",
+				value);
 		extraData.addChild(iso3ExtraDataPart);
-		possiblyAddExtraDataPartWithKeyAndAttribute("alpha2code", "iso31661Alpha2", extraData);
+		possiblyAddExtraDataPartWithKeyAndAttribute("alpha2code", "iso639Alpha2", extraData);
 		item.addChild(extraData);
 
 	}
