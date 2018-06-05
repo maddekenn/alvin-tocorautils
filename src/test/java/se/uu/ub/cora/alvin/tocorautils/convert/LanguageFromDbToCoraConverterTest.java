@@ -58,7 +58,7 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertedRows.size(), 1);
+		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
@@ -74,6 +74,12 @@ public class LanguageFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordItem.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SWE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SWE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
 		assertEquals(row.size(), 3);
+
+		List<CoraJsonRecord> row3 = convertedRows.get(1);
+		CoraJsonRecord coraJsonItemCollection = row3.get(0);
+		assertEquals(coraJsonItemCollection.recordType, "metadataItemCollection");
+		// TODO: continue here
+
 	}
 
 	@Test
@@ -82,7 +88,7 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertedRows.size(), 1);
+		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
@@ -106,7 +112,7 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertedRows.size(), 1);
+		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
@@ -130,7 +136,7 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertedRows.size(), 1);
+		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
@@ -157,7 +163,7 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(convertedRows.size(), 2);
+		assertEquals(convertedRows.size(), 3);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");

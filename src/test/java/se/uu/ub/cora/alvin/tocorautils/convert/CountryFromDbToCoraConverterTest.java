@@ -28,7 +28,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.alvin.tocorautils.convert.CountryFromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
@@ -75,6 +74,7 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
 		assertEquals(coraJsonRecordItem.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+
 	}
 
 	@Test
@@ -119,6 +119,5 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordItem2.recordType, "countryCollectionItem");
 		assertEquals(coraJsonRecordItem2.json,
 				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"NO\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"NO\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
-
 	}
 }

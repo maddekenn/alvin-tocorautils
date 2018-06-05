@@ -25,11 +25,13 @@ import java.util.Map;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
+import se.uu.ub.cora.clientdata.constructor.ItemCollectionConstructor;
 import se.uu.ub.cora.clientdata.constructor.TextConstructor;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
 public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
+	private static final String DATA_DIVIDER = "bibsys";
 	private static final String LANGUAGE_COLLECTION_ITEM = "languageCollectionItem";
 	private JsonBuilderFactory jsonFactory;
 
@@ -49,7 +51,31 @@ public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 		for (Map<String, String> rowFromDb : rowsFromDb) {
 			convertToJsonFromRow(convertedRows, rowFromDb);
 		}
+
+		List<CoraJsonRecord> itemCollectionHolderList = createItemCollectionForCreatedCollectionItems();
+		convertedRows.add(itemCollectionHolderList);
+
 		return convertedRows;
+	}
+
+	protected List<CoraJsonRecord> createItemCollectionForCreatedCollectionItems() {
+		List<CoraJsonRecord> itemCollectionHolderList = new ArrayList<>();
+		String itemCollectionJson = createItemCollectionAsJson();
+
+		CoraJsonRecord coraRecordJsonItemCollection = CoraJsonRecord
+				.withRecordTypeAndJson("metadataItemCollection", itemCollectionJson);
+		itemCollectionHolderList.add(coraRecordJsonItemCollection);
+		return itemCollectionHolderList;
+	}
+
+	protected String createItemCollectionAsJson() {
+		String itemCollectionJson = null;
+		ItemCollectionConstructor itemCollectionConstructor = ItemCollectionConstructor
+				.withDataDivider(DATA_DIVIDER);
+		// TODO: continue here
+		// itemCollectionConstructor.constructUsingIdAndNameInDataAndCollectionItems(id,
+		// nameInData, collectionItems)
+		return itemCollectionJson;
 	}
 
 	private void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
@@ -95,7 +121,7 @@ public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 
 	private ClientDataGroup constructText(String textId, String svText,
 			Map<String, String> alternativeTexts) {
-		TextConstructor textConstructor = new TextConstructor("bibsys");
+		TextConstructor textConstructor = new TextConstructor(DATA_DIVIDER);
 		return textConstructor.constructTextUsingTextIdAndDefaultSvTextAndAlternativeTexts(textId,
 				svText, alternativeTexts);
 	}
