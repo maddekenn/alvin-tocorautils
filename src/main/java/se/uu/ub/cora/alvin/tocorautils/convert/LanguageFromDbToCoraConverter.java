@@ -31,7 +31,7 @@ import se.uu.ub.cora.clientdata.constructor.TextConstructor;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
-public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
+public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 	private static final String DATA_DIVIDER = "bibsys";
 	private static final String LANGUAGE_COLLECTION_ITEM = "languageCollectionItem";
 	private JsonBuilderFactory jsonFactory;
