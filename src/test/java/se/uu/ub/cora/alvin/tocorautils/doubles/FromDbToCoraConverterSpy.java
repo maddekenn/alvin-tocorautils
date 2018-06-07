@@ -19,28 +19,41 @@
 package se.uu.ub.cora.alvin.tocorautils.doubles;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 
 public class FromDbToCoraConverterSpy implements FromDbToCoraConverter {
 
 	public List<Map<String, String>> rowsFromDb;
 	public List<Map<String, String>> returnedList;
+	public List<List<CoraJsonRecord>> returnedList2;
+
+	// @Override
+	// public List<Map<String, String>> convertToJsonFromRowsFromDb(
+	// List<Map<String, String>> rowsFromDb) {
+	// this.rowsFromDb = rowsFromDb;
+	//
+	// returnedList = new ArrayList<>();
+	// Map<String, String> returnedMap = new HashMap<>();
+	// returnedMap.put("keyFromDbToCoraStorageSpy", "valueFromCoraStorageSpy");
+	// returnedList.add(returnedMap);
+	// return returnedList;
+	// }
 
 	@Override
-	public List<Map<String, String>> convertToJsonFromRowsFromDb(
+	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
 			List<Map<String, String>> rowsFromDb) {
 		this.rowsFromDb = rowsFromDb;
 
-		returnedList = new ArrayList<>();
-		Map<String, String> returnedMap = new HashMap<>();
-		returnedMap.put("keyFromDbToCoraStorageSpy", "valueFromCoraStorageSpy");
-		returnedList.add(returnedMap);
-		// TODO Auto-generated method stub
-		return returnedList;
+		returnedList2 = new ArrayList<>();
+		List<CoraJsonRecord> returnedInnerList = new ArrayList<>();
+		returnedInnerList.add(CoraJsonRecord.withRecordTypeAndJson(
+				"recordTypeFromDbToCoraConverterSpy", "jsonFromDbToCoraConverterSpy"));
+		returnedList2.add(returnedInnerList);
+		return returnedList2;
 	}
 
 }

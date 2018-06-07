@@ -16,16 +16,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import java.util.Map;
 
 import se.uu.ub.cora.clientdata.ClientDataAtomic;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
-public class CountryCollectionItemConstructor {
-
-	private Map<String, String> rowFromDb;
+public abstract class CollectionItemConstructor {
+	Map<String, String> rowFromDb;
 
 	public ClientDataGroup convert(Map<String, String> rowFromDb) {
 		this.rowFromDb = rowFromDb;
@@ -40,48 +39,38 @@ public class CountryCollectionItemConstructor {
 		return item;
 	}
 
-	private void addChildrenToClientDataGroup(ClientDataGroup item) {
-		String alpha2 = rowFromDb.get("alpha2code").trim();
-		addRecordInfo(alpha2, item);
-		addNameInData(alpha2, item);
-		addExtraData(alpha2, item);
+	void addChildrenToClientDataGroup(ClientDataGroup item) {
+		String id = getId();
+		addRecordInfo(id, item);
+		addNameInData(id, item);
+		addExtraData(id, item);
 	}
 
-	private void addRecordInfo(String alpha2code, ClientDataGroup item) {
+	protected abstract String getId();
+
+	void addRecordInfo(String id, ClientDataGroup item) {
 		ClientDataGroup recordInfo = ClientDataGroup.withNameInData("recordInfo");
-		addId(alpha2code, recordInfo);
+		addId(id, recordInfo);
 		addDataDivider(recordInfo);
 		item.addChild(recordInfo);
 	}
 
-	private void addId(String alpha2code, ClientDataGroup recordInfo) {
-		String id = alpha2code.toLowerCase() + "CountryItem";
-		recordInfo.addChild(ClientDataAtomic.withNameInDataAndValue("id", id));
-	}
+	protected abstract void addId(String id, ClientDataGroup recordInfo);
 
-	private void addDataDivider(ClientDataGroup recordInfo) {
+	protected void addDataDivider(ClientDataGroup recordInfo) {
 		ClientDataGroup dataDivider = ClientDataGroup.withNameInData("dataDivider");
 		dataDivider.addChild(ClientDataAtomic.withNameInDataAndValue("linkedRecordType", "system"));
 		dataDivider.addChild(ClientDataAtomic.withNameInDataAndValue("linkedRecordId", "bibsys"));
 		recordInfo.addChild(dataDivider);
 	}
 
-	private void addNameInData(String alpha2, ClientDataGroup item) {
-		item.addChild(ClientDataAtomic.withNameInDataAndValue("nameInData", alpha2));
+	protected void addNameInData(String nameInData, ClientDataGroup item) {
+		item.addChild(ClientDataAtomic.withNameInDataAndValue("nameInData", nameInData));
 	}
 
-	private void addExtraData(String value, ClientDataGroup item) {
-		ClientDataGroup extraData = ClientDataGroup.withNameInData("extraData");
-		ClientDataGroup iso2ExtraDataPart = createExtraDataPartWithAttributeAndValue(
-				"iso31661Alpha2", value);
-		extraData.addChild(iso2ExtraDataPart);
-		possiblyAddExtraDataPartWithKeyAndAttribute("alpha3code", "iso31661Alpha3", extraData);
-		possiblyAddExtraDataPartWithKeyAndAttribute("numericalcode", "iso31661Numeric", extraData);
-		possiblyAddExtraDataPartWithKeyAndAttribute("marccode", "marcCountryCode", extraData);
-		item.addChild(extraData);
-	}
+	protected abstract void addExtraData(String value, ClientDataGroup item);
 
-	private void possiblyAddExtraDataPartWithKeyAndAttribute(String key, String attribute,
+	protected void possiblyAddExtraDataPartWithKeyAndAttribute(String key, String attribute,
 			ClientDataGroup extraData) {
 		if (nonEmptyValueExistsForKey(key)) {
 			addExtraDataPartWithAttributeAndValue(key, attribute, extraData);
@@ -101,7 +90,7 @@ public class CountryCollectionItemConstructor {
 				&& !"".equals(rowFromDb.get(key));
 	}
 
-	private ClientDataGroup createExtraDataPartWithAttributeAndValue(String attribute,
+	protected ClientDataGroup createExtraDataPartWithAttributeAndValue(String attribute,
 			String value) {
 		ClientDataGroup extraDataPart = ClientDataGroup.withNameInData("extraDataPart");
 		extraDataPart.addAttributeByIdWithValue("type", attribute);

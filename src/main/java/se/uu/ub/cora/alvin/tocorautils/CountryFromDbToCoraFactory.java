@@ -18,25 +18,16 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraSpy;
-import se.uu.ub.cora.client.CoraClientConfig;
-import se.uu.ub.cora.client.CoraClientFactory;
+import se.uu.ub.cora.alvin.tocorautils.convert.CountryFromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
-public class FromDbToCoraFactorySpy implements FromDbToCoraFactory {
-
-	public String coraClientFactoryClassName;
-	public CoraClientConfig coraClientConfig;
-	public DbConfig dbConfig;
-	public CountryFromDbToCoraSpy factored;
-	public CoraClientFactory coraClientFactory;
+public class CountryFromDbToCoraFactory extends FromDbToCoraFactoryImp
+		implements FromDbToCoraFactory {
 
 	@Override
-	public FromDbToCora factorFromDbToCora(CoraClientFactory coraClientFactory,
-			CoraClientConfig coraClientConfig, DbConfig dbConfig) {
-		this.coraClientFactory = coraClientFactory;
-		this.coraClientConfig = coraClientConfig;
-		this.dbConfig = dbConfig;
-		factored = new CountryFromDbToCoraSpy();
-		return factored;
+	FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
+		return CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
 	}
+
 }

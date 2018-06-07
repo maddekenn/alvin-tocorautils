@@ -16,23 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
-public class CountryFromDbToCoraSpy implements CountryFromDbToCora {
+import java.util.List;
+import java.util.Map;
 
-	public boolean importCountriesHasBeenCalled = false;
-	public boolean returnErrors = false;
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 
-	@Override
-	public ImportResult importCountries() {
-		importCountriesHasBeenCalled = true;
-		// TODO Auto-generated method stub
-		ImportResult result = new ImportResult();
-		if (returnErrors) {
-			result.listOfFails.add("failed during import in CountryFromDbToCoraSpy");
-			result.listOfFails.add("failed again during import of CountryFromDbToCoraSpy");
-		}
-		return result;
-	}
-
+public interface FromDbToCoraConverter {
+	List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
 }

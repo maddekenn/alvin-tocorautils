@@ -21,50 +21,52 @@ package se.uu.ub.cora.alvin.tocorautils;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
+import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
 import se.uu.ub.cora.sqldatabase.RecordReader;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
 
-public final class CountryFromDbToCoraImp implements CountryFromDbToCora {
+public final class FromDbToCoraImp implements FromDbToCora {
 
 	private FromDbToCoraConverter fromDbToCoraConverter;
 	private RecordReaderFactory recordReaderFactory;
-	private ListImporter importer;
+	private Importer importer;
 
-	public static CountryFromDbToCora usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
+	public static FromDbToCora usingRecordReaderFactoryAndDbToCoraConverterAndImporter(
 			RecordReaderFactory recordReaderFactory, FromDbToCoraConverter fromDbToCoraConverter,
-			ListImporter importer) {
-		return new CountryFromDbToCoraImp(recordReaderFactory, fromDbToCoraConverter, importer);
+			Importer importer) {
+		return new FromDbToCoraImp(recordReaderFactory, fromDbToCoraConverter, importer);
 	}
 
-	private CountryFromDbToCoraImp(RecordReaderFactory recordReaderFactory,
-			FromDbToCoraConverter fromDbToCoraConverter, ListImporter importer) {
+	private FromDbToCoraImp(RecordReaderFactory recordReaderFactory,
+			FromDbToCoraConverter fromDbToCoraConverter, Importer importer) {
 		this.recordReaderFactory = recordReaderFactory;
 		this.fromDbToCoraConverter = fromDbToCoraConverter;
 		this.importer = importer;
 	}
 
 	@Override
-	public ImportResult importCountries() {
+	public ImportResult importFromTable(String tableName) {
 		RecordReader recordReader = recordReaderFactory.factor();
-		List<Map<String, String>> readAllFromTable = recordReader
-				.readAllFromTable("completeCountry");
+		List<Map<String, String>> readAllFromTable = recordReader.readAllFromTable(tableName);
 
-		List<Map<String, String>> convertedRows = fromDbToCoraConverter
+		List<List<CoraJsonRecord>> convertedRows2 = fromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(readAllFromTable);
-		return importer.createInCora(convertedRows);
+		return importer.createInCora(convertedRows2);
 	}
 
-	RecordReaderFactory getRecordReaderFactory() {
+	public RecordReaderFactory getRecordReaderFactory() {
 		// needed for test
 		return recordReaderFactory;
 	}
 
-	FromDbToCoraConverter getFromDbToCoraConverter() {
+	public FromDbToCoraConverter getFromDbToCoraConverter() {
 		// needed for test
 		return fromDbToCoraConverter;
 	}
 
-	ListImporter getListImporter() {
+	public Importer getListImporter() {
 		// needed for test
 		return importer;
 	}

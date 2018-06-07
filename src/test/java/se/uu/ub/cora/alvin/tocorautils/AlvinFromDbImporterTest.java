@@ -25,26 +25,33 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.country.CountryFromDbToCoraSpy;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
 
-public class AlvinCountryListImporterTest {
+public class AlvinFromDbImporterTest {
 
 	private String args[];
 
 	@BeforeMethod
 	private void beforeMethod() {
-		AlvinCountryListImporter.setFromDbToCoraFactoryClassName(
-				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy");
 
 		args = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl", "baseUrl",
-				"dbUrl", "dbUser", "dbPassword" };
+				"dbUser", "dbPassword", "dbUrl", "tableName",
+				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactorySpy" };
 	}
+
+	/**
+	 * create view completelanguage as select l.alpha3code, l.alpha2code,
+	 * l.defaultname as "svText", ll.name as "enText" from language l left join
+	 * language_localisednames ll on l.alpha3code=ll.language_alpha3code where
+	 * l.alpha3code='9ft';
+	 */
 
 	@Test
 	public void testMainFactorsCorrectly() throws Exception {
-		AlvinCountryListImporter.main(args);
-		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
+		AlvinFromDbImporter.main(args);
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinFromDbImporter
 				.getInstance();
 		assertTrue(fromDbToCoraFactory instanceof FromDbToCoraFactorySpy);
 
@@ -68,34 +75,33 @@ public class AlvinCountryListImporterTest {
 
 	@Test
 	public void testCallingImportCountries() throws Exception {
-		AlvinCountryListImporter.main(args);
-		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinCountryListImporter
+		AlvinFromDbImporter.main(args);
+		FromDbToCoraFactorySpy fromDbToCoraFactory = (FromDbToCoraFactorySpy) AlvinFromDbImporter
 				.getInstance();
 		CountryFromDbToCoraSpy countryFromDbToCoraSpy = fromDbToCoraFactory.factored;
 
 		assertTrue(countryFromDbToCoraSpy.importCountriesHasBeenCalled);
+		assertEquals(countryFromDbToCoraSpy.usedTableName, "tableName");
 	}
 
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "failed during import in CountryFromDbToCoraSpy\n"
 			+ "ERROR: failed again during import of CountryFromDbToCoraSpy")
 	public void testErrorsDuringImport() throws Exception {
-		AlvinCountryListImporter.setFromDbToCoraFactoryClassName(
-				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy");
 		String args[] = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl",
-				"baseUrl", "dbUrl", "dbUser", "dbPassword" };
+				"baseUrl", "dbUrl", "dbUser", "dbPassword", "tableName",
+				"se.uu.ub.cora.alvin.tocorautils.FromDbToCoraFactoryReturningErrorsSpy" };
 
-		AlvinCountryListImporter.main(args);
+		AlvinFromDbImporter.main(args);
 	}
 
 	@Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ""
 			+ "se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND")
 	public void testFactoryClassNotFound() throws Exception {
-		AlvinCountryListImporter
-				.setFromDbToCoraFactoryClassName("se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND");
 
 		String args[] = new String[] { "someUserId", "someAppToken", "appTokenVerifierUrl",
-				"baseUrl", "dbUrl", "dbUser", "dbPassword" };
+				"baseUrl", "dbUrl", "dbUser", "dbPassword", "tableName",
+				"se.uu.ub.cora.FromDbToCoraFactoryNOTFOUND" };
 
-		AlvinCountryListImporter.main(args);
+		AlvinFromDbImporter.main(args);
 	}
 }

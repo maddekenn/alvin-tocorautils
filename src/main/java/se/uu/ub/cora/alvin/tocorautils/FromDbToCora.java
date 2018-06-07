@@ -18,8 +18,10 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-public interface CountryFromDbToCora {
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
 
-	ImportResult importCountries();
+public interface FromDbToCora {
+
+	ImportResult importFromTable(String tableName);
 
 }

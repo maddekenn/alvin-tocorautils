@@ -18,9 +18,17 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import java.util.List;
-import java.util.Map;
+import static org.testng.Assert.assertEquals;
 
-public interface FromDbToCoraConverter {
-	List<Map<String, String>> convertToJsonFromRowsFromDb(List<Map<String, String>> rowsFromDb);
+import org.testng.annotations.Test;
+
+public class CoraJsonRecordTest {
+	@Test
+	public void testClass() throws Exception {
+		String recordType = "someRecordType";
+		String json = "json";
+		CoraJsonRecord coraJsonRecord = CoraJsonRecord.withRecordTypeAndJson(recordType, json);
+		assertEquals(coraJsonRecord.recordType, recordType);
+		assertEquals(coraJsonRecord.json, json);
+	}
 }

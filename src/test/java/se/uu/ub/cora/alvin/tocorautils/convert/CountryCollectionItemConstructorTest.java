@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils;
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
 
@@ -27,6 +27,7 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.convert.CountryCollectionItemConstructor;
 import se.uu.ub.cora.clientdata.ClientDataAttribute;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
@@ -42,7 +43,7 @@ public class CountryCollectionItemConstructorTest {
 
 	@Test
 	public void testConvertCountry() {
-		CountryCollectionItemConstructor countryItemCounstructor = new CountryCollectionItemConstructor();
+		CollectionItemConstructor countryItemCounstructor = new CountryCollectionItemConstructor();
 		ClientDataGroup countryItem = countryItemCounstructor.convert(rowFromDb);
 		assertEquals(countryItem.getNameInData(), "metadata");
 		assertEquals(countryItem.getAttributes().get("type"), "collectionItem");
@@ -64,7 +65,7 @@ public class CountryCollectionItemConstructorTest {
 
 	@Test
 	public void testConvertCountryExtraDataOnlyIso2() {
-		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
 		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
 
 		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
@@ -87,7 +88,7 @@ public class CountryCollectionItemConstructorTest {
 		rowFromDb.put("alpha3code", "SWE");
 		rowFromDb.put("numericalcode", "752");
 		rowFromDb.put("marccode", "sw");
-		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
 		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
 
 		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
@@ -103,7 +104,7 @@ public class CountryCollectionItemConstructorTest {
 		rowFromDb.put("alpha3code", null);
 		rowFromDb.put("numericalcode", null);
 		rowFromDb.put("marccode", null);
-		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
 		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
 
 		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
@@ -116,7 +117,7 @@ public class CountryCollectionItemConstructorTest {
 		rowFromDb.put("alpha3code", "");
 		rowFromDb.put("numericalcode", "");
 		rowFromDb.put("marccode", "");
-		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
 		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
 
 		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");
@@ -130,7 +131,7 @@ public class CountryCollectionItemConstructorTest {
 		rowFromDb.put("alpha3code", " SWE ");
 		rowFromDb.put("numericalcode", " 752 ");
 		rowFromDb.put("marccode", " sw ");
-		CountryCollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
 		ClientDataGroup countryItem = countryFromDbToCoraStorageConverter.convert(rowFromDb);
 
 		ClientDataGroup extraData = countryItem.getFirstGroupWithNameInData("extraData");

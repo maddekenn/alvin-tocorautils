@@ -25,37 +25,39 @@ import javax.naming.NamingException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraImp;
 import se.uu.ub.cora.alvin.tocorautils.doubles.FromDbToCoraConverterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.ListImporterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderFactorySpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderSpy;
+import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
 
-public class CountryToCoraTest {
+public class FromDbToCoraTest {
 
 	private FromDbToCoraConverterSpy toCoraConverter;
 	private RecordReaderFactorySpy recordReaderFactory;
 	private ListImporterSpy importer;
-	private CountryFromDbToCoraImp countryToCora;
+	private FromDbToCoraImp countryToCora;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		toCoraConverter = new FromDbToCoraConverterSpy();
 		recordReaderFactory = new RecordReaderFactorySpy();
 		importer = new ListImporterSpy();
-		countryToCora = (CountryFromDbToCoraImp) CountryFromDbToCoraImp
+		countryToCora = (FromDbToCoraImp) FromDbToCoraImp
 				.usingRecordReaderFactoryAndDbToCoraConverterAndImporter(recordReaderFactory,
 						toCoraConverter, importer);
 	}
 
 	@Test
 	public void testCountryToCora() throws NamingException {
-		ImportResult importResult = countryToCora.importCountries();
+		ImportResult importResult = countryToCora.importFromTable("someTableName");
 
 		RecordReaderSpy factoredReader = recordReaderFactory.factored;
-		assertEquals(factoredReader.usedTableName, "completeCountry");
+		assertEquals(factoredReader.usedTableName, "someTableName");
 
 		assertEquals(factoredReader.returnedList, toCoraConverter.rowsFromDb);
-		assertEquals(toCoraConverter.returnedList, importer.convertedRows);
+		assertEquals(toCoraConverter.returnedList2, importer.listOfConvertedRows);
 
 		assertEquals(importResult.listOfFails.get(0), "failure from ListImporterSpy");
 	}

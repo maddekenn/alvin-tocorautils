@@ -16,27 +16,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.doubles;
+package se.uu.ub.cora.alvin.tocorautils.country;
 
-import java.util.List;
-import java.util.Map;
-
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
+import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
 import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
 
-public class ListImporterSpy implements Importer {
+public class CountryFromDbToCoraSpy implements FromDbToCora {
 
-	public List<Map<String, String>> convertedRows;
-	public List<List<CoraJsonRecord>> listOfConvertedRows;
-	private ImportResult importResult;
+	public boolean importCountriesHasBeenCalled = false;
+	public boolean returnErrors = false;
+	public String usedTableName;
 
 	@Override
-	public ImportResult createInCora(List<List<CoraJsonRecord>> listOfConvertedRows) {
-		this.listOfConvertedRows = listOfConvertedRows;
-		importResult = new ImportResult();
-		importResult.listOfFails.add("failure from ListImporterSpy");
-		return importResult;
+	public ImportResult importFromTable(String tableName) {
+		importCountriesHasBeenCalled = true;
+		usedTableName = tableName;
+		ImportResult result = new ImportResult();
+		if (returnErrors) {
+			result.listOfFails.add("failed during import in CountryFromDbToCoraSpy");
+			result.listOfFails.add("failed again during import of CountryFromDbToCoraSpy");
+		}
+		return result;
 	}
 
 }
