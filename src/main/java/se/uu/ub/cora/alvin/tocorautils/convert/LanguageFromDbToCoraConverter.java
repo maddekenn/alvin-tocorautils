@@ -56,8 +56,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 		return convertedData;
 	}
 
-	protected List<List<CoraJsonRecord>> convertAllRowsToJson(
-			List<Map<String, String>> rowsFromDb) {
+	private List<List<CoraJsonRecord>> convertAllRowsToJson(List<Map<String, String>> rowsFromDb) {
 		List<List<CoraJsonRecord>> convertedData = new ArrayList<>();
 		for (Map<String, String> rowFromDb : rowsFromDb) {
 			convertedData.add(convertToJsonFromRow(rowFromDb));
@@ -73,11 +72,11 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 		return convertedRow;
 	}
 
-	protected CoraJsonRecord createTextAsJsonFromRow(Map<String, String> rowFromDb) {
+	private CoraJsonRecord createTextAsJsonFromRow(Map<String, String> rowFromDb) {
 		return constructTextAsJsonUsingRowAndTextType(rowFromDb, "Text");
 	}
 
-	protected CoraJsonRecord constructTextAsJsonUsingRowAndTextType(Map<String, String> rowFromDb,
+	private CoraJsonRecord constructTextAsJsonUsingRowAndTextType(Map<String, String> rowFromDb,
 			String type) {
 		String textId = constructTextIdUsingRowAndTextType(rowFromDb, type);
 		String textAsJson = createTextFromDbRowWithIdEndingAndTextKey(rowFromDb, textId);
@@ -125,7 +124,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 		return converter.toJson();
 	}
 
-	protected CoraJsonRecord createDefTextAsJsonFromRow(Map<String, String> rowFromDb) {
+	private CoraJsonRecord createDefTextAsJsonFromRow(Map<String, String> rowFromDb) {
 		return constructTextAsJsonUsingRowAndTextType(rowFromDb, "DefText");
 	}
 
@@ -145,7 +144,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 		return itemConstructor.convert(rowFromDb);
 	}
 
-	protected List<CoraJsonRecord> createItemCollectionForCreatedCollectionItems() {
+	private List<CoraJsonRecord> createItemCollectionForCreatedCollectionItems() {
 		List<CoraJsonRecord> itemCollectionHolderList = new ArrayList<>();
 		String itemCollectionJson = createItemCollectionAsJson();
 
@@ -155,7 +154,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 		return itemCollectionHolderList;
 	}
 
-	protected String createItemCollectionAsJson() {
+	private String createItemCollectionAsJson() {
 		ItemCollectionConstructor itemCollectionConstructor = ItemCollectionConstructor
 				.withDataDivider(DATA_DIVIDER);
 		ClientDataGroup itemCollectionDataGroup = createItemCollectionDataGroup(
@@ -166,7 +165,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 		return converter.toJson();
 	}
 
-	protected ClientDataGroup createItemCollectionDataGroup(
+	private ClientDataGroup createItemCollectionDataGroup(
 			ItemCollectionConstructor itemCollectionConstructor) {
 		return itemCollectionConstructor.constructUsingIdAndNameInDataAndCollectionItems(
 				"completeLanguageCollection", "language", collectionItems);
