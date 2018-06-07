@@ -25,6 +25,7 @@ import java.util.Map;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
+import se.uu.ub.cora.clientdata.RecordIdentifier;
 import se.uu.ub.cora.clientdata.constructor.ItemCollectionConstructor;
 import se.uu.ub.cora.clientdata.constructor.TextConstructor;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
@@ -34,6 +35,7 @@ public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 	private static final String DATA_DIVIDER = "bibsys";
 	private static final String LANGUAGE_COLLECTION_ITEM = "languageCollectionItem";
 	private JsonBuilderFactory jsonFactory;
+	private List<RecordIdentifier> collectionItems;
 
 	private LanguageFromDbToCoraConverter(JsonBuilderFactory jsonFactory) {
 		this.jsonFactory = jsonFactory;
@@ -46,59 +48,50 @@ public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 	@Override
 	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
 			List<Map<String, String>> rowsFromDb) {
-		List<List<CoraJsonRecord>> convertedRows = new ArrayList<>();
+		collectionItems = new ArrayList<>();
 
+		List<List<CoraJsonRecord>> convertedData = convertAllRowsToJson(rowsFromDb);
+
+		convertedData.add(createItemCollectionForCreatedCollectionItems());
+		return convertedData;
+	}
+
+	protected List<List<CoraJsonRecord>> convertAllRowsToJson(
+			List<Map<String, String>> rowsFromDb) {
+		List<List<CoraJsonRecord>> convertedData = new ArrayList<>();
 		for (Map<String, String> rowFromDb : rowsFromDb) {
-			convertToJsonFromRow(convertedRows, rowFromDb);
+			convertedData.add(convertToJsonFromRow(rowFromDb));
 		}
-
-		List<CoraJsonRecord> itemCollectionHolderList = createItemCollectionForCreatedCollectionItems();
-		convertedRows.add(itemCollectionHolderList);
-
-		return convertedRows;
+		return convertedData;
 	}
 
-	protected List<CoraJsonRecord> createItemCollectionForCreatedCollectionItems() {
-		List<CoraJsonRecord> itemCollectionHolderList = new ArrayList<>();
-		String itemCollectionJson = createItemCollectionAsJson();
-
-		CoraJsonRecord coraRecordJsonItemCollection = CoraJsonRecord
-				.withRecordTypeAndJson("metadataItemCollection", itemCollectionJson);
-		itemCollectionHolderList.add(coraRecordJsonItemCollection);
-		return itemCollectionHolderList;
-	}
-
-	protected String createItemCollectionAsJson() {
-		String itemCollectionJson = null;
-		ItemCollectionConstructor itemCollectionConstructor = ItemCollectionConstructor
-				.withDataDivider(DATA_DIVIDER);
-		// TODO: continue here
-		// itemCollectionConstructor.constructUsingIdAndNameInDataAndCollectionItems(id,
-		// nameInData, collectionItems)
-		return itemCollectionJson;
-	}
-
-	private void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
-			Map<String, String> rowFromDb) {
+	private List<CoraJsonRecord> convertToJsonFromRow(Map<String, String> rowFromDb) {
 		List<CoraJsonRecord> convertedRow = new ArrayList<>();
-		convertTexts(rowFromDb, convertedRow);
-		convertLanguageItem(rowFromDb, convertedRow);
-		convertedRows.add(convertedRow);
+		convertedRow.add(createTextAsJsonFromRow(rowFromDb));
+		convertedRow.add(createDefTextAsJsonFromRow(rowFromDb));
+		convertedRow.add(convertLanguageItem(rowFromDb));
+		return convertedRow;
 	}
 
-	private void convertTexts(Map<String, String> rowFromDb, List<CoraJsonRecord> convertedRow) {
-		String textAsJson = createTextFromDbRowWithIdEndingAndTextKey(rowFromDb, "Text", "svText");
-		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", textAsJson));
-		String defTextAsJson = createTextFromDbRowWithIdEndingAndTextKey(rowFromDb, "DefText",
-				"svText");
-		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", defTextAsJson));
+	protected CoraJsonRecord createTextAsJsonFromRow(Map<String, String> rowFromDb) {
+		return constructTextAsJsonUsingRowAndTextType(rowFromDb, "Text");
+	}
 
+	protected CoraJsonRecord constructTextAsJsonUsingRowAndTextType(Map<String, String> rowFromDb,
+			String type) {
+		String textId = constructTextIdUsingRowAndTextType(rowFromDb, type);
+		String textAsJson = createTextFromDbRowWithIdEndingAndTextKey(rowFromDb, textId);
+		return CoraJsonRecord.withRecordTypeAndJson("coraText", textAsJson);
+	}
+
+	private String constructTextIdUsingRowAndTextType(Map<String, String> rowFromDb, String type) {
+		String code = rowFromDb.get("alpha3code");
+		return code.toLowerCase() + "LanguageItem" + type;
 	}
 
 	private String createTextFromDbRowWithIdEndingAndTextKey(Map<String, String> rowFromDb,
-			String idEnding, String textToExtract) {
-		String textId = constructIdFromCodeWithEnding(rowFromDb, idEnding);
-		String svText = rowFromDb.get(textToExtract);
+			String textId) {
+		String svText = rowFromDb.get("svText");
 		Map<String, String> alternativeTexts = getAlternativeTexts(rowFromDb);
 
 		ClientDataGroup text = constructText(textId, svText, alternativeTexts);
@@ -132,23 +125,51 @@ public class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
 		return converter.toJson();
 	}
 
-	private String constructIdFromCodeWithEnding(Map<String, String> rowFromDb, String ending) {
-		String code = rowFromDb.get("alpha3code");
-		return code.toLowerCase() + "LanguageItem" + ending;
+	protected CoraJsonRecord createDefTextAsJsonFromRow(Map<String, String> rowFromDb) {
+		return constructTextAsJsonUsingRowAndTextType(rowFromDb, "DefText");
 	}
 
-	private void convertLanguageItem(Map<String, String> rowFromDb,
-			List<CoraJsonRecord> convertedRow) {
+	private CoraJsonRecord convertLanguageItem(Map<String, String> rowFromDb) {
 		ClientDataGroup itemDataGroup = getConstructedLanguageItemToCreate(rowFromDb);
 		DataGroupToJsonConverter converter = DataGroupToJsonConverter
 				.usingJsonFactoryForClientDataGroup(jsonFactory, itemDataGroup);
+		String id = itemDataGroup.getFirstGroupWithNameInData("recordInfo")
+				.getFirstAtomicValueWithNameInData("id");
+		collectionItems.add(RecordIdentifier.usingTypeAndId(LANGUAGE_COLLECTION_ITEM, id));
 		String json = converter.toJson();
-		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson(LANGUAGE_COLLECTION_ITEM, json));
+		return CoraJsonRecord.withRecordTypeAndJson(LANGUAGE_COLLECTION_ITEM, json);
 	}
 
 	private ClientDataGroup getConstructedLanguageItemToCreate(Map<String, String> rowFromDb) {
 		CollectionItemConstructor itemConstructor = new LanguageCollectionItemConstructor();
 		return itemConstructor.convert(rowFromDb);
+	}
+
+	protected List<CoraJsonRecord> createItemCollectionForCreatedCollectionItems() {
+		List<CoraJsonRecord> itemCollectionHolderList = new ArrayList<>();
+		String itemCollectionJson = createItemCollectionAsJson();
+
+		CoraJsonRecord coraRecordJsonItemCollection = CoraJsonRecord
+				.withRecordTypeAndJson("metadataItemCollection", itemCollectionJson);
+		itemCollectionHolderList.add(coraRecordJsonItemCollection);
+		return itemCollectionHolderList;
+	}
+
+	protected String createItemCollectionAsJson() {
+		ItemCollectionConstructor itemCollectionConstructor = ItemCollectionConstructor
+				.withDataDivider(DATA_DIVIDER);
+		ClientDataGroup itemCollectionDataGroup = createItemCollectionDataGroup(
+				itemCollectionConstructor);
+
+		DataGroupToJsonConverter converter = DataGroupToJsonConverter
+				.usingJsonFactoryForClientDataGroup(jsonFactory, itemCollectionDataGroup);
+		return converter.toJson();
+	}
+
+	protected ClientDataGroup createItemCollectionDataGroup(
+			ItemCollectionConstructor itemCollectionConstructor) {
+		return itemCollectionConstructor.constructUsingIdAndNameInDataAndCollectionItems(
+				"completeLanguageCollection", "language", collectionItems);
 	}
 
 	public JsonBuilderFactory getJsonBuilderFactory() {
