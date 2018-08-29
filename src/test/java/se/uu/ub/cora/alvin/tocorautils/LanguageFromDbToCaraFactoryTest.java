@@ -32,6 +32,8 @@ import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
@@ -69,6 +71,10 @@ public class LanguageFromDbToCaraFactoryTest {
 
 		JsonBuilderFactory jsonBuilderFactory = languageConverter.getJsonBuilderFactory();
 		assertTrue(jsonBuilderFactory instanceof OrgJsonBuilderFactoryAdapter);
+		assertNotNull(jsonBuilderFactory);
+		DataToJsonConverterFactory dataToJsonConverterFactory = languageConverter
+				.getDataToJsonConverterFactory();
+		assertTrue(dataToJsonConverterFactory instanceof DataToJsonConverterFactoryImp);
 		assertNotNull(jsonBuilderFactory);
 	}
 

@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
+import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
@@ -37,6 +38,7 @@ public class CountryFromDbToCoraConverterTest {
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
 	private CountryFromDbToCoraConverter countryFromDbToCoraConverter;
+	private DataToJsonConverterFactorySpy dataToJsonConverterFactory;
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -49,7 +51,9 @@ public class CountryFromDbToCoraConverterTest {
 
 		coraClient = new CoraClientSpy();
 		jsonFactory = new OrgJsonBuilderFactoryAdapter();
-		countryFromDbToCoraConverter = CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
+		dataToJsonConverterFactory = new DataToJsonConverterFactorySpy();
+		countryFromDbToCoraConverter = CountryFromDbToCoraConverter
+				.usingJsonFactoryAndConverterFactory(jsonFactory, dataToJsonConverterFactory);
 
 	}
 
@@ -58,23 +62,62 @@ public class CountryFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 3);
 		assertEquals(convertedRows.size(), 1);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		String textJsonFromSpy = "{\"name\":\"text\"}";
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		String collectionItemJsonFromSpy = "{\"name\":\"metadata\"}";
+		assertEquals(coraJsonRecordItem.json, collectionItemJsonFromSpy);
 
+		assertCorrectFirstTextsAndItem();
+	}
+
+	private void assertCorrectFirstTextsAndItem() {
+		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(0);
+		assertCorrectTextGroupSentToConverterFactory(text, "seCountryItemText", 1, 2);
+
+		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(1);
+		assertCorrectTextGroupSentToConverterFactory(defText, "seCountryItemDefText", 1, 2);
+
+		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(2);
+		assertCorrectGroupSentToConverterFactory(langItem, "seCountryItem", 3);
+		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"), "SE");
+		assertCorrectExtraData(langItem, "SE");
+	}
+
+	private void assertCorrectTextGroupSentToConverterFactory(ClientDataGroup group,
+			String expectedId, int numOfTextParts, int numOfChildren) {
+		assertEquals(group.getAllGroupsWithNameInData("textPart").size(), numOfTextParts);
+		assertCorrectGroupSentToConverterFactory(group, expectedId, numOfChildren);
+	}
+
+	private void assertCorrectGroupSentToConverterFactory(ClientDataGroup group, String expectedId,
+			int numOfChildren) {
+		String id = getIdFromDataGroup(group);
+		assertEquals(id, expectedId);
+		assertEquals(group.getChildren().size(), numOfChildren);
+	}
+
+	private String getIdFromDataGroup(ClientDataGroup group) {
+		ClientDataGroup recordInfo = group.getFirstGroupWithNameInData("recordInfo");
+		return recordInfo.getFirstAtomicValueWithNameInData("id");
+	}
+
+	private void assertCorrectExtraData(ClientDataGroup langItem, String partValue) {
+		ClientDataGroup extraData = langItem.getFirstGroupWithNameInData("extraData");
+		ClientDataGroup extraDataPart = extraData.getFirstGroupWithNameInData("extraDataPart");
+		assertEquals(extraDataPart.getFirstAtomicValueWithNameInData("value"), partValue);
+		assertEquals(extraDataPart.getAttributes().get("type"), "iso31661Alpha2");
 	}
 
 	@Test
@@ -87,37 +130,49 @@ public class CountryFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 6);
 		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		String textJsonFromSpy = "{\"name\":\"text\"}";
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Sverige\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"seCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"SE\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"SE\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		String collectionItemJsonFromSpy = "{\"name\":\"metadata\"}";
+		assertEquals(coraJsonRecordItem.json, collectionItemJsonFromSpy);
 
 		List<CoraJsonRecord> row2 = convertedRows.get(1);
 		CoraJsonRecord coraJsonRecordText2 = row2.get(0);
 		assertEquals(coraJsonRecordText2.recordType, "coraText");
-		assertEquals(coraJsonRecordText2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Norge\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordText2.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordDefText2 = row2.get(1);
 		assertEquals(coraJsonRecordDefText2.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Norge\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText2.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem2 = row2.get(2);
 		assertEquals(coraJsonRecordItem2.recordType, "countryCollectionItem");
-		assertEquals(coraJsonRecordItem2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"noCountryItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"NO\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"NO\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso31661Alpha2\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		assertEquals(coraJsonRecordItem2.json, collectionItemJsonFromSpy);
+		assertCorrectFirstTextsAndItem();
+		assertCorrectSecondTextsAndItem();
+	}
+
+	private void assertCorrectSecondTextsAndItem() {
+		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(3);
+		assertCorrectTextGroupSentToConverterFactory(text, "noCountryItemText", 1, 2);
+
+		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(4);
+		assertCorrectTextGroupSentToConverterFactory(defText, "noCountryItemDefText", 1, 2);
+
+		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(5);
+		assertCorrectGroupSentToConverterFactory(langItem, "noCountryItem", 3);
+		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"), "NO");
+		assertCorrectExtraData(langItem, "NO");
 	}
 }

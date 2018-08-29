@@ -20,6 +20,8 @@ package se.uu.ub.cora.alvin.tocorautils;
 
 import se.uu.ub.cora.alvin.tocorautils.convert.CountryFromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
 public class CountryFromDbToCoraFactory extends FromDbToCoraFactoryImp
@@ -27,7 +29,9 @@ public class CountryFromDbToCoraFactory extends FromDbToCoraFactoryImp
 
 	@Override
 	FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
-		return CountryFromDbToCoraConverter.usingJsonFactory(jsonFactory);
+		DataToJsonConverterFactory dataToJsonConverterFactory = new DataToJsonConverterFactoryImp();
+		return CountryFromDbToCoraConverter.usingJsonFactoryAndConverterFactory(jsonFactory,
+				dataToJsonConverterFactory);
 	}
 
 }

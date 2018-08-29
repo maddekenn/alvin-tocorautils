@@ -28,7 +28,8 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.RecordIdentifier;
 import se.uu.ub.cora.clientdata.constructor.ItemCollectionConstructor;
 import se.uu.ub.cora.clientdata.constructor.TextConstructor;
-import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverter;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
 public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverter {
@@ -36,13 +37,17 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 	private static final String LANGUAGE_COLLECTION_ITEM = "languageCollectionItem";
 	private JsonBuilderFactory jsonFactory;
 	private List<RecordIdentifier> collectionItems;
+	private DataToJsonConverterFactory dataToJsonConverterFactory;
 
-	private LanguageFromDbToCoraConverter(JsonBuilderFactory jsonFactory) {
+	private LanguageFromDbToCoraConverter(JsonBuilderFactory jsonFactory,
+			DataToJsonConverterFactory dataToJsonConverterFactory) {
 		this.jsonFactory = jsonFactory;
+		this.dataToJsonConverterFactory = dataToJsonConverterFactory;
 	}
 
-	public static LanguageFromDbToCoraConverter usingJsonFactory(JsonBuilderFactory jsonFactory) {
-		return new LanguageFromDbToCoraConverter(jsonFactory);
+	public static LanguageFromDbToCoraConverter usingJsonFactory(JsonBuilderFactory jsonFactory,
+			DataToJsonConverterFactory dataToJsonConverterFactory) {
+		return new LanguageFromDbToCoraConverter(jsonFactory, dataToJsonConverterFactory);
 	}
 
 	@Override
@@ -119,8 +124,8 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 	}
 
 	private String convertText(ClientDataGroup text) {
-		DataGroupToJsonConverter converter = DataGroupToJsonConverter
-				.usingJsonFactoryForClientDataGroup(jsonFactory, text);
+		DataToJsonConverter converter = dataToJsonConverterFactory
+				.createForClientDataElement(jsonFactory, text);
 		return converter.toJson();
 	}
 
@@ -130,8 +135,10 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 
 	private CoraJsonRecord convertLanguageItem(Map<String, String> rowFromDb) {
 		ClientDataGroup itemDataGroup = getConstructedLanguageItemToCreate(rowFromDb);
-		DataGroupToJsonConverter converter = DataGroupToJsonConverter
-				.usingJsonFactoryForClientDataGroup(jsonFactory, itemDataGroup);
+
+		DataToJsonConverter converter = dataToJsonConverterFactory
+				.createForClientDataElement(jsonFactory, itemDataGroup);
+
 		String id = itemDataGroup.getFirstGroupWithNameInData("recordInfo")
 				.getFirstAtomicValueWithNameInData("id");
 		collectionItems.add(RecordIdentifier.usingTypeAndId(LANGUAGE_COLLECTION_ITEM, id));
@@ -159,9 +166,8 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 				.withDataDivider(DATA_DIVIDER);
 		ClientDataGroup itemCollectionDataGroup = createItemCollectionDataGroup(
 				itemCollectionConstructor);
-
-		DataGroupToJsonConverter converter = DataGroupToJsonConverter
-				.usingJsonFactoryForClientDataGroup(jsonFactory, itemCollectionDataGroup);
+		DataToJsonConverter converter = dataToJsonConverterFactory
+				.createForClientDataElement(jsonFactory, itemCollectionDataGroup);
 		return converter.toJson();
 	}
 
@@ -173,5 +179,9 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 
 	public JsonBuilderFactory getJsonBuilderFactory() {
 		return jsonFactory;
+	}
+
+	public DataToJsonConverterFactory getDataToJsonConverterFactory() {
+		return dataToJsonConverterFactory;
 	}
 }

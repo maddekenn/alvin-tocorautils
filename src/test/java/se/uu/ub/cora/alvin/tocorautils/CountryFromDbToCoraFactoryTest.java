@@ -34,6 +34,8 @@ import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.connection.ParameterConnectionProviderImp;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
@@ -62,8 +64,8 @@ public class CountryFromDbToCoraFactoryTest {
 		dbConfig = new DbConfig(dbUserId, password, url);
 
 		CoraClientFactory coraClientFactory = new CoraClientFactorySpy();
-		countryToCora = (FromDbToCoraImp) countryToCoraFactory
-				.factorFromDbToCora(coraClientFactory, coraClientConfig, dbConfig);
+		countryToCora = (FromDbToCoraImp) countryToCoraFactory.factorFromDbToCora(coraClientFactory,
+				coraClientConfig, dbConfig);
 	}
 
 	@Test
@@ -102,6 +104,10 @@ public class CountryFromDbToCoraFactoryTest {
 		JsonBuilderFactory jsonBuilderFactory = countryConverter.getJsonBuilderFactory();
 		assertTrue(jsonBuilderFactory instanceof OrgJsonBuilderFactoryAdapter);
 		assertNotNull(jsonBuilderFactory);
+		DataToJsonConverterFactory dataToJsonConverterFactory = countryConverter
+				.getDataToJsonConverterFactory();
+		assertTrue(dataToJsonConverterFactory instanceof DataToJsonConverterFactoryImp);
+		assertNotNull(dataToJsonConverterFactory);
 	}
 
 	@Test

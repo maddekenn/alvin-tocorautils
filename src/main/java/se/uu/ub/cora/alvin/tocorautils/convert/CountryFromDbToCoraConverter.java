@@ -24,19 +24,24 @@ import java.util.Map;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
-import se.uu.ub.cora.clientdata.converter.javatojson.DataGroupToJsonConverter;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverter;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
 public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 
 	private JsonBuilderFactory jsonFactory;
+	private DataToJsonConverterFactory dataToJsonConverterFactory;
 
-	private CountryFromDbToCoraConverter(JsonBuilderFactory jsonFactory) {
+	private CountryFromDbToCoraConverter(JsonBuilderFactory jsonFactory,
+			DataToJsonConverterFactory dataToJsonConverterFactory) {
 		this.jsonFactory = jsonFactory;
+		this.dataToJsonConverterFactory = dataToJsonConverterFactory;
 	}
 
-	public static CountryFromDbToCoraConverter usingJsonFactory(JsonBuilderFactory jsonFactory) {
-		return new CountryFromDbToCoraConverter(jsonFactory);
+	public static CountryFromDbToCoraConverter usingJsonFactoryAndConverterFactory(
+			JsonBuilderFactory jsonFactory, DataToJsonConverterFactory dataToJsonConverterFactory) {
+		return new CountryFromDbToCoraConverter(jsonFactory, dataToJsonConverterFactory);
 	}
 
 	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
@@ -46,8 +51,8 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 	}
 
 	private String convertText(ClientDataGroup text) {
-		DataGroupToJsonConverter converter = DataGroupToJsonConverter
-				.usingJsonFactoryForClientDataGroup(jsonFactory, text);
+		DataToJsonConverter converter = getDataToJsonConverterFactory()
+				.createForClientDataElement(jsonFactory, text);
 		return converter.toJson();
 	}
 
@@ -91,10 +96,15 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 	private void convertCountryItem(Map<String, String> rowFromDb,
 			List<CoraJsonRecord> convertedRow) {
 		ClientDataGroup itemDataGroup = getConstructedCountryItemToCreate(rowFromDb);
-		DataGroupToJsonConverter converter = DataGroupToJsonConverter
-				.usingJsonFactoryForClientDataGroup(jsonFactory, itemDataGroup);
+
+		DataToJsonConverter converter = getDataToJsonConverterFactory()
+				.createForClientDataElement(jsonFactory, itemDataGroup);
 		String json = converter.toJson();
 		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("countryCollectionItem", json));
+	}
+
+	public DataToJsonConverterFactory getDataToJsonConverterFactory() {
+		return dataToJsonConverterFactory;
 	}
 
 }

@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
+import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
@@ -37,6 +38,9 @@ public class LanguageFromDbToCoraConverterTest {
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
 	private LanguageFromDbToCoraConverter languageFromDbToCoraConverter;
+	private DataToJsonConverterFactorySpy dataToJsonConverterFactory;
+	private String textJsonFromSpy = "{\"name\":\"text\"}";;
+	private String metadataJsonFromSpy = "{\"name\":\"metadata\"}";
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -49,7 +53,9 @@ public class LanguageFromDbToCoraConverterTest {
 
 		coraClient = new CoraClientSpy();
 		jsonFactory = new OrgJsonBuilderFactoryAdapter();
-		languageFromDbToCoraConverter = LanguageFromDbToCoraConverter.usingJsonFactory(jsonFactory);
+		dataToJsonConverterFactory = new DataToJsonConverterFactorySpy();
+		languageFromDbToCoraConverter = LanguageFromDbToCoraConverter.usingJsonFactory(jsonFactory,
+				dataToJsonConverterFactory);
 
 	}
 
@@ -58,29 +64,54 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 4);
 		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
+
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
+
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"swe\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"swe\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		assertEquals(coraJsonRecordItem.json, metadataJsonFromSpy);
 		assertEquals(row.size(), 3);
 
 		List<CoraJsonRecord> row2 = convertedRows.get(1);
 		CoraJsonRecord coraJsonItemCollection = row2.get(0);
 		assertEquals(coraJsonItemCollection.recordType, "metadataItemCollection");
+		assertEquals(coraJsonItemCollection.json, metadataJsonFromSpy);
+		assertCorrectFactoryCallsForOneItemNoAlternativeLang(convertedRows);
+	}
 
-		String expectedJson = "{\"children\":[{\"name\":\"nameInData\",\"value\":\"language\"},{\"children\":[{\"name\":\"id\",\"value\":\"completeLanguageCollection\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"repeatId\":\"0\",\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"languageCollectionItem\"},{\"name\":\"linkedRecordId\",\"value\":\"sweLanguageItem\"}],\"name\":\"ref\"}],\"name\":\"collectionItemReferences\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"itemCollection\"}}";
-		assertEquals(coraJsonItemCollection.json, expectedJson);
+	private void assertCorrectFactoryCallsForOneItemNoAlternativeLang(
+			List<List<CoraJsonRecord>> convertedRows) {
+		int textParts = 1;
+		int textChildren = 2;
+		assertCorrectFactoryCallsForTextsAndFirstItem(textParts, textChildren);
+
+		ClientDataGroup langCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
+				.get(3);
+		assertCorrectCollectionWithOneRefSentToFactory(langCollection, "completeLanguageCollection",
+				3, "language");
+	}
+
+	private void assertCorrectFactoryCallsForTextsAndFirstItem(int textParts, int textChildren) {
+
+		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(0);
+		assertCorrectTextGroupSentToConverterFactory(text, "sweLanguageItemText", textParts,
+				textChildren);
+
+		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(1);
+		assertCorrectTextGroupSentToConverterFactory(defText, "sweLanguageItemDefText", textParts,
+				textChildren);
+
+		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(2);
+		assertCorrectLangItemSentToFactory(langItem, "sweLanguageItem", 3, "swe");
 	}
 
 	@Test
@@ -89,22 +120,74 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 4);
 		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"swe\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"swe\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		assertEquals(coraJsonRecordItem.json, metadataJsonFromSpy);
 		assertEquals(row.size(), 3);
+
+		assertCorrectFactoryCallsForOneItemNoAlternativeLang(convertedRows);
+
+	}
+
+	private void assertCorrectCollectionWithOneRefSentToFactory(ClientDataGroup langCollection,
+			String expectedId, int numOfChildren, String nameInData) {
+		assertCorrectGroupSentToConverterFactory(langCollection, expectedId, numOfChildren);
+		assertEquals(langCollection.getFirstAtomicValueWithNameInData("nameInData"), nameInData);
+		String expectedItemId = "sweLanguageItem";
+		assertCorrectChildReferencesWithOneItem(langCollection, expectedItemId);
+	}
+
+	private void assertCorrectChildReferencesWithOneItem(ClientDataGroup langCollection,
+			String expectedItemId) {
+		ClientDataGroup childReferences = langCollection
+				.getFirstGroupWithNameInData("collectionItemReferences");
+		assertEquals(childReferences.getAllChildrenWithNameInData("ref").size(), 1);
+		ClientDataGroup ref = childReferences.getFirstGroupWithNameInData("ref");
+		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
+				"languageCollectionItem");
+		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), expectedItemId);
+	}
+
+	private void assertCorrectTextGroupSentToConverterFactory(ClientDataGroup group,
+			String expectedId, int numOfTextParts, int numOfChildren) {
+		assertEquals(group.getAllGroupsWithNameInData("textPart").size(), numOfTextParts);
+		assertCorrectGroupSentToConverterFactory(group, expectedId, numOfChildren);
+	}
+
+	private void assertCorrectGroupSentToConverterFactory(ClientDataGroup group, String expectedId,
+			int numOfChildren) {
+		String id = getIdFromDataGroup(group);
+		assertEquals(id, expectedId);
+		assertEquals(group.getChildren().size(), numOfChildren);
+	}
+
+	private String getIdFromDataGroup(ClientDataGroup group) {
+		ClientDataGroup recordInfo = group.getFirstGroupWithNameInData("recordInfo");
+		return recordInfo.getFirstAtomicValueWithNameInData("id");
+	}
+
+	private void assertCorrectLangItemSentToFactory(ClientDataGroup langItem, String expectedId,
+			int numOfChildren, String nameInData) {
+		assertCorrectGroupSentToConverterFactory(langItem, expectedId, numOfChildren);
+		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"), nameInData);
+		assertCorrectExtraData(langItem, nameInData);
+	}
+
+	private void assertCorrectExtraData(ClientDataGroup langItem, String partValue) {
+		ClientDataGroup extraData = langItem.getFirstGroupWithNameInData("extraData");
+		ClientDataGroup extraDataPart = extraData.getFirstGroupWithNameInData("extraDataPart");
+		assertEquals(extraDataPart.getFirstAtomicValueWithNameInData("value"), partValue);
+		assertEquals(extraDataPart.getAttributes().get("type"), "iso639Alpha3");
 	}
 
 	@Test
@@ -113,22 +196,22 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 4);
 		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"swe\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"swe\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		assertEquals(coraJsonRecordItem.json, metadataJsonFromSpy);
 		assertEquals(row.size(), 3);
+
+		assertCorrectFactoryCallsForOneItemNoAlternativeLang(convertedRows);
 	}
 
 	@Test
@@ -136,21 +219,26 @@ public class LanguageFromDbToCoraConverterTest {
 		rowsFromDb.get(0).put("enText", "Swedish");
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
-
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 4);
 		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}},{\"children\":[{\"name\":\"text\",\"value\":\"Swedish\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"alternative\",\"lang\":\"en\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
+
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}},{\"children\":[{\"name\":\"text\",\"value\":\"Swedish\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"alternative\",\"lang\":\"en\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
+
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"swe\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"swe\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		assertEquals(coraJsonRecordItem.json, metadataJsonFromSpy);
+
+		assertCorrectFactoryCallsForTextsAndFirstItem(2, 3);
+		ClientDataGroup langCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
+				.get(3);
+		assertCorrectCollectionWithOneRefSentToFactory(langCollection, "completeLanguageCollection",
+				3, "language");
 
 	}
 
@@ -164,44 +252,69 @@ public class LanguageFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = languageFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 7);
 		assertEquals(convertedRows.size(), 3);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
-		assertEquals(coraJsonRecordText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordDefText = row.get(1);
 		assertEquals(coraJsonRecordDefText.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Svenska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
+		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
 		assertEquals(coraJsonRecordItem.recordType, "languageCollectionItem");
-		assertEquals(coraJsonRecordItem.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"sweLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"swe\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"swe\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
+		assertEquals(coraJsonRecordItem.json, metadataJsonFromSpy);
 
 		List<CoraJsonRecord> row2 = convertedRows.get(1);
 		CoraJsonRecord coraJsonRecordText2 = row2.get(0);
 		assertEquals(coraJsonRecordText2.recordType, "coraText");
-		assertEquals(coraJsonRecordText2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"norLanguageItemText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Norska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
-
+		assertEquals(coraJsonRecordText2.json, textJsonFromSpy);
 		CoraJsonRecord coraJsonRecordDefText2 = row2.get(1);
 		assertEquals(coraJsonRecordDefText2.recordType, "coraText");
-		assertEquals(coraJsonRecordDefText2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"norLanguageItemDefText\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"name\":\"text\",\"value\":\"Norska\"}],\"name\":\"textPart\",\"attributes\":{\"type\":\"default\",\"lang\":\"sv\"}}],\"name\":\"text\"}");
-
+		assertEquals(coraJsonRecordDefText2.json, textJsonFromSpy);
 		CoraJsonRecord coraJsonRecordItem2 = row2.get(2);
 		assertEquals(coraJsonRecordItem2.recordType, "languageCollectionItem");
-		assertEquals(coraJsonRecordItem2.json,
-				"{\"children\":[{\"children\":[{\"name\":\"id\",\"value\":\"norLanguageItem\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"name\":\"nameInData\",\"value\":\"nor\"},{\"children\":[{\"children\":[{\"name\":\"value\",\"value\":\"nor\"}],\"name\":\"extraDataPart\",\"attributes\":{\"type\":\"iso639Alpha3\"}}],\"name\":\"extraData\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"collectionItem\"}}");
-
+		assertEquals(coraJsonRecordItem2.json, metadataJsonFromSpy);
 		List<CoraJsonRecord> row3 = convertedRows.get(2);
 		CoraJsonRecord coraJsonItemCollection = row3.get(0);
 		assertEquals(coraJsonItemCollection.recordType, "metadataItemCollection");
 
-		String expectedJson = "{\"children\":[{\"name\":\"nameInData\",\"value\":\"language\"},{\"children\":[{\"name\":\"id\",\"value\":\"completeLanguageCollection\"},{\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"system\"},{\"name\":\"linkedRecordId\",\"value\":\"bibsys\"}],\"name\":\"dataDivider\"}],\"name\":\"recordInfo\"},{\"children\":[{\"repeatId\":\"0\",\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"languageCollectionItem\"},{\"name\":\"linkedRecordId\",\"value\":\"sweLanguageItem\"}],\"name\":\"ref\"},{\"repeatId\":\"1\",\"children\":[{\"name\":\"linkedRecordType\",\"value\":\"languageCollectionItem\"},{\"name\":\"linkedRecordId\",\"value\":\"norLanguageItem\"}],\"name\":\"ref\"}],\"name\":\"collectionItemReferences\"}],\"name\":\"metadata\",\"attributes\":{\"type\":\"itemCollection\"}}";
-		assertEquals(coraJsonItemCollection.json, expectedJson);
+		assertEquals(coraJsonItemCollection.json, metadataJsonFromSpy);
+		assertCorrectFactoryCallsForTwoItemsNoAlternativeLang();
+	}
+
+	private void assertCorrectFactoryCallsForTwoItemsNoAlternativeLang() {
+		assertCorrectFactoryCallsForTextsAndFirstItem(1, 2);
+
+		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(3);
+		assertCorrectTextGroupSentToConverterFactory(text, "norLanguageItemText", 1, 2);
+
+		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(4);
+		assertCorrectTextGroupSentToConverterFactory(defText, "norLanguageItemDefText", 1, 2);
+
+		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(5);
+		assertCorrectLangItemSentToFactory(langItem, "norLanguageItem", 3, "nor");
+		ClientDataGroup langCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
+				.get(6);
+		assertCorrectGroupSentToConverterFactory(langCollection, "completeLanguageCollection", 3);
+		assertEquals(langCollection.getFirstAtomicValueWithNameInData("nameInData"), "language");
+		assertCorrectChildReferencesWithTwoItems(langCollection);
+	}
+
+	private void assertCorrectChildReferencesWithTwoItems(ClientDataGroup langCollection) {
+		ClientDataGroup childReferences = langCollection
+				.getFirstGroupWithNameInData("collectionItemReferences");
+		List<ClientDataGroup> refs = childReferences.getAllGroupsWithNameInData("ref");
+		assertEquals(refs.size(), 2);
+		ClientDataGroup ref = refs.get(0);
+		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
+				"languageCollectionItem");
+		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), "sweLanguageItem");
+		ClientDataGroup ref2 = refs.get(1);
+		assertEquals(ref2.getFirstAtomicValueWithNameInData("linkedRecordType"),
+				"languageCollectionItem");
+		assertEquals(ref2.getFirstAtomicValueWithNameInData("linkedRecordId"), "norLanguageItem");
 	}
 }
