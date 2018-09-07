@@ -24,6 +24,7 @@
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
 		<version>0.6-SNAPSHOT</version>
+    <relativePath>../cora-parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>alvintocorautils</artifactId>
