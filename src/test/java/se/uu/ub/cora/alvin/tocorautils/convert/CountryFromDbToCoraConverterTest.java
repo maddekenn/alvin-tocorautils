@@ -52,8 +52,10 @@ public class CountryFromDbToCoraConverterTest {
 		coraClient = new CoraClientSpy();
 		jsonFactory = new OrgJsonBuilderFactoryAdapter();
 		dataToJsonConverterFactory = new DataToJsonConverterFactorySpy();
+		CollectionItemConstructor itemConstructor = new CollectionItemConstructorSpy();
 		countryFromDbToCoraConverter = CountryFromDbToCoraConverter
-				.usingJsonFactoryAndConverterFactory(jsonFactory, dataToJsonConverterFactory);
+				.usingJsonFactoryConverterFactoryAndItemConstructor(jsonFactory,
+						dataToJsonConverterFactory, null);
 
 	}
 

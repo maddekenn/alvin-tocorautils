@@ -30,8 +30,8 @@ public class CountryFromDbToCoraFactory extends FromDbToCoraFactoryImp
 	@Override
 	FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
 		DataToJsonConverterFactory dataToJsonConverterFactory = new DataToJsonConverterFactoryImp();
-		return CountryFromDbToCoraConverter.usingJsonFactoryAndConverterFactory(jsonFactory,
-				dataToJsonConverterFactory);
+		return CountryFromDbToCoraConverter.usingJsonFactoryConverterFactoryAndItemConstructor(jsonFactory,
+				dataToJsonConverterFactory, null);
 	}
 
 }

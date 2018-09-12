@@ -39,15 +39,10 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 		this.dataToJsonConverterFactory = dataToJsonConverterFactory;
 	}
 
-	public static CountryFromDbToCoraConverter usingJsonFactoryAndConverterFactory(
-			JsonBuilderFactory jsonFactory, DataToJsonConverterFactory dataToJsonConverterFactory) {
+	public static CountryFromDbToCoraConverter usingJsonFactoryConverterFactoryAndItemConstructor(
+			JsonBuilderFactory jsonFactory, DataToJsonConverterFactory dataToJsonConverterFactory,
+			CollectionItemConstructor collectionItemConstructor) {
 		return new CountryFromDbToCoraConverter(jsonFactory, dataToJsonConverterFactory);
-	}
-
-	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
-			Map<String, String> rowFromDb) {
-		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
-		return textConstructor.constructFromDbRow(rowFromDb);
 	}
 
 	private String convertText(ClientDataGroup text) {
@@ -91,6 +86,12 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 			String json = convertText(text);
 			convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", json));
 		}
+	}
+
+	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
+			Map<String, String> rowFromDb) {
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		return textConstructor.constructFromDbRow(rowFromDb);
 	}
 
 	private void convertCountryItem(Map<String, String> rowFromDb,
