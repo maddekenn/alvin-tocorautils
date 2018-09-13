@@ -1,39 +1,53 @@
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
+import static org.testng.Assert.assertEquals;
+import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectDataDivider;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
-import java.util.HashMap;
-
-import java.util.Map;
-
-import static org.testng.Assert.assertEquals;
-import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectDataDivider;
-
 public class HistoricCountryCollectionItemConstructorTest {
-    private Map<String, String> rowFromDb;
+	private Map<String, String> rowFromDb;
 
-    @BeforeMethod
-    public void beforeMethod() {
-        rowFromDb = new HashMap<>();
-        rowFromDb.put("code", "duchy_of_saxe-coburg-meiningen");
-        rowFromDb.put("svText", "Hertigdömet Sachsen-Coburg-Meiningen");
-        rowFromDb.put("enText", "Duchy of Saxe-Coburg-Meiningen");
-    }
+	@BeforeMethod
+	public void beforeMethod() {
+		rowFromDb = new HashMap<>();
+		rowFromDb.put("code", "duchy_of_saxe-coburg-meiningen");
+		rowFromDb.put("svText", "Hertigdömet Sachsen-Coburg-Meiningen");
+		rowFromDb.put("enText", "Duchy of Saxe-Coburg-Meiningen");
+	}
 
-    @Test
-    public void testConvertHistoricCountry() {
-        CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();
-        ClientDataGroup historicCountryItem = historicCountryItemConstructor.convert(rowFromDb);
-        assertEquals(historicCountryItem.getNameInData(), "metadata");
-        assertEquals(historicCountryItem.getAttributes().get("type"), "collectionItem");
+	@Test
+	public void testConvertHistoricCountry() {
+		CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();
+		ClientDataGroup historicCountryItem = historicCountryItemConstructor.convert(rowFromDb);
+		assertEquals(historicCountryItem.getNameInData(), "metadata");
+		assertEquals(historicCountryItem.getAttributes().get("type"), "collectionItem");
 
-        ClientDataGroup recordInfo = historicCountryItem.getFirstGroupWithNameInData("recordInfo");
-        assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), "duchyOfSaxeCoburgMeiningenHistoricCountryItem");
-        assertCorrectDataDivider(recordInfo);
-        assertEquals(historicCountryItem.getFirstAtomicValueWithNameInData("nameInData"), "duchyOfSaxeCoburgMeiningen");
-    }
+		ClientDataGroup recordInfo = historicCountryItem.getFirstGroupWithNameInData("recordInfo");
+		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"),
+				"duchyOfSaxeCoburgMeiningenHistoricCountryItem");
+		assertCorrectDataDivider(recordInfo);
+		assertEquals(historicCountryItem.getFirstAtomicValueWithNameInData("nameInData"),
+				"duchyOfSaxeCoburgMeiningen");
+	}
 
+	@Test(expectedExceptions = AssertionError.class)
+	public void testConvertHistoricCountryWithoutCodeKey() {
+		rowFromDb.remove("code");
+		CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();
+		historicCountryItemConstructor.convert(rowFromDb);
+	}
+
+	@Test(expectedExceptions = AssertionError.class)
+	public void testConvertHistoricCountryWithoutCodeValue() {
+		rowFromDb.replace("code", "");
+		CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();
+		historicCountryItemConstructor.convert(rowFromDb);
+	}
 }

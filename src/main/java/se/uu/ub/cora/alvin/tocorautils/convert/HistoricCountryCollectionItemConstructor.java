@@ -18,66 +18,72 @@
  */
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
+import se.uu.ub.cora.alvin.tocorautils.DbRowException;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 public class HistoricCountryCollectionItemConstructor extends CollectionItemConstructor {
 
-    @Override
-    protected String getSuffix() {
-        return "HistoricCountryItem";
-    }
+	@Override
+	protected String getSuffix() {
+		return "HistoricCountryItem";
+	}
 
-    @Override
-    protected String getId() {
-        assert (rowFromDb.containsKey("code"));
-        String id = cleanCamelCase(rowFromDb.get("code"));
-        assert (!"".equals(id));
-        return id;
-    }
+	@Override
+	protected String getId() {
+		if (rowFromDb.containsKey("code")) {
+			return possiblyExtractCamelCaseId();
+		}
+		throw DbRowException.withMessage("Could not find \"code\"");
+	}
 
-//    private String sdf(String s) {
-//        Arrays.asList(s.toCharArray()).stream().collect();
-//
-//        return "";
-//    }
-//
-//    private Optional<Character> handleSymbol(Character symbol) {
-//        if(Character.isAlphabetic(symbol)) {
-//            return Optional.of(symbol);
-//        }
-//        return Optional.empty();
-//    }
+	private String possiblyExtractCamelCaseId() {
+		String id = cleanCamelCase(rowFromDb.get("code"));
+		if ("".equals(id)) {
+			throw DbRowException.withMessage("Could not extract valid ID from \"code\"");
+		}
+		return id;
+	}
 
-    private String cleanCamelCase(String text) {
-        StringBuilder sb = new StringBuilder();
-        boolean toUpper = false;
-        for(char symbol : text.toCharArray()) {
-            toUpper = handleCharacter(sb, toUpper, symbol);
-        }
-        return sb.toString();
-    }
+	// private String sdf(String s) {
+	// Arrays.asList(s.toCharArray()).stream().collect();
+	//
+	// return "";
+	// }
+	//
+	// private Optional<Character> handleSymbol(Character symbol) {
+	// if(Character.isAlphabetic(symbol)) {
+	// return Optional.of(symbol);
+	// }
+	// return Optional.empty();
+	// }
 
-    private boolean handleCharacter(StringBuilder sb, boolean toUpper, char symbol) {
-        if(Character.isAlphabetic(symbol)) {
-            return handleUpperOrLowerCase(sb, toUpper, symbol);
-        }
-        return true;
-    }
+	private String cleanCamelCase(String text) {
+		StringBuilder sb = new StringBuilder();
+		boolean toUpper = false;
+		for (char symbol : text.toCharArray()) {
+			toUpper = handleCharacter(sb, toUpper, symbol);
+		}
+		return sb.toString();
+	}
 
-    private boolean handleUpperOrLowerCase(StringBuilder sb, boolean toUpper, char symbol) {
-        if(toUpper) {
-            sb.append(Character.toUpperCase(symbol));
-            return false;
-        }
-        sb.append(Character.toLowerCase(symbol));
-        return toUpper;
-    }
+	private boolean handleCharacter(StringBuilder sb, boolean toUpper, char symbol) {
+		if (Character.isAlphabetic(symbol)) {
+			return handleUpperOrLowerCase(sb, toUpper, symbol);
+		}
+		return true;
+	}
 
+	private boolean handleUpperOrLowerCase(StringBuilder sb, boolean toUpper, char symbol) {
+		if (toUpper) {
+			sb.append(Character.toUpperCase(symbol));
+			return false;
+		}
+		sb.append(Character.toLowerCase(symbol));
+		return toUpper;
+	}
 
-    @Override
-    protected void addExtraData(String value, ClientDataGroup item) {
-    }
+	@Override
+	protected void addExtraData(String value, ClientDataGroup item) {
+		// Not used in this item constructor
+	}
 }
