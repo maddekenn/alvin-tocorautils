@@ -60,7 +60,7 @@ public class LanguageCollectionItemConstructorTest {
 	@Test
 	public void testUnusedGetSuffixIsNull() {
 		LanguageCollectionItemConstructor languageItemCounstructor = new LanguageCollectionItemConstructor();
-		assertNull(languageItemCounstructor.getSuffix());
+		assertEquals(languageItemCounstructor.getSuffix(), "");
 	}
 
 	@Test

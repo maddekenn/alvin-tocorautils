@@ -2,11 +2,11 @@ package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import se.uu.ub.cora.clientdata.ClientDataAttribute;
+
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;

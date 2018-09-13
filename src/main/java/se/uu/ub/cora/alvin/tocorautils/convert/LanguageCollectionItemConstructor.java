@@ -25,7 +25,7 @@ public class LanguageCollectionItemConstructor extends CollectionItemConstructor
 
 	@Override
 	protected String getSuffix() {
-		return null;
+		return "";
 	}
 
 	@Override
