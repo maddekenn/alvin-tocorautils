@@ -24,6 +24,11 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 public class LanguageCollectionItemConstructor extends CollectionItemConstructor {
 
 	@Override
+	protected String getSuffix() {
+		return null;
+	}
+
+	@Override
 	protected String getId() {
 		return rowFromDb.get("alpha3code").trim();
 	}
