@@ -19,6 +19,8 @@
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectDataDivider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +29,6 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.convert.CountryCollectionItemConstructor;
 import se.uu.ub.cora.clientdata.ClientDataAttribute;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
@@ -55,12 +56,10 @@ public class CountryCollectionItemConstructorTest {
 		assertEquals(countryItem.getFirstAtomicValueWithNameInData("nameInData"), "SE");
 	}
 
-	private void assertCorrectDataDivider(ClientDataGroup recordInfo) {
-		ClientDataGroup dataDivider = recordInfo.getFirstGroupWithNameInData("dataDivider");
-		String linkedRecordId = dataDivider.getFirstAtomicValueWithNameInData("linkedRecordId");
-		assertEquals(linkedRecordId, "bibsys");
-		String linkedRecordType = dataDivider.getFirstAtomicValueWithNameInData("linkedRecordType");
-		assertEquals(linkedRecordType, "system");
+	@Test
+	public void testUnusedGetSuffixIsNull() {
+		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
+		assertNull(countryFromDbToCoraStorageConverter.getSuffix());
 	}
 
 	@Test

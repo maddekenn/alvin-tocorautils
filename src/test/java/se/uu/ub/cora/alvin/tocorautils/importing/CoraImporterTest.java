@@ -71,7 +71,7 @@ public class CoraImporterTest {
 	}
 
 	@Test
-	public void testFailedImport() throws Exception {
+	public void testFailedImport() {
 		coraClient = new CoraClientSpy();
 		importer = CoraImporter.usingCoraClient(coraClient);
 

@@ -46,8 +46,7 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 
 	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
 			Map<String, String> rowFromDb) {
-		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
-		return textConstructor.constructFromDbRow(rowFromDb);
+		return TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 	}
 
 	private String convertText(ClientDataGroup text) {

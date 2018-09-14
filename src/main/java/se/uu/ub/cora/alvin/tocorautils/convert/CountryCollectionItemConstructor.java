@@ -24,16 +24,13 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 public class CountryCollectionItemConstructor extends CollectionItemConstructor {
 
 	@Override
-	protected String getId() {
-		return rowFromDb.get("alpha2code").trim();
+	protected String getSuffix() {
+		return null;
 	}
 
 	@Override
-	void addRecordInfo(String alpha2code, ClientDataGroup item) {
-		ClientDataGroup recordInfo = ClientDataGroup.withNameInData("recordInfo");
-		addId(alpha2code, recordInfo);
-		addDataDivider(recordInfo);
-		item.addChild(recordInfo);
+	protected String getId() {
+		return rowFromDb.get("alpha2code").trim();
 	}
 
 	@Override

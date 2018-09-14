@@ -39,7 +39,7 @@ public abstract class CollectionItemConstructor {
 		return item;
 	}
 
-	void addChildrenToClientDataGroup(ClientDataGroup item) {
+	private void addChildrenToClientDataGroup(ClientDataGroup item) {
 		String id = getId();
 		addRecordInfo(id, item);
 		addNameInData(id, item);
@@ -48,6 +48,8 @@ public abstract class CollectionItemConstructor {
 
 	protected abstract String getId();
 
+	protected abstract String getSuffix();
+
 	void addRecordInfo(String id, ClientDataGroup item) {
 		ClientDataGroup recordInfo = ClientDataGroup.withNameInData("recordInfo");
 		addId(id, recordInfo);
@@ -55,7 +57,9 @@ public abstract class CollectionItemConstructor {
 		item.addChild(recordInfo);
 	}
 
-	protected abstract void addId(String id, ClientDataGroup recordInfo);
+	protected void addId(String id, ClientDataGroup recordInfo) {
+		recordInfo.addChild(ClientDataAtomic.withNameInDataAndValue("id", getId() + getSuffix()));
+	}
 
 	protected void addDataDivider(ClientDataGroup recordInfo) {
 		ClientDataGroup dataDivider = ClientDataGroup.withNameInData("dataDivider");
@@ -97,5 +101,4 @@ public abstract class CollectionItemConstructor {
 		extraDataPart.addChild(ClientDataAtomic.withNameInDataAndValue("value", value));
 		return extraDataPart;
 	}
-
 }

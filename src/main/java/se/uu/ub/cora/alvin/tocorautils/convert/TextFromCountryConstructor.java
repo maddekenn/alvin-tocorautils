@@ -29,12 +29,26 @@ public class TextFromCountryConstructor {
 
 	private Map<String, String> rowFromDb;
 
-	List<ClientDataGroup> constructFromDbRow(Map<String, String> rowFromDb) {
-		List<ClientDataGroup> texts = new ArrayList<>();
-		this.rowFromDb = rowFromDb;
+	private List<ClientDataGroup> texts;
+
+	protected String dbKey = "alpha2code";
+
+	protected String coraInfix = "CountryItem";
+
+	protected TextFromCountryConstructor(Map<String,String> rowFromDb) {
+        this.rowFromDb = rowFromDb;
+    }
+
+    protected List<ClientDataGroup> getTexts() {
+		texts = new ArrayList<>();
 		createText(texts);
 		createDefText(texts);
 		return texts;
+	}
+
+	public static List<ClientDataGroup> constructFromDbRow(Map<String, String> rowFromDb) {
+        TextFromCountryConstructor textConstructor = new TextFromCountryConstructor(rowFromDb);
+		return textConstructor.getTexts();
 	}
 
 	private void createText(List<ClientDataGroup> texts) {
@@ -57,8 +71,12 @@ public class TextFromCountryConstructor {
 	}
 
 	private String constructIdFromCodeWithEnding(String ending) {
-		String code = rowFromDb.get("alpha2code");
-		return code.toLowerCase() + "CountryItem" + ending;
+		String code = rowFromDb.get(dbKey);
+		return possiblyMangleId(code) + coraInfix + ending;
+	}
+
+	protected String possiblyMangleId(String oldId) {
+		return oldId.toLowerCase();
 	}
 
 	private void addId(String id, ClientDataGroup recordInfo) {
