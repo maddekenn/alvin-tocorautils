@@ -23,4 +23,11 @@ public class TextUtilTest {
 		assertEquals(normalizedString,
 				"aAaaaaAabBcCcccdDeEeefFgGhHiIijJkKlLmMnNnoOooOpPqQrRsSstTuUuUvVwWxyYzZzz");
 	}
+
+	@Test
+	public void testTurnStringIntoCamelCase(){
+		String stringToTurnIntoCamelCase = "prinicpality_of_pfalz-sulzbach";
+		String camelCasedString = TextUtil.turnStringIntoCamelCase(stringToTurnIntoCamelCase);
+		assertEquals(camelCasedString, "prinicpalityOfPfalzSulzbach");
+	}
 }

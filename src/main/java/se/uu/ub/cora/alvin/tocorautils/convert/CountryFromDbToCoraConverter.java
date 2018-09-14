@@ -44,6 +44,25 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 		return new CountryFromDbToCoraConverter(jsonFactory, dataToJsonConverterFactory);
 	}
 
+	@Override
+	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
+			List<Map<String, String>> rowsFromDb) {
+		List<List<CoraJsonRecord>> convertedRows = new ArrayList<>();
+
+		for (Map<String, String> rowFromDb : rowsFromDb) {
+			convertToJsonFromRow(convertedRows, rowFromDb);
+		}
+		return convertedRows;
+	}
+
+	private void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
+									  Map<String, String> rowFromDb) {
+		List<CoraJsonRecord> convertedRow = new ArrayList<>();
+		convertTexts(rowFromDb, convertedRow);
+		convertCountryItem(rowFromDb, convertedRow);
+		convertedRows.add(convertedRow);
+	}
+
 	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
 			Map<String, String> rowFromDb) {
 		return TextFromCountryConstructor.constructFromDbRow(rowFromDb);
@@ -65,24 +84,7 @@ public final class CountryFromDbToCoraConverter implements FromDbToCoraConverter
 		return jsonFactory;
 	}
 
-	@Override
-	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
-			List<Map<String, String>> rowsFromDb) {
-		List<List<CoraJsonRecord>> convertedRows = new ArrayList<>();
 
-		for (Map<String, String> rowFromDb : rowsFromDb) {
-			convertToJsonFromRow(convertedRows, rowFromDb);
-		}
-		return convertedRows;
-	}
-
-	private void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
-			Map<String, String> rowFromDb) {
-		List<CoraJsonRecord> convertedRow = new ArrayList<>();
-		convertTexts(rowFromDb, convertedRow);
-		convertCountryItem(rowFromDb, convertedRow);
-		convertedRows.add(convertedRow);
-	}
 
 	private void convertTexts(Map<String, String> rowFromDb, List<CoraJsonRecord> convertedRow) {
 		List<ClientDataGroup> texts = getConstructedTextDataGroupsToCreate(rowFromDb);
