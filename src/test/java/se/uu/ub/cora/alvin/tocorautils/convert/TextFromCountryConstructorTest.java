@@ -73,7 +73,6 @@ public class TextFromCountryConstructorTest {
 		assertEquals(textParts.size(), 0);
 	}
 
-
 	private void assertCorrectRecordInfo(ClientDataGroup text, String textId) {
 		ClientDataGroup recordInfo = text.getFirstGroupWithNameInData("recordInfo");
 		assertEquals(recordInfo.getFirstAtomicValueWithNameInData("id"), textId);
@@ -85,7 +84,6 @@ public class TextFromCountryConstructorTest {
 		rowFromDb.put("enText", "Sweden");
 		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
 		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
-//        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertCorrectSwedishTextPart(text, "Sverige");
@@ -97,7 +95,8 @@ public class TextFromCountryConstructorTest {
 		rowFromDb.put("enText", null);
 		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
 		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
-//        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		// List<ClientDataGroup> texts =
+		// TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
@@ -111,7 +110,8 @@ public class TextFromCountryConstructorTest {
 		rowFromDb.put("enText", "");
 		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
 		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
-//        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		// List<ClientDataGroup> texts =
+		// TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);

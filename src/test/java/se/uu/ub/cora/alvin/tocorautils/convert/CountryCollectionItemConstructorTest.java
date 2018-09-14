@@ -19,7 +19,6 @@
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectDataDivider;
 
 import java.util.HashMap;
@@ -54,12 +53,6 @@ public class CountryCollectionItemConstructorTest {
 		assertCorrectDataDivider(recordInfo);
 
 		assertEquals(countryItem.getFirstAtomicValueWithNameInData("nameInData"), "SE");
-	}
-
-	@Test
-	public void testUnusedGetSuffixIsNull() {
-		CollectionItemConstructor countryFromDbToCoraStorageConverter = new CountryCollectionItemConstructor();
-		assertNull(countryFromDbToCoraStorageConverter.getSuffix());
 	}
 
 	@Test

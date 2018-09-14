@@ -45,7 +45,7 @@ public class HistoricCountryCollectionItemConstructorTest {
 		historicCountryItemConstructor.convert(rowFromDb);
 	}
 
-	@Test(expectedExceptions = DbRowException.class, expectedExceptionsMessageRegExp = "Could not extract valid ID from \"code\"")
+	@Test(expectedExceptions = DbRowException.class)
 	public void testConvertHistoricCountryWithoutCodeValue() {
 		rowFromDb.replace("code", "");
 		CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();

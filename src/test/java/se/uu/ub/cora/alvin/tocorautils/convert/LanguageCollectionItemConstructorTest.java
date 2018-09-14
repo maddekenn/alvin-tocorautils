@@ -19,7 +19,6 @@
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectDataDivider;
 
 import java.util.HashMap;
@@ -55,12 +54,6 @@ public class LanguageCollectionItemConstructorTest {
 		assertCorrectDataDivider(recordInfo);
 
 		assertEquals(langaugeItem.getFirstAtomicValueWithNameInData("nameInData"), "swe");
-	}
-
-	@Test
-	public void testUnusedGetSuffixIsNull() {
-		LanguageCollectionItemConstructor languageItemCounstructor = new LanguageCollectionItemConstructor();
-		assertEquals(languageItemCounstructor.getSuffix(), "");
 	}
 
 	@Test

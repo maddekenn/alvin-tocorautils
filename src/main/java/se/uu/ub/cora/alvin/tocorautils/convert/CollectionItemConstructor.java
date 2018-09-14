@@ -50,14 +50,16 @@ public abstract class CollectionItemConstructor {
 
 	protected abstract String getSuffix();
 
+	protected abstract String getNameInData();
+
 	void addRecordInfo(String id, ClientDataGroup item) {
 		ClientDataGroup recordInfo = ClientDataGroup.withNameInData("recordInfo");
-		addId(id, recordInfo);
+		addId(recordInfo);
 		addDataDivider(recordInfo);
 		item.addChild(recordInfo);
 	}
 
-	protected void addId(String id, ClientDataGroup recordInfo) {
+	protected void addId(ClientDataGroup recordInfo) {
 		recordInfo.addChild(ClientDataAtomic.withNameInDataAndValue("id", getId() + getSuffix()));
 	}
 
@@ -69,7 +71,7 @@ public abstract class CollectionItemConstructor {
 	}
 
 	protected void addNameInData(String nameInData, ClientDataGroup item) {
-		item.addChild(ClientDataAtomic.withNameInDataAndValue("nameInData", nameInData));
+		item.addChild(ClientDataAtomic.withNameInDataAndValue("nameInData", getNameInData()));
 	}
 
 	protected abstract void addExtraData(String value, ClientDataGroup item);

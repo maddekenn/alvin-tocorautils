@@ -75,11 +75,11 @@ public class HistoricCountryFromDbToCoraConverterTest {
 	private void assertCorrectFirstTextsAndItem() {
 		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(0);
 		assertCorrectTextGroupSentToConverterFactory(text,
-				"duchyOfSaxeCoburgMeiningenHistoricCountryText", 2, 3);
+				"duchyOfSaxeCoburgMeiningenHistoricCountryItemText", 2, 3);
 
 		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(1);
 		assertCorrectTextGroupSentToConverterFactory(defText,
-				"duchyOfSaxeCoburgMeiningenHistoricCountryDefText", 2, 3);
+				"duchyOfSaxeCoburgMeiningenHistoricCountryItemDefText", 2, 3);
 
 		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(2);
 		assertCorrectGroupSentToConverterFactory(langItem,
@@ -172,11 +172,11 @@ public class HistoricCountryFromDbToCoraConverterTest {
 	private void assertCorrectSecondTextsAndItem() {
 		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(3);
 		assertCorrectTextGroupSentToConverterFactory(text,
-				"archbishopricSalzburgHistoricCountryText", 2, 3);
+				"archbishopricSalzburgHistoricCountryItemText", 2, 3);
 
 		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(4);
 		assertCorrectTextGroupSentToConverterFactory(defText,
-				"archbishopricSalzburgHistoricCountryDefText", 2, 3);
+				"archbishopricSalzburgHistoricCountryItemDefText", 2, 3);
 
 		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(5);
 		assertCorrectGroupSentToConverterFactory(langItem,
@@ -197,12 +197,12 @@ public class HistoricCountryFromDbToCoraConverterTest {
 
 		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 7);
 		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(3);
-		assertCorrectTextGroupSentToConverterFactory(text, "lordshipTrckaLipaHistoricCountryText",
-				2, 3);
+		assertCorrectTextGroupSentToConverterFactory(text,
+				"lordshipTrckaLipaHistoricCountryItemText", 2, 3);
 
 		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(4);
 		assertCorrectTextGroupSentToConverterFactory(defText,
-				"lordshipTrckaLipaHistoricCountryDefText", 2, 3);
+				"lordshipTrckaLipaHistoricCountryItemDefText", 2, 3);
 
 		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(5);
 		assertCorrectGroupSentToConverterFactory(langItem, "lordshipTrckaLipaHistoricCountryItem",

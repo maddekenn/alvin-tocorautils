@@ -30,47 +30,23 @@ public class HistoricCountryCollectionItemConstructor extends CollectionItemCons
 
 	@Override
 	protected String getId() {
-		if (rowFromDb.containsKey("code")) {
-			return possiblyExtractCamelCaseId();
+		if (dbRowContainsNoCodeToUseAsId()) {
+			throw DbRowException.withMessage("Could not find \"code\"");
 		}
-		throw DbRowException.withMessage("Could not find \"code\"");
+		return TextUtil.turnStringIntoCamelCase(rowFromDb.get("code"));
 	}
 
-	private String possiblyExtractCamelCaseId() {
-		String id = cleanCamelCase(rowFromDb.get("code"));
-		if ("".equals(id)) {
-			throw DbRowException.withMessage("Could not extract valid ID from \"code\"");
-		}
-		return id;
-	}
-
-	private String cleanCamelCase(String text) {
-		StringBuilder sb = new StringBuilder();
-		boolean toUpper = false;
-		for (char symbol : text.toCharArray()) {
-			toUpper = handleCharacter(sb, toUpper, symbol);
-		}
-		return sb.toString();
-	}
-
-	private boolean handleCharacter(StringBuilder sb, boolean toUpper, char symbol) {
-		if (Character.isAlphabetic(symbol)) {
-			return handleUpperOrLowerCase(sb, toUpper, symbol);
-		}
-		return true;
-	}
-
-	private boolean handleUpperOrLowerCase(StringBuilder sb, boolean toUpper, char symbol) {
-		if (toUpper) {
-			sb.append(Character.toUpperCase(symbol));
-		} else {
-			sb.append(Character.toLowerCase(symbol));
-		}
-		return false;
+	private boolean dbRowContainsNoCodeToUseAsId() {
+		return !rowFromDb.containsKey("code") || "".equals(rowFromDb.get("code"));
 	}
 
 	@Override
 	protected void addExtraData(String value, ClientDataGroup item) {
 		// Not used in this item constructor
+	}
+
+	@Override
+	protected String getNameInData() {
+		return getId();
 	}
 }

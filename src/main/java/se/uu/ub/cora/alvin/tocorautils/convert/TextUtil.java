@@ -1,9 +1,10 @@
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class TextUtil {
-
 
 	private TextUtil() {
 	}
@@ -14,17 +15,18 @@ public class TextUtil {
 	}
 
 	public static String turnStringIntoCamelCase(String stringToTurnIntoCamelCase) {
-		String[] splitText = stringToTurnIntoCamelCase.split("\\P{Alpha}+");
-		String camelCasedString = splitText[0];
-		for(int i=1; i< splitText.length; i++){
-			String camelCasedWord = turnFirstCharacterIntoUpperCase(splitText[i]);
-			camelCasedString+=camelCasedWord;
-		}
+		String[] stringSplitByNonAlpha = stringToTurnIntoCamelCase.split("\\P{Alpha}+");
 
-		return camelCasedString;
+		String camelCased = Arrays.stream(stringSplitByNonAlpha)
+				.map(TextUtil::turnFirstCharacterIntoUpperCase).collect(Collectors.joining(""));
+		return turnFirstCharacterIntoLowerCase(camelCased);
 	}
 
-	private static final String turnFirstCharacterIntoUpperCase(String input) {
-		return input.substring(0,  1).toUpperCase() + input.substring(1);
+	private static final String turnFirstCharacterIntoUpperCase(String stringToModify) {
+		return stringToModify.substring(0, 1).toUpperCase() + stringToModify.substring(1);
+	};
+
+	private static final String turnFirstCharacterIntoLowerCase(String stringToModify) {
+		return stringToModify.substring(0, 1).toLowerCase() + stringToModify.substring(1);
 	};
 }

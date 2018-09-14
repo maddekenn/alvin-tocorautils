@@ -18,26 +18,19 @@
  */
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
-import se.uu.ub.cora.clientdata.ClientDataAtomic;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class LanguageCollectionItemConstructor extends CollectionItemConstructor {
 
 	@Override
 	protected String getSuffix() {
-		return "";
+		return "LanguageItem";
 	}
 
 	@Override
 	protected String getId() {
-		return rowFromDb.get("alpha3code").trim();
-	}
-
-	@Override
-	protected void addId(String idPrefix, ClientDataGroup recordInfo) {
-		String id = idPrefix.toLowerCase() + "LanguageItem";
-		recordInfo.addChild(ClientDataAtomic.withNameInDataAndValue("id", id));
-
+		String alpha3Code = rowFromDb.get("alpha3code").trim();
+		return alpha3Code.toLowerCase();
 	}
 
 	@Override
@@ -49,5 +42,10 @@ public class LanguageCollectionItemConstructor extends CollectionItemConstructor
 		possiblyAddExtraDataPartWithKeyAndAttribute("alpha2code", "iso639Alpha2", extraData);
 		item.addChild(extraData);
 
+	}
+
+	@Override
+	protected String getNameInData() {
+		return getId();
 	}
 }
