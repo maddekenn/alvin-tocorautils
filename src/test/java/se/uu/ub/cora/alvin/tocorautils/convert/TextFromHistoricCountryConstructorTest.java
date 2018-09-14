@@ -47,7 +47,8 @@ public class TextFromHistoricCountryConstructorTest {
 	@Test
 	public void testConstructTexts() {
 		rowFromDb.remove("enText");
-		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 
@@ -74,8 +75,12 @@ public class TextFromHistoricCountryConstructorTest {
 
 	@Test
 	public void testConstructTextsWithEnglishParts() {
-		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
+
+//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+//				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertCorrectSwedishTextPart(text, "Hertigdömet Sachsen-Coburg-Meiningen");
@@ -85,8 +90,12 @@ public class TextFromHistoricCountryConstructorTest {
 	@Test
 	public void testConstructTextsWithEnglishPartsNullValue() {
 		rowFromDb.replace("enText", null);
-		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
+
+//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+//				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
@@ -98,8 +107,12 @@ public class TextFromHistoricCountryConstructorTest {
 	@Test
 	public void testConstructTextsWithEnglishPartsEmptyValue() {
 		rowFromDb.replace("enText", "");
-		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
+
+//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+//				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);

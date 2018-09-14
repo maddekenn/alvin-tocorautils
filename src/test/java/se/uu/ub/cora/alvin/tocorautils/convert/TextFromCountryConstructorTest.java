@@ -45,7 +45,8 @@ public class TextFromCountryConstructorTest {
 
 	@Test
 	public void testConstructTexts() {
-		List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 
 		ClientDataGroup text = texts.get(0);
@@ -82,7 +83,9 @@ public class TextFromCountryConstructorTest {
 	@Test
 	public void testConstructTextsWithEnglishParts() {
 		rowFromDb.put("enText", "Sweden");
-        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+//        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertCorrectSwedishTextPart(text, "Sverige");
@@ -92,7 +95,9 @@ public class TextFromCountryConstructorTest {
 	@Test
 	public void testConstructTextsWithEnglishPartsNullValue() {
 		rowFromDb.put("enText", null);
-        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+//        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
@@ -104,7 +109,9 @@ public class TextFromCountryConstructorTest {
 	@Test
 	public void testConstructTextsWithEnglishPartsEmptyValue() {
 		rowFromDb.put("enText", "");
-        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
+		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+//        List<ClientDataGroup> texts = TextFromCountryConstructor.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);

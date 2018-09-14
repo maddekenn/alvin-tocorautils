@@ -108,7 +108,9 @@ public final class HistoricCountryFromDbToCoraConverter implements FromDbToCoraC
 
 	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
 			Map<String, String> rowFromDb) {
-		return TextFromHistoricCountryConstructor.constructFromDbRow(rowFromDb);
+		TextFromHistoricCountryConstructor textConstructor = new TextFromHistoricCountryConstructor();
+		return textConstructor.constructFromDbRow(rowFromDb);
+//		return TextFromHistoricCountryConstructor.constructFromDbRow(rowFromDb);
 	}
 
 	private String convertText(ClientDataGroup text) {

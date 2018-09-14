@@ -35,9 +35,6 @@ public class TextFromCountryConstructor {
 
 	protected String coraInfix = "CountryItem";
 
-	protected TextFromCountryConstructor(Map<String,String> rowFromDb) {
-        this.rowFromDb = rowFromDb;
-    }
 
     protected List<ClientDataGroup> getTexts() {
 		texts = new ArrayList<>();
@@ -46,9 +43,12 @@ public class TextFromCountryConstructor {
 		return texts;
 	}
 
-	public static List<ClientDataGroup> constructFromDbRow(Map<String, String> rowFromDb) {
-        TextFromCountryConstructor textConstructor = new TextFromCountryConstructor(rowFromDb);
-		return textConstructor.getTexts();
+	List<ClientDataGroup> constructFromDbRow(Map<String, String> rowFromDb) {
+		List<ClientDataGroup> texts = new ArrayList<>();
+		this.rowFromDb = rowFromDb;
+		createText(texts);
+		createDefText(texts);
+		return texts;
 	}
 
 	private void createText(List<ClientDataGroup> texts) {
