@@ -44,19 +44,6 @@ public class HistoricCountryCollectionItemConstructor extends CollectionItemCons
 		return id;
 	}
 
-	// private String sdf(String s) {
-	// Arrays.asList(s.toCharArray()).stream().collect();
-	//
-	// return "";
-	// }
-	//
-	// private Optional<Character> handleSymbol(Character symbol) {
-	// if(Character.isAlphabetic(symbol)) {
-	// return Optional.of(symbol);
-	// }
-	// return Optional.empty();
-	// }
-
 	private String cleanCamelCase(String text) {
 		StringBuilder sb = new StringBuilder();
 		boolean toUpper = false;
@@ -76,10 +63,10 @@ public class HistoricCountryCollectionItemConstructor extends CollectionItemCons
 	private boolean handleUpperOrLowerCase(StringBuilder sb, boolean toUpper, char symbol) {
 		if (toUpper) {
 			sb.append(Character.toUpperCase(symbol));
-			return false;
+		} else {
+			sb.append(Character.toLowerCase(symbol));
 		}
-		sb.append(Character.toLowerCase(symbol));
-		return toUpper;
+		return false;
 	}
 
 	@Override

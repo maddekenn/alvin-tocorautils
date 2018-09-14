@@ -9,6 +9,7 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.alvin.tocorautils.DbRowException;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class HistoricCountryCollectionItemConstructorTest {
@@ -37,14 +38,14 @@ public class HistoricCountryCollectionItemConstructorTest {
 				"duchyOfSaxeCoburgMeiningen");
 	}
 
-	@Test(expectedExceptions = AssertionError.class)
+	@Test(expectedExceptions = DbRowException.class, expectedExceptionsMessageRegExp = "Could not find \"code\"")
 	public void testConvertHistoricCountryWithoutCodeKey() {
 		rowFromDb.remove("code");
 		CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();
 		historicCountryItemConstructor.convert(rowFromDb);
 	}
 
-	@Test(expectedExceptions = AssertionError.class)
+	@Test(expectedExceptions = DbRowException.class, expectedExceptionsMessageRegExp = "Could not extract valid ID from \"code\"")
 	public void testConvertHistoricCountryWithoutCodeValue() {
 		rowFromDb.replace("code", "");
 		CollectionItemConstructor historicCountryItemConstructor = new HistoricCountryCollectionItemConstructor();

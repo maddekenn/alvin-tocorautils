@@ -18,86 +18,132 @@
  */
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.clientdata.ClientDataGroup;
-import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverter;
-import se.uu.ub.cora.json.builder.JsonBuilderFactory;
-
-import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class HistoricCountryFromDbToCoraConverter implements FromDbToCoraConverter{
-    private JsonBuilderFactory jsonFactory;
-    private DataToJsonConverterFactory dataToJsonConverterFactory;
-    private HistoricCountryFromDbToCoraConverter(JsonBuilderFactory jsonFactory,
-                                         DataToJsonConverterFactory dataToJsonConverterFactory) {
-        this.jsonFactory = jsonFactory;
-        this.dataToJsonConverterFactory = dataToJsonConverterFactory;
-    }
-    public static HistoricCountryFromDbToCoraConverter usingJsonFactoryAndConverterFactory(JsonBuilderFactory jsonFactory, DataToJsonConverterFactory dataToJsonConverterFactory) {
-        return new HistoricCountryFromDbToCoraConverter(jsonFactory, dataToJsonConverterFactory);
-    }
+import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
+import se.uu.ub.cora.clientdata.ClientDataGroup;
+import se.uu.ub.cora.clientdata.RecordIdentifier;
+import se.uu.ub.cora.clientdata.constructor.ItemCollectionConstructor;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverter;
+import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
+import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 
-    public JsonBuilderFactory getJsonBuilderFactory() {
-        // needed for tests
-        return jsonFactory;
-    }
+public final class HistoricCountryFromDbToCoraConverter implements FromDbToCoraConverter {
+	private JsonBuilderFactory jsonFactory;
+	private DataToJsonConverterFactory dataToJsonConverterFactory;
+	private List<RecordIdentifier> collectionItems;
 
-    public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(List<Map<String,String>> rowsFromDb) {
-        List<List<CoraJsonRecord>> convertedRows = new ArrayList<>();
+	private HistoricCountryFromDbToCoraConverter(JsonBuilderFactory jsonFactory,
+			DataToJsonConverterFactory dataToJsonConverterFactory) {
+		this.jsonFactory = jsonFactory;
+		this.dataToJsonConverterFactory = dataToJsonConverterFactory;
+	}
 
-        for (Map<String, String> rowFromDb : rowsFromDb) {
-            convertToJsonFromRow(convertedRows, rowFromDb);
-        }
-        return convertedRows;
-    }
-    private void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
-                                      Map<String, String> rowFromDb) {
-        List<CoraJsonRecord> convertedRow = new ArrayList<>();
-        convertTexts(rowFromDb, convertedRow);
-        convertHistoricCountryItem(rowFromDb, convertedRow);
-        convertedRows.add(convertedRow);
-    }
+	public static HistoricCountryFromDbToCoraConverter usingJsonFactoryAndConverterFactory(
+			JsonBuilderFactory jsonFactory, DataToJsonConverterFactory dataToJsonConverterFactory) {
+		return new HistoricCountryFromDbToCoraConverter(jsonFactory, dataToJsonConverterFactory);
+	}
 
-    private void convertHistoricCountryItem(Map<String, String> rowFromDb,
-                                    List<CoraJsonRecord> convertedRow) {
-        ClientDataGroup itemDataGroup = getConstructedHistoricCountryItemToCreate(rowFromDb);
+	public JsonBuilderFactory getJsonBuilderFactory() {
+		// needed for tests
+		return jsonFactory;
+	}
 
-        DataToJsonConverter converter = getDataToJsonConverterFactory()
-                .createForClientDataElement(jsonFactory, itemDataGroup);
-        String json = converter.toJson();
-        convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("historicCountryCollectionItem", json));
-    }
+	@Override
+	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
+			List<Map<String, String>> rowsFromDb) {
+		collectionItems = new ArrayList<>();
+		List<List<CoraJsonRecord>> convertedRows = new ArrayList<>();
+		for (Map<String, String> rowFromDb : rowsFromDb) {
+			normalizeCodeString(rowFromDb);
+			convertToJsonFromRow(convertedRows, rowFromDb);
+		}
+		convertedRows.add(createItemCollectionForCreatedCollectionItems());
+		return convertedRows;
+	}
 
+	private void normalizeCodeString(Map<String, String> rowFromDb) {
+		String code = rowFromDb.get("code");
+		String replacedCode = TextUtil.normalizeString(code);
+		rowFromDb.put("code", replacedCode);
+	}
 
-    private ClientDataGroup getConstructedHistoricCountryItemToCreate(Map<String, String> rowFromDb) {
-        CollectionItemConstructor itemConstructor = new HistoricCountryCollectionItemConstructor();
-        return itemConstructor.convert(rowFromDb);
-    }
+	private void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
+			Map<String, String> rowFromDb) {
+		List<CoraJsonRecord> convertedRow = new ArrayList<>();
+		convertTexts(rowFromDb, convertedRow);
+		convertHistoricCountryItem(rowFromDb, convertedRow);
+		convertedRows.add(convertedRow);
+	}
 
-    private void convertTexts(Map<String, String> rowFromDb, List<CoraJsonRecord> convertedRow) {
-        List<ClientDataGroup> texts = getConstructedTextDataGroupsToCreate(rowFromDb);
-        for (ClientDataGroup text : texts) {
-            String json = convertText(text);
-            convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", json));
-        }
-    }
+	private void convertHistoricCountryItem(Map<String, String> rowFromDb,
+			List<CoraJsonRecord> convertedRow) {
+		ClientDataGroup itemDataGroup = getConstructedHistoricCountryItemToCreate(rowFromDb);
 
-    private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
-            Map<String, String> rowFromDb) {
-        return TextFromHistoricCountryConstructor.constructFromDbRow(rowFromDb);
-    }
+		String id = itemDataGroup.getFirstGroupWithNameInData("recordInfo")
+				.getFirstAtomicValueWithNameInData("id");
+		collectionItems.add(RecordIdentifier.usingTypeAndId("genericCollectionItem", id));
 
-    private String convertText(ClientDataGroup text) {
-        DataToJsonConverter converter = getDataToJsonConverterFactory()
-                .createForClientDataElement(jsonFactory, text);
-        return converter.toJson();
-    }
+		DataToJsonConverter converter = getDataToJsonConverterFactory()
+				.createForClientDataElement(jsonFactory, itemDataGroup);
+		String json = converter.toJson();
+		convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("genericCollectionItem", json));
+	}
 
-    public DataToJsonConverterFactory getDataToJsonConverterFactory() {
-        return dataToJsonConverterFactory;
-    }
+	private ClientDataGroup getConstructedHistoricCountryItemToCreate(
+			Map<String, String> rowFromDb) {
+		CollectionItemConstructor itemConstructor = new HistoricCountryCollectionItemConstructor();
+		return itemConstructor.convert(rowFromDb);
+	}
+
+	private void convertTexts(Map<String, String> rowFromDb, List<CoraJsonRecord> convertedRow) {
+		List<ClientDataGroup> texts = getConstructedTextDataGroupsToCreate(rowFromDb);
+		for (ClientDataGroup text : texts) {
+			String json = convertText(text);
+			convertedRow.add(CoraJsonRecord.withRecordTypeAndJson("coraText", json));
+		}
+	}
+
+	private List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
+			Map<String, String> rowFromDb) {
+		return TextFromHistoricCountryConstructor.constructFromDbRow(rowFromDb);
+	}
+
+	private String convertText(ClientDataGroup text) {
+		DataToJsonConverter converter = getDataToJsonConverterFactory()
+				.createForClientDataElement(jsonFactory, text);
+		return converter.toJson();
+	}
+
+	public DataToJsonConverterFactory getDataToJsonConverterFactory() {
+		return dataToJsonConverterFactory;
+	}
+
+	private List<CoraJsonRecord> createItemCollectionForCreatedCollectionItems() {
+		List<CoraJsonRecord> itemCollectionHolderList = new ArrayList<>();
+		String itemCollectionJson = createItemCollectionAsJson();
+
+		CoraJsonRecord coraRecordJsonItemCollection = CoraJsonRecord
+				.withRecordTypeAndJson("metadataItemCollection", itemCollectionJson);
+		itemCollectionHolderList.add(coraRecordJsonItemCollection);
+		return itemCollectionHolderList;
+	}
+
+	private String createItemCollectionAsJson() {
+		ItemCollectionConstructor itemCollectionConstructor = ItemCollectionConstructor
+				.withDataDivider("cora");
+		ClientDataGroup itemCollectionDataGroup = createItemCollectionDataGroup(
+				itemCollectionConstructor);
+		DataToJsonConverter converter = dataToJsonConverterFactory
+				.createForClientDataElement(jsonFactory, itemCollectionDataGroup);
+		return converter.toJson();
+	}
+
+	private ClientDataGroup createItemCollectionDataGroup(
+			ItemCollectionConstructor itemCollectionConstructor) {
+		return itemCollectionConstructor.constructUsingIdAndNameInDataAndCollectionItems(
+				"historicCountryCollection", "historicCountry", collectionItems);
+	}
 }
