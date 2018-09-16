@@ -62,8 +62,8 @@ public class CountryFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 3);
-		assertEquals(convertedRows.size(), 1);
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 4);
+		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
@@ -80,6 +80,15 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordItem.json, collectionItemJsonFromSpy);
 
 		assertCorrectFirstTextsAndItem();
+
+		List<CoraJsonRecord> row2 = convertedRows.get(1);
+		CoraJsonRecord coraJsonItemCollection = row2.get(0);
+		assertEquals(coraJsonItemCollection.recordType, "metadataItemCollection");
+
+		ClientDataGroup countryCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
+				.get(3);
+		assertCorrectCollectionWithOneRefSentToFactory(countryCollection,
+				"completeCountryCollection", 3, "completeCountry");
 	}
 
 	private void assertCorrectFirstTextsAndItem() {
@@ -120,6 +129,25 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(extraDataPart.getAttributes().get("type"), "iso31661Alpha2");
 	}
 
+	private void assertCorrectCollectionWithOneRefSentToFactory(ClientDataGroup langCollection,
+			String expectedId, int numOfChildren, String nameInData) {
+		assertCorrectGroupSentToConverterFactory(langCollection, expectedId, numOfChildren);
+		assertEquals(langCollection.getFirstAtomicValueWithNameInData("nameInData"), nameInData);
+		String expectedItemId = "seCountryItem";
+		assertCorrectChildReferencesWithOneItem(langCollection, expectedItemId);
+	}
+
+	private void assertCorrectChildReferencesWithOneItem(ClientDataGroup langCollection,
+			String expectedItemId) {
+		ClientDataGroup childReferences = langCollection
+				.getFirstGroupWithNameInData("collectionItemReferences");
+		assertEquals(childReferences.getAllChildrenWithNameInData("ref").size(), 1);
+		ClientDataGroup ref = childReferences.getFirstGroupWithNameInData("ref");
+		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
+				"countryCollectionItem");
+		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), expectedItemId);
+	}
+
 	@Test
 	public void testConvertCountryTwoRow() {
 		Map<String, String> rowFromDb = new HashMap<>();
@@ -130,8 +158,8 @@ public class CountryFromDbToCoraConverterTest {
 		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
-		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 6);
-		assertEquals(convertedRows.size(), 2);
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 7);
+		assertEquals(convertedRows.size(), 3);
 		List<CoraJsonRecord> row = convertedRows.get(0);
 		CoraJsonRecord coraJsonRecordText = row.get(0);
 		assertEquals(coraJsonRecordText.recordType, "coraText");
@@ -161,6 +189,7 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordItem2.json, collectionItemJsonFromSpy);
 		assertCorrectFirstTextsAndItem();
 		assertCorrectSecondTextsAndItem();
+
 	}
 
 	private void assertCorrectSecondTextsAndItem() {

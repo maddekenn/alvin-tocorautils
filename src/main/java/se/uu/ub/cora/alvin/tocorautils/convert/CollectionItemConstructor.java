@@ -41,7 +41,7 @@ public abstract class CollectionItemConstructor {
 
 	private void addChildrenToClientDataGroup(ClientDataGroup item) {
 		String id = getId();
-		addRecordInfo(id, item);
+		addRecordInfo(item);
 		addNameInData(id, item);
 		addExtraData(id, item);
 	}
@@ -52,7 +52,7 @@ public abstract class CollectionItemConstructor {
 
 	protected abstract String getNameInData();
 
-	void addRecordInfo(String id, ClientDataGroup item) {
+	void addRecordInfo(ClientDataGroup item) {
 		ClientDataGroup recordInfo = ClientDataGroup.withNameInData("recordInfo");
 		addId(recordInfo);
 		addDataDivider(recordInfo);

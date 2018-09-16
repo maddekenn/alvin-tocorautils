@@ -66,9 +66,9 @@ public class HistoricCountryFromDbToCoraConverterTest {
 		CoraJsonRecord coraJsonItemCollection = row2.get(0);
 		assertEquals(coraJsonItemCollection.recordType, "metadataItemCollection");
 
-		ClientDataGroup langCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
+		ClientDataGroup countryCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
 				.get(3);
-		assertCorrectCollectionWithOneRefSentToFactory(langCollection, "historicCountryCollection",
+		assertCorrectCollectionWithOneRefSentToFactory(countryCollection, "historicCountryCollection",
 				3, "historicCountry");
 	}
 
