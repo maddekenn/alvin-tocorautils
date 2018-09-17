@@ -27,6 +27,10 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class TextFromCountryConstructor {
 
+	private static final String COUNTRY_ITEM = "CountryItem";
+
+	private static final String ALPHA2CODE = "alpha2code";
+
 	private Map<String, String> rowFromDb;
 
 	List<ClientDataGroup> constructFromDbRow(Map<String, String> rowFromDb) {
@@ -57,8 +61,12 @@ public class TextFromCountryConstructor {
 	}
 
 	private String constructIdFromCodeWithEnding(String ending) {
-		String code = rowFromDb.get("alpha2code");
-		return code.toLowerCase() + "CountryItem" + ending;
+		String code = rowFromDb.get(getDbKey());
+		return modifyCodeString(code) + getItemNamePart() + ending;
+	}
+
+	protected String modifyCodeString(String oldId) {
+		return oldId.toLowerCase();
 	}
 
 	private void addId(String id, ClientDataGroup recordInfo) {
@@ -102,5 +110,13 @@ public class TextFromCountryConstructor {
 
 	private void createDefText(List<ClientDataGroup> texts) {
 		createAndAddTextWithIdEnding(texts, "DefText");
+	}
+
+	protected String getDbKey() {
+		return ALPHA2CODE;
+	}
+
+	protected String getItemNamePart() {
+		return COUNTRY_ITEM;
 	}
 }

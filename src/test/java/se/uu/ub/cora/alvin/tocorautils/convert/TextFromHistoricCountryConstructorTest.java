@@ -22,6 +22,7 @@ import static org.testng.Assert.assertEquals;
 import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectDataDivider;
 import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectEnglishTextPart;
 import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertCorrectSwedishTextPart;
+import static se.uu.ub.cora.alvin.tocorautils.convert.ConverterTestHelpers.assertNoEnglishTextPart;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,47 +31,40 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.clientdata.ClientDataAttribute;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
-public class TextFromCountryConstructorTest {
+public class TextFromHistoricCountryConstructorTest {
 	private Map<String, String> rowFromDb;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		rowFromDb = new HashMap<>();
-		rowFromDb.put("alpha2code", "SE");
-		rowFromDb.put("svText", "Sverige");
+		rowFromDb.put("code", "duchy_of_saxe-coburg-meiningen");
+		rowFromDb.put("svText", "Hertigdömet Sachsen-Coburg-Meiningen");
+		rowFromDb.put("enText", "Duchy of Saxe-Coburg-Meiningen");
 	}
 
 	@Test
 	public void testConstructTexts() {
-		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
-		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+		rowFromDb.remove("enText");
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
+				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getNameInData(), "text");
 
-		assertCorrectRecordInfo(text, "seCountryItemText");
-		assertCorrectSwedishTextPart(text, "Sverige");
+		assertCorrectRecordInfo(text, "duchyOfSaxeCoburgMeiningenHistoricCountryItemText");
+		assertCorrectSwedishTextPart(text, "Hertigdömet Sachsen-Coburg-Meiningen");
 		assertNoEnglishTextPart(text);
 
 		ClientDataGroup defText = texts.get(1);
 		assertEquals(defText.getNameInData(), "text");
 
-		assertCorrectRecordInfo(defText, "seCountryItemDefText");
-		assertCorrectSwedishTextPart(defText, "Sverige");
+		assertCorrectRecordInfo(defText, "duchyOfSaxeCoburgMeiningenHistoricCountryItemDefText");
+		assertCorrectSwedishTextPart(defText, "Hertigdömet Sachsen-Coburg-Meiningen");
 		assertNoEnglishTextPart(defText);
-	}
-
-	private void assertNoEnglishTextPart(ClientDataGroup text) {
-		ClientDataAttribute type = ClientDataAttribute.withNameInDataAndValue("type",
-				"alternative");
-		ClientDataAttribute lang = ClientDataAttribute.withNameInDataAndValue("lang", "en");
-		List<ClientDataGroup> textParts = (List<ClientDataGroup>) text
-				.getAllGroupsWithNameInDataAndAttributes("textPart", type, lang);
-		assertEquals(textParts.size(), 0);
 	}
 
 	private void assertCorrectRecordInfo(ClientDataGroup text, String textId) {
@@ -81,22 +75,27 @@ public class TextFromCountryConstructorTest {
 
 	@Test
 	public void testConstructTextsWithEnglishParts() {
-		rowFromDb.put("enText", "Sweden");
-		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
-		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
+				.constructFromDbRow(rowFromDb);
+
+//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+//				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
-		assertCorrectSwedishTextPart(text, "Sverige");
-		assertCorrectEnglishTextPart(text, "Sweden");
+		assertCorrectSwedishTextPart(text, "Hertigdömet Sachsen-Coburg-Meiningen");
+		assertCorrectEnglishTextPart(text, "Duchy of Saxe-Coburg-Meiningen");
 	}
 
 	@Test
 	public void testConstructTextsWithEnglishPartsNullValue() {
-		rowFromDb.put("enText", null);
-		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
-		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
-		// List<ClientDataGroup> texts =
-		// TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		rowFromDb.replace("enText", null);
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
+				.constructFromDbRow(rowFromDb);
+
+//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+//				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
@@ -107,11 +106,13 @@ public class TextFromCountryConstructorTest {
 
 	@Test
 	public void testConstructTextsWithEnglishPartsEmptyValue() {
-		rowFromDb.put("enText", "");
-		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
-		List<ClientDataGroup> texts = textConstructor.constructFromDbRow(rowFromDb);
-		// List<ClientDataGroup> texts =
-		// TextFromCountryConstructor.constructFromDbRow(rowFromDb);
+		rowFromDb.replace("enText", "");
+		TextFromHistoricCountryConstructor textFromHistoricCountryConstructor = new TextFromHistoricCountryConstructor();
+		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
+				.constructFromDbRow(rowFromDb);
+
+//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+//				.constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
@@ -119,5 +120,4 @@ public class TextFromCountryConstructorTest {
 		ClientDataGroup defText = texts.get(1);
 		assertEquals(defText.getAllGroupsWithNameInData("textPart").size(), 1);
 	}
-
 }

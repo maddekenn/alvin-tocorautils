@@ -1,21 +1,4 @@
-/*
- * Copyright 2018 Uppsala University Library
- *
- * This file is part of Cora.
- *
- *     Cora is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     Cora is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
- */package se.uu.ub.cora.alvin.tocorautils.convert;
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
 
@@ -33,35 +16,33 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
-public class CountryFromDbToCoraConverterTest {
-	List<Map<String, String>> rowsFromDb = new ArrayList<Map<String, String>>();
+public class HistoricCountryFromDbToCoraConverterTest {
+	List<Map<String, String>> rowsFromDb = new ArrayList<>();
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
-	private CountryFromDbToCoraConverter countryFromDbToCoraConverter;
+	private HistoricCountryFromDbToCoraConverter historicCountryFromDbToCoraConverter;
 	private DataToJsonConverterFactorySpy dataToJsonConverterFactory;
 
 	@BeforeMethod
 	public void beforeMethod() {
-		rowsFromDb = new ArrayList<Map<String, String>>();
+		rowsFromDb = new ArrayList<>();
 		Map<String, String> rowFromDb = new HashMap<>();
-		rowFromDb.put("alpha2code", "SE");
-		rowFromDb.put("svText", "Sverige");
-
+		rowFromDb.put("code", "duchy_of_saxe-coburg-meiningen");
+		rowFromDb.put("svText", "Hertigdömet Sachsen-Coburg-Meiningen");
+		rowFromDb.put("enText", "Duchy of Saxe-Coburg-Meiningen");
 		rowsFromDb.add(rowFromDb);
 
 		coraClient = new CoraClientSpy();
 		jsonFactory = new OrgJsonBuilderFactoryAdapter();
 		dataToJsonConverterFactory = new DataToJsonConverterFactorySpy();
-		countryFromDbToCoraConverter = CountryFromDbToCoraConverter
+		historicCountryFromDbToCoraConverter = HistoricCountryFromDbToCoraConverter
 				.usingJsonFactoryAndConverterFactory(jsonFactory, dataToJsonConverterFactory);
-
 	}
 
 	@Test
 	public void testConvertCountryOneRow() {
-		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
+		List<List<CoraJsonRecord>> convertedRows = historicCountryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
-
 		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 4);
 		assertEquals(convertedRows.size(), 2);
 		List<CoraJsonRecord> row = convertedRows.get(0);
@@ -75,7 +56,7 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
-		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
+		assertEquals(coraJsonRecordItem.recordType, "genericCollectionItem");
 		String collectionItemJsonFromSpy = "{\"name\":\"metadata\"}";
 		assertEquals(coraJsonRecordItem.json, collectionItemJsonFromSpy);
 
@@ -87,21 +68,24 @@ public class CountryFromDbToCoraConverterTest {
 
 		ClientDataGroup countryCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
 				.get(3);
-		assertCorrectCollectionWithOneRefSentToFactory(countryCollection,
-				"completeCountryCollection", 3, "completeCountry");
+		assertCorrectCollectionWithOneRefSentToFactory(countryCollection, "historicCountryCollection",
+				3, "historicCountry");
 	}
 
 	private void assertCorrectFirstTextsAndItem() {
 		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(0);
-		assertCorrectTextGroupSentToConverterFactory(text, "seCountryItemText", 1, 2);
+		assertCorrectTextGroupSentToConverterFactory(text,
+				"duchyOfSaxeCoburgMeiningenHistoricCountryItemText", 2, 3);
 
 		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(1);
-		assertCorrectTextGroupSentToConverterFactory(defText, "seCountryItemDefText", 1, 2);
+		assertCorrectTextGroupSentToConverterFactory(defText,
+				"duchyOfSaxeCoburgMeiningenHistoricCountryItemDefText", 2, 3);
 
 		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(2);
-		assertCorrectGroupSentToConverterFactory(langItem, "seCountryItem", 3);
-		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"), "SE");
-		assertCorrectExtraData(langItem, "SE");
+		assertCorrectGroupSentToConverterFactory(langItem,
+				"duchyOfSaxeCoburgMeiningenHistoricCountryItem", 2);
+		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"),
+				"duchyOfSaxeCoburgMeiningen");
 	}
 
 	private void assertCorrectTextGroupSentToConverterFactory(ClientDataGroup group,
@@ -122,18 +106,11 @@ public class CountryFromDbToCoraConverterTest {
 		return recordInfo.getFirstAtomicValueWithNameInData("id");
 	}
 
-	private void assertCorrectExtraData(ClientDataGroup langItem, String partValue) {
-		ClientDataGroup extraData = langItem.getFirstGroupWithNameInData("extraData");
-		ClientDataGroup extraDataPart = extraData.getFirstGroupWithNameInData("extraDataPart");
-		assertEquals(extraDataPart.getFirstAtomicValueWithNameInData("value"), partValue);
-		assertEquals(extraDataPart.getAttributes().get("type"), "iso31661Alpha2");
-	}
-
 	private void assertCorrectCollectionWithOneRefSentToFactory(ClientDataGroup langCollection,
 			String expectedId, int numOfChildren, String nameInData) {
 		assertCorrectGroupSentToConverterFactory(langCollection, expectedId, numOfChildren);
 		assertEquals(langCollection.getFirstAtomicValueWithNameInData("nameInData"), nameInData);
-		String expectedItemId = "seCountryItem";
+		String expectedItemId = "duchyOfSaxeCoburgMeiningenHistoricCountryItem";
 		assertCorrectChildReferencesWithOneItem(langCollection, expectedItemId);
 	}
 
@@ -144,18 +121,19 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(childReferences.getAllChildrenWithNameInData("ref").size(), 1);
 		ClientDataGroup ref = childReferences.getFirstGroupWithNameInData("ref");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordType"),
-				"countryCollectionItem");
+				"genericCollectionItem");
 		assertEquals(ref.getFirstAtomicValueWithNameInData("linkedRecordId"), expectedItemId);
 	}
 
 	@Test
 	public void testConvertCountryTwoRow() {
 		Map<String, String> rowFromDb = new HashMap<>();
-		rowFromDb.put("alpha2code", "NO");
-		rowFromDb.put("svText", "Norge");
+		rowFromDb.put("code", "archbishopric_salzburg");
+		rowFromDb.put("svText", "Ärkebiskopsdömet Salzburg");
+		rowFromDb.put("enText", "Archbishopric of Salzburg");
 		rowsFromDb.add(rowFromDb);
 
-		List<List<CoraJsonRecord>> convertedRows = countryFromDbToCoraConverter
+		List<List<CoraJsonRecord>> convertedRows = historicCountryFromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(rowsFromDb);
 
 		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 7);
@@ -171,7 +149,7 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordDefText.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem = row.get(2);
-		assertEquals(coraJsonRecordItem.recordType, "countryCollectionItem");
+		assertEquals(coraJsonRecordItem.recordType, "genericCollectionItem");
 		String collectionItemJsonFromSpy = "{\"name\":\"metadata\"}";
 		assertEquals(coraJsonRecordItem.json, collectionItemJsonFromSpy);
 
@@ -185,23 +163,51 @@ public class CountryFromDbToCoraConverterTest {
 		assertEquals(coraJsonRecordDefText2.json, textJsonFromSpy);
 
 		CoraJsonRecord coraJsonRecordItem2 = row2.get(2);
-		assertEquals(coraJsonRecordItem2.recordType, "countryCollectionItem");
+		assertEquals(coraJsonRecordItem2.recordType, "genericCollectionItem");
 		assertEquals(coraJsonRecordItem2.json, collectionItemJsonFromSpy);
 		assertCorrectFirstTextsAndItem();
 		assertCorrectSecondTextsAndItem();
-
 	}
 
 	private void assertCorrectSecondTextsAndItem() {
 		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(3);
-		assertCorrectTextGroupSentToConverterFactory(text, "noCountryItemText", 1, 2);
+		assertCorrectTextGroupSentToConverterFactory(text,
+				"archbishopricSalzburgHistoricCountryItemText", 2, 3);
 
 		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(4);
-		assertCorrectTextGroupSentToConverterFactory(defText, "noCountryItemDefText", 1, 2);
+		assertCorrectTextGroupSentToConverterFactory(defText,
+				"archbishopricSalzburgHistoricCountryItemDefText", 2, 3);
 
 		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(5);
-		assertCorrectGroupSentToConverterFactory(langItem, "noCountryItem", 3);
-		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"), "NO");
-		assertCorrectExtraData(langItem, "NO");
+		assertCorrectGroupSentToConverterFactory(langItem,
+				"archbishopricSalzburgHistoricCountryItem", 2);
+		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"),
+				"archbishopricSalzburg");
 	}
+
+	@Test
+	public void testConvertCountryTwoRowCharactersShouldBeReplaced() {
+		Map<String, String> rowFromDb = new HashMap<>();
+		rowFromDb.put("code", "lordship_trcka_lípa");
+		rowFromDb.put("svText", "Herradöme Trčka von Lípa");
+		rowFromDb.put("enText", "Lordship of Trčka von Lípa");
+		rowsFromDb.add(rowFromDb);
+
+		historicCountryFromDbToCoraConverter.convertToJsonFromRowsFromDb(rowsFromDb);
+
+		assertEquals(dataToJsonConverterFactory.calledNumOfTimes, 7);
+		ClientDataGroup text = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(3);
+		assertCorrectTextGroupSentToConverterFactory(text,
+				"lordshipTrckaLipaHistoricCountryItemText", 2, 3);
+
+		ClientDataGroup defText = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(4);
+		assertCorrectTextGroupSentToConverterFactory(defText,
+				"lordshipTrckaLipaHistoricCountryItemDefText", 2, 3);
+
+		ClientDataGroup langItem = (ClientDataGroup) dataToJsonConverterFactory.dataElements.get(5);
+		assertCorrectGroupSentToConverterFactory(langItem, "lordshipTrckaLipaHistoricCountryItem",
+				2);
+		assertEquals(langItem.getFirstAtomicValueWithNameInData("nameInData"), "lordshipTrckaLipa");
+	}
+
 }

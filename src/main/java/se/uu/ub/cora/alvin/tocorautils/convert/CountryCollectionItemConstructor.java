@@ -24,21 +24,18 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 public class CountryCollectionItemConstructor extends CollectionItemConstructor {
 
 	@Override
+	protected String getSuffix() {
+		return "CountryItem";
+	}
+
+	@Override
 	protected String getId() {
-		return rowFromDb.get("alpha2code").trim();
+		return rowFromDb.get("alpha2code").trim().toLowerCase();
 	}
 
 	@Override
-	void addRecordInfo(String alpha2code, ClientDataGroup item) {
-		ClientDataGroup recordInfo = ClientDataGroup.withNameInData("recordInfo");
-		addId(alpha2code, recordInfo);
-		addDataDivider(recordInfo);
-		item.addChild(recordInfo);
-	}
-
-	@Override
-	protected void addId(String idPrefix, ClientDataGroup recordInfo) {
-		String id = idPrefix.toLowerCase() + "CountryItem";
+	protected void addId(ClientDataGroup recordInfo) {
+		String id = getId().toLowerCase() + getSuffix();
 		recordInfo.addChild(ClientDataAtomic.withNameInDataAndValue("id", id));
 	}
 
@@ -46,12 +43,17 @@ public class CountryCollectionItemConstructor extends CollectionItemConstructor 
 	protected void addExtraData(String value, ClientDataGroup item) {
 		ClientDataGroup extraData = ClientDataGroup.withNameInData("extraData");
 		ClientDataGroup iso2ExtraDataPart = createExtraDataPartWithAttributeAndValue(
-				"iso31661Alpha2", value);
+				"iso31661Alpha2", value.toUpperCase());
 		extraData.addChild(iso2ExtraDataPart);
 		possiblyAddExtraDataPartWithKeyAndAttribute("alpha3code", "iso31661Alpha3", extraData);
 		possiblyAddExtraDataPartWithKeyAndAttribute("numericalcode", "iso31661Numeric", extraData);
 		possiblyAddExtraDataPartWithKeyAndAttribute("marccode", "marcCountryCode", extraData);
 		item.addChild(extraData);
+	}
+
+	@Override
+	protected String getNameInData() {
+		return getId().toUpperCase();
 	}
 
 }

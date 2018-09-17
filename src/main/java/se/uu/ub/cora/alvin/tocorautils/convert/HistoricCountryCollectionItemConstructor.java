@@ -18,30 +18,31 @@
  */
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
+import se.uu.ub.cora.alvin.tocorautils.DbRowException;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
-public class LanguageCollectionItemConstructor extends CollectionItemConstructor {
+public class HistoricCountryCollectionItemConstructor extends CollectionItemConstructor {
 
 	@Override
 	protected String getSuffix() {
-		return "LanguageItem";
+		return "HistoricCountryItem";
 	}
 
 	@Override
 	protected String getId() {
-		String alpha3Code = rowFromDb.get("alpha3code").trim();
-		return alpha3Code.toLowerCase();
+		if (dbRowContainsNoCodeToUseAsId()) {
+			throw DbRowException.withMessage("Could not find \"code\"");
+		}
+		return TextUtil.turnStringIntoCamelCase(rowFromDb.get("code"));
+	}
+
+	private boolean dbRowContainsNoCodeToUseAsId() {
+		return !rowFromDb.containsKey("code") || "".equals(rowFromDb.get("code"));
 	}
 
 	@Override
 	protected void addExtraData(String value, ClientDataGroup item) {
-		ClientDataGroup extraData = ClientDataGroup.withNameInData("extraData");
-		ClientDataGroup iso3ExtraDataPart = createExtraDataPartWithAttributeAndValue("iso639Alpha3",
-				value);
-		extraData.addChild(iso3ExtraDataPart);
-		possiblyAddExtraDataPartWithKeyAndAttribute("alpha2code", "iso639Alpha2", extraData);
-		item.addChild(extraData);
-
+		// Not used in this item constructor
 	}
 
 	@Override
