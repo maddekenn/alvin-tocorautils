@@ -42,7 +42,7 @@ public abstract class CollectionItemConstructor {
 	private void addChildrenToClientDataGroup(ClientDataGroup item) {
 		String id = getId();
 		addRecordInfo(item);
-		addNameInData(id, item);
+		addNameInData(item);
 		addExtraData(id, item);
 	}
 
@@ -70,7 +70,7 @@ public abstract class CollectionItemConstructor {
 		recordInfo.addChild(dataDivider);
 	}
 
-	protected void addNameInData(String nameInData, ClientDataGroup item) {
+	protected void addNameInData(ClientDataGroup item) {
 		item.addChild(ClientDataAtomic.withNameInDataAndValue("nameInData", getNameInData()));
 	}
 
