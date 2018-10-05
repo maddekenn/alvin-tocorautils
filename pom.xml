@@ -23,20 +23,20 @@
 	<parent>
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
-		<version>0.6-SNAPSHOT</version>
+		<version>0.7-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>alvintocorautils</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Alvin to Cora utils</name>
 
 	<properties>
-		<clientdata.version>0.1-SNAPSHOT</clientdata.version>
-		<sqldatabase.version>0.1-SNAPSHOT</sqldatabase.version>
-		<json.version>0.3-SNAPSHOT</json.version>
-		<javaclient.version>0.1-SNAPSHOT</javaclient.version>
+		<clientdata.version>0.2-SNAPSHOT</clientdata.version>
+		<sqldatabase.version>0.2-SNAPSHOT</sqldatabase.version>
+		<json.version>0.4-SNAPSHOT</json.version>
+		<javaclient.version>0.2-SNAPSHOT</javaclient.version>
 	</properties>
 
 	<scm>
@@ -45,20 +45,6 @@
 		<url>https://github.com/lsu-ub-uu/alvin-cora.git</url>
 	</scm>
 
-	<repositories>
-		<repository>
-			<id>maven-public</id>
-			<name>LSU Nexus Repository</name>
-			<url>http://epc.ub.uu.se/nexus/repository/maven-public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>daily</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -98,7 +84,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
