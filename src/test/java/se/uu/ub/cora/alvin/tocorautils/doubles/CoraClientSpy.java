@@ -41,4 +41,22 @@ public class CoraClientSpy implements CoraClient {
 		return null;
 	}
 
+	@Override
+	public String read(String recordType, String recordId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String update(String recordType, String recordId, String json) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String delete(String recordType, String recordId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
