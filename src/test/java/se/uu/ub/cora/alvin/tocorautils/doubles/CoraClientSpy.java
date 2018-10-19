@@ -59,4 +59,10 @@ public class CoraClientSpy implements CoraClient {
 		return null;
 	}
 
+	@Override
+	public String readList(String recordType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
