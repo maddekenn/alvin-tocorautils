@@ -65,4 +65,10 @@ public class CoraClientSpy implements CoraClient {
 		return null;
 	}
 
+	@Override
+	public String readIncomingLinks(String recordType, String recordId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
