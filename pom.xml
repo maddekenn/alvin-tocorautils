@@ -14,36 +14,36 @@
   ~     GNU General Public License for more details.
   ~
   ~     You should have received a copy of the GNU General Public License
-  ~     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
+  ~     along with Cora.  If not, see <http://www.gnu.org/licenses />.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
-		<version>0.7-SNAPSHOT</version>
+		<version>0.8.6</version>
 	</parent>
 
 	<artifactId>alvintocorautils</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Alvin to Cora utils</name>
 
 	<properties>
-		<clientdata.version>0.2-SNAPSHOT</clientdata.version>
-		<sqldatabase.version>0.2-SNAPSHOT</sqldatabase.version>
-		<json.version>0.4-SNAPSHOT</json.version>
-		<javaclient.version>0.2-SNAPSHOT</javaclient.version>
+		<clientdata.version>0.3.0</clientdata.version>
+		<sqldatabase.version>0.3.1</sqldatabase.version>
+		<json.version>0.5.7</json.version>
+		<javaclient.version>0.3.0</javaclient.version>
 	</properties>
 
 	<scm>
-		<connection>scm:git:https://github.com/lsu-ub-uu/alvin-cora.git</connection>
-		<developerConnection>scm:git:https://github.com/lsu-ub-uu/alvin-cora.git</developerConnection>
-		<url>https://github.com/lsu-ub-uu/alvin-cora.git</url>
-	</scm>
+		<connection>scm:git:https://github.com/lsu-ub-uu/alvin-tocorautils.git</connection>
+		<developerConnection>scm:git:https://github.com/lsu-ub-uu/alvin-tocorautils.git</developerConnection>
+		<url>https://github.com/lsu-ub-uu/alvin-tocorautils.git</url>
+	  <tag>HEAD</tag>
+  </scm>
 
 
 	<dependencies>
