@@ -21,11 +21,11 @@ package se.uu.ub.cora.alvin.tocorautils.convert;
 import java.util.List;
 import java.util.Map;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.constructor.ItemCollectionConstructor;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
+import se.uu.ub.cora.tocorautils.CoraJsonRecord;
 
 public final class HistoricCountryFromDbToCoraConverter extends CountryFromDbToCoraConverter {
 

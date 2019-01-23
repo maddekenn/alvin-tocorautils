@@ -10,11 +10,11 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
+import se.uu.ub.cora.tocorautils.CoraJsonRecord;
 
 public class HistoricCountryFromDbToCoraConverterTest {
 	List<Map<String, String>> rowsFromDb = new ArrayList<>();
@@ -68,8 +68,8 @@ public class HistoricCountryFromDbToCoraConverterTest {
 
 		ClientDataGroup countryCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
 				.get(3);
-		assertCorrectCollectionWithOneRefSentToFactory(countryCollection, "historicCountryCollection",
-				3, "historicCountry");
+		assertCorrectCollectionWithOneRefSentToFactory(countryCollection,
+				"historicCountryCollection", 3, "historicCountry");
 	}
 
 	private void assertCorrectFirstTextsAndItem() {

@@ -24,10 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.client.CoraClientFactoryImp;
+import se.uu.ub.cora.tocorautils.DbConfig;
+import se.uu.ub.cora.tocorautils.FromDbToCora;
+import se.uu.ub.cora.tocorautils.FromDbToCoraFactory;
+import se.uu.ub.cora.tocorautils.importing.ImportResult;
 
 public final class AlvinFromDbImporter {
 	private static List<AlvinFromDbImporter> instances = new ArrayList<>();

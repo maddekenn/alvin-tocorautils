@@ -19,19 +19,21 @@
 package se.uu.ub.cora.alvin.tocorautils;
 
 import se.uu.ub.cora.alvin.tocorautils.convert.HistoricCountryFromDbToCoraConverter;
-import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
+import se.uu.ub.cora.tocorautils.FromDbToCoraFactory;
+import se.uu.ub.cora.tocorautils.FromDbToCoraFactoryImp;
+import se.uu.ub.cora.tocorautils.convert.FromDbToCoraConverter;
 
 public class HistoricCountryFromDbToCoraFactory extends FromDbToCoraFactoryImp
-        implements FromDbToCoraFactory {
+		implements FromDbToCoraFactory {
 
-    @Override
-    FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
-        DataToJsonConverterFactory dataToJsonConverterFactory = new DataToJsonConverterFactoryImp();
-        return HistoricCountryFromDbToCoraConverter.usingJsonFactoryAndConverterFactory(jsonFactory,
-                dataToJsonConverterFactory);
-    }
+	@Override
+	protected FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
+		DataToJsonConverterFactory dataToJsonConverterFactory = new DataToJsonConverterFactoryImp();
+		return HistoricCountryFromDbToCoraConverter.usingJsonFactoryAndConverterFactory(jsonFactory,
+				dataToJsonConverterFactory);
+	}
 
 }

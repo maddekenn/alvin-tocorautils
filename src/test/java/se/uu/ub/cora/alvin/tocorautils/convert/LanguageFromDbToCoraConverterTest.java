@@ -27,11 +27,11 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
+import se.uu.ub.cora.tocorautils.CoraJsonRecord;
 
 public class LanguageFromDbToCoraConverterTest {
 	List<Map<String, String>> rowsFromDb = new ArrayList<Map<String, String>>();

@@ -28,9 +28,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.convert.CountryFromDbToCoraConverter;
-import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
-import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
@@ -41,6 +39,11 @@ import se.uu.ub.cora.connection.SqlConnectionProvider;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactoryImp;
+import se.uu.ub.cora.tocorautils.DbConfig;
+import se.uu.ub.cora.tocorautils.FromDbToCoraFactoryImp;
+import se.uu.ub.cora.tocorautils.FromDbToCoraImp;
+import se.uu.ub.cora.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.tocorautils.importing.CoraImporter;
 
 public class CountryFromDbToCoraFactoryTest {
 
@@ -112,7 +115,7 @@ public class CountryFromDbToCoraFactoryTest {
 
 	@Test
 	public void testInitListImporter() throws Exception {
-		CoraImporter importer = (CoraImporter) countryToCora.getListImporter();
+		CoraImporter importer = (CoraImporter) countryToCora.getImporter();
 		assertTrue(importer instanceof CoraImporter);
 
 		CoraClient coraClient = importer.getCoraClient();

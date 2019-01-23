@@ -36,6 +36,7 @@
 		<sqldatabase.version>0.3.1</sqldatabase.version>
 		<json.version>0.5.7</json.version>
 		<javaclient.version>0.3.0</javaclient.version>
+		<tocorautils.version>0.1-SNAPSHOT</tocorautils.version>
 	</properties>
 
 	<scm>
@@ -69,6 +70,12 @@
 			<groupId>se.uu.ub.cora</groupId>
 			<artifactId>javaclient</artifactId>
 			<version>${javaclient.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>tocorautils</artifactId>
+			<version>${tocorautils.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

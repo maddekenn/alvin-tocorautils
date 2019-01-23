@@ -25,10 +25,8 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.convert.LanguageFromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
-import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 import se.uu.ub.cora.client.CoraClient;
 import se.uu.ub.cora.client.CoraClientConfig;
 import se.uu.ub.cora.client.CoraClientFactory;
@@ -36,6 +34,10 @@ import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
+import se.uu.ub.cora.tocorautils.DbConfig;
+import se.uu.ub.cora.tocorautils.FromDbToCoraImp;
+import se.uu.ub.cora.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.tocorautils.importing.CoraImporter;
 
 public class LanguageFromDbToCaraFactoryTest {
 	private CoraClientConfig coraClientConfig;
@@ -80,7 +82,7 @@ public class LanguageFromDbToCaraFactoryTest {
 
 	@Test
 	public void testInitListImporter() throws Exception {
-		CoraImporter importer = (CoraImporter) languageToCora.getListImporter();
+		CoraImporter importer = (CoraImporter) languageToCora.getImporter();
 		assertTrue(importer instanceof CoraImporter);
 
 		CoraClient coraClient = importer.getCoraClient();

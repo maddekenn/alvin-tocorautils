@@ -21,9 +21,9 @@ package se.uu.ub.cora.alvin.tocorautils.doubles;
 import java.util.List;
 import java.util.Map;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
-import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
+import se.uu.ub.cora.tocorautils.CoraJsonRecord;
+import se.uu.ub.cora.tocorautils.importing.ImportResult;
+import se.uu.ub.cora.tocorautils.importing.Importer;
 
 public class ListImporterSpy implements Importer {
 

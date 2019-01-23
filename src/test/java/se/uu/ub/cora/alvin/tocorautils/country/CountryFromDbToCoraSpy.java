@@ -18,8 +18,8 @@
  */
 package se.uu.ub.cora.alvin.tocorautils.country;
 
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCora;
-import se.uu.ub.cora.alvin.tocorautils.importing.ImportResult;
+import se.uu.ub.cora.tocorautils.FromDbToCora;
+import se.uu.ub.cora.tocorautils.importing.ImportResult;
 
 public class CountryFromDbToCoraSpy implements FromDbToCora {
 

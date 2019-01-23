@@ -22,13 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.RecordIdentifier;
 import se.uu.ub.cora.clientdata.constructor.ItemCollectionConstructor;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverter;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
+import se.uu.ub.cora.tocorautils.CoraJsonRecord;
+import se.uu.ub.cora.tocorautils.convert.FromDbToCoraConverter;
 
 public class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 

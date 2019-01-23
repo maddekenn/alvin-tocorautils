@@ -18,16 +18,17 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.convert.LanguageFromDbToCoraConverter;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
+import se.uu.ub.cora.tocorautils.FromDbToCoraFactoryImp;
+import se.uu.ub.cora.tocorautils.convert.FromDbToCoraConverter;
 
 public class LanguageFromDbToCoraFactory extends FromDbToCoraFactoryImp {
 
 	@Override
-	FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
+	protected FromDbToCoraConverter createConverter(JsonBuilderFactory jsonFactory) {
 		DataToJsonConverterFactory dataToJsonConverterFactory = new DataToJsonConverterFactoryImp();
 		return LanguageFromDbToCoraConverter.usingJsonFactory(jsonFactory,
 				dataToJsonConverterFactory);
