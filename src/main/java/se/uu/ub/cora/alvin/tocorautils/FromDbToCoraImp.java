@@ -49,7 +49,7 @@ public final class FromDbToCoraImp implements FromDbToCora {
 	@Override
 	public ImportResult importFromTable(String tableName) {
 		RecordReader recordReader = recordReaderFactory.factor();
-		List<Map<String, String>> readAllFromTable = recordReader.readAllFromTable(tableName);
+		List<Map<String, Object>> readAllFromTable = recordReader.readAllFromTable(tableName);
 
 		List<List<CoraJsonRecord>> convertedRows2 = fromDbToCoraConverter
 				.convertToJsonFromRowsFromDb(readAllFromTable);

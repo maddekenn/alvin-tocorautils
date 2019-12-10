@@ -21,7 +21,7 @@ package se.uu.ub.cora.alvin.tocorautils.importing;
 import java.util.List;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
-import se.uu.ub.cora.client.CoraClient;
+import se.uu.ub.cora.javaclient.cora.CoraClient;
 
 public final class CoraImporter implements Importer {
 

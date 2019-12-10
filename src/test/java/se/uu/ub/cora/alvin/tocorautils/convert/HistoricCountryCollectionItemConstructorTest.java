@@ -13,7 +13,7 @@ import se.uu.ub.cora.alvin.tocorautils.DbRowException;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class HistoricCountryCollectionItemConstructorTest {
-	private Map<String, String> rowFromDb;
+	private Map<String, Object> rowFromDb;
 
 	@BeforeMethod
 	public void beforeMethod() {

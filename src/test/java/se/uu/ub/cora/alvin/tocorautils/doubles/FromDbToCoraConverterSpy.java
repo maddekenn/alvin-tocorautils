@@ -27,7 +27,7 @@ import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 
 public class FromDbToCoraConverterSpy implements FromDbToCoraConverter {
 
-	public List<Map<String, String>> rowsFromDb;
+	public List<Map<String, Object>> rowsFromDb;
 	public List<Map<String, String>> returnedList;
 	public List<List<CoraJsonRecord>> returnedList2;
 
@@ -45,7 +45,7 @@ public class FromDbToCoraConverterSpy implements FromDbToCoraConverter {
 
 	@Override
 	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
-			List<Map<String, String>> rowsFromDb) {
+			List<Map<String, Object>> rowsFromDb) {
 		this.rowsFromDb = rowsFromDb;
 
 		returnedList2 = new ArrayList<>();

@@ -31,11 +31,11 @@ public class TextFromCountryConstructor {
 
 	private static final String ALPHA2CODE = "alpha2code";
 
-	private Map<String, String> rowFromDb;
+	private Map<String, Object> rowFromDb;
 
-	List<ClientDataGroup> constructFromDbRow(Map<String, String> rowFromDb) {
+	List<ClientDataGroup> constructFromDbRow(Map<String, Object> rowFromDb2) {
 		List<ClientDataGroup> texts = new ArrayList<>();
-		this.rowFromDb = rowFromDb;
+		this.rowFromDb = rowFromDb2;
 		createText(texts);
 		createDefText(texts);
 		return texts;
@@ -61,7 +61,7 @@ public class TextFromCountryConstructor {
 	}
 
 	private String constructIdFromCodeWithEnding(String ending) {
-		String code = rowFromDb.get(getDbKey());
+		String code = (String) rowFromDb.get(getDbKey());
 		return modifyCodeString(code) + getItemNamePart() + ending;
 	}
 
@@ -81,7 +81,7 @@ public class TextFromCountryConstructor {
 	}
 
 	private void addTextParts(ClientDataGroup text) {
-		String textValue = rowFromDb.get("svText");
+		String textValue = (String) rowFromDb.get("svText");
 		addTextPartUsingValueLangAttributeAndTypeAttribute(textValue, "sv", "default", text);
 		possiblyAddEnglishTextPart(text);
 	}
@@ -97,7 +97,7 @@ public class TextFromCountryConstructor {
 
 	private void possiblyAddEnglishTextPart(ClientDataGroup text) {
 		if (nonEmptyValueExistsForKey("enText")) {
-			String enTextValue = rowFromDb.get("enText");
+			String enTextValue = (String) rowFromDb.get("enText");
 			addTextPartUsingValueLangAttributeAndTypeAttribute(enTextValue, "en", "alternative",
 					text);
 		}

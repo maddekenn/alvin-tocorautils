@@ -1,11 +1,11 @@
 package se.uu.ub.cora.alvin.tocorautils.convert;
 
-import se.uu.ub.cora.clientdata.ClientDataAttribute;
-import se.uu.ub.cora.clientdata.ClientDataGroup;
+import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
+import se.uu.ub.cora.clientdata.ClientDataAttribute;
+import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class ConverterTestHelpers {
 

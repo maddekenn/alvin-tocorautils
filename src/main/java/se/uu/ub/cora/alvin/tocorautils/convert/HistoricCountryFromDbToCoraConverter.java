@@ -41,13 +41,13 @@ public final class HistoricCountryFromDbToCoraConverter extends CountryFromDbToC
 
 	@Override
 	protected void handleRow(List<List<CoraJsonRecord>> convertedRows,
-			Map<String, String> rowFromDb) {
+			Map<String, Object> rowFromDb) {
 		normalizeCodeString(rowFromDb);
 		convertToJsonFromRow(convertedRows, rowFromDb);
 	}
 
-	private void normalizeCodeString(Map<String, String> rowFromDb) {
-		String code = rowFromDb.get("code");
+	private void normalizeCodeString(Map<String, Object> rowFromDb) {
+		String code = (String) rowFromDb.get("code");
 		String replacedCode = TextUtil.normalizeString(code);
 		rowFromDb.put("code", replacedCode);
 	}
@@ -59,13 +59,13 @@ public final class HistoricCountryFromDbToCoraConverter extends CountryFromDbToC
 
 	@Override
 	protected List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
-			Map<String, String> rowFromDb) {
+			Map<String, Object> rowFromDb) {
 		TextFromHistoricCountryConstructor textConstructor = new TextFromHistoricCountryConstructor();
 		return textConstructor.constructFromDbRow(rowFromDb);
 	}
 
 	@Override
-	protected ClientDataGroup getConstructedItemToCreate(Map<String, String> rowFromDb) {
+	protected ClientDataGroup getConstructedItemToCreate(Map<String, Object> rowFromDb) {
 		CollectionItemConstructor itemConstructor = new HistoricCountryCollectionItemConstructor();
 		return itemConstructor.convert(rowFromDb);
 	}

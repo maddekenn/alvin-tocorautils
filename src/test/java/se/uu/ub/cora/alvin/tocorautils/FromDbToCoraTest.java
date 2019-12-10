@@ -25,7 +25,6 @@ import javax.naming.NamingException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.alvin.tocorautils.FromDbToCoraImp;
 import se.uu.ub.cora.alvin.tocorautils.doubles.FromDbToCoraConverterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.ListImporterSpy;
 import se.uu.ub.cora.alvin.tocorautils.doubles.RecordReaderFactorySpy;

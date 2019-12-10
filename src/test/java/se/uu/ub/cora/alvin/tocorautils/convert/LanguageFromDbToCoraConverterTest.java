@@ -15,7 +15,8 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
- */package se.uu.ub.cora.alvin.tocorautils.convert;
+ */
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
 
@@ -34,7 +35,7 @@ import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
 public class LanguageFromDbToCoraConverterTest {
-	List<Map<String, String>> rowsFromDb = new ArrayList<Map<String, String>>();
+	List<Map<String, Object>> rowsFromDb = new ArrayList<>();
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
 	private LanguageFromDbToCoraConverter languageFromDbToCoraConverter;
@@ -44,8 +45,8 @@ public class LanguageFromDbToCoraConverterTest {
 
 	@BeforeMethod
 	public void beforeMethod() {
-		rowsFromDb = new ArrayList<Map<String, String>>();
-		Map<String, String> rowFromDb = new HashMap<>();
+		rowsFromDb = new ArrayList<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("alpha3code", "swe");
 		rowFromDb.put("svText", "Svenska");
 
@@ -244,7 +245,7 @@ public class LanguageFromDbToCoraConverterTest {
 
 	@Test
 	public void testConvertLanguageTwoRow() {
-		Map<String, String> rowFromDb = new HashMap<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("alpha3code", "nor");
 		rowFromDb.put("svText", "Norska");
 		rowsFromDb.add(rowFromDb);

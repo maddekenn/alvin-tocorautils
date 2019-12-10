@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.CoraJsonRecord;
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientSpy;
-import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 
 public class CoraImporterTest {
 

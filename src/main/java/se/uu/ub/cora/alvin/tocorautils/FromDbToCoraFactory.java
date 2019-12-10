@@ -18,8 +18,8 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.client.CoraClientConfig;
-import se.uu.ub.cora.client.CoraClientFactory;
+import se.uu.ub.cora.javaclient.CoraClientConfig;
+import se.uu.ub.cora.javaclient.cora.CoraClientFactory;
 
 public interface FromDbToCoraFactory {
 

@@ -29,7 +29,7 @@ public class LanguageCollectionItemConstructor extends CollectionItemConstructor
 
 	@Override
 	protected String getId() {
-		String alpha3Code = rowFromDb.get("alpha3code").trim();
+		String alpha3Code = ((String) rowFromDb.get("alpha3code")).trim();
 		return alpha3Code.toLowerCase();
 	}
 

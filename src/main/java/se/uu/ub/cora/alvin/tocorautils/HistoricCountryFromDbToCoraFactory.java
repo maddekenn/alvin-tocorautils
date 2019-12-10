@@ -18,8 +18,8 @@
  */
 package se.uu.ub.cora.alvin.tocorautils;
 
-import se.uu.ub.cora.alvin.tocorautils.convert.HistoricCountryFromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
+import se.uu.ub.cora.alvin.tocorautils.convert.HistoricCountryFromDbToCoraConverter;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactory;
 import se.uu.ub.cora.clientdata.converter.javatojson.DataToJsonConverterFactoryImp;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;

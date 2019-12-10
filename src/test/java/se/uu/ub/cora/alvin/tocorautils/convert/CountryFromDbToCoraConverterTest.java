@@ -15,7 +15,8 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
- */package se.uu.ub.cora.alvin.tocorautils.convert;
+ */
+package se.uu.ub.cora.alvin.tocorautils.convert;
 
 import static org.testng.Assert.assertEquals;
 
@@ -34,7 +35,7 @@ import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
 public class CountryFromDbToCoraConverterTest {
-	List<Map<String, String>> rowsFromDb = new ArrayList<Map<String, String>>();
+	List<Map<String, Object>> rowsFromDb = new ArrayList<>();
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
 	private CountryFromDbToCoraConverter countryFromDbToCoraConverter;
@@ -42,8 +43,8 @@ public class CountryFromDbToCoraConverterTest {
 
 	@BeforeMethod
 	public void beforeMethod() {
-		rowsFromDb = new ArrayList<Map<String, String>>();
-		Map<String, String> rowFromDb = new HashMap<>();
+		rowsFromDb = new ArrayList<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("alpha2code", "SE");
 		rowFromDb.put("svText", "Sverige");
 
@@ -150,7 +151,7 @@ public class CountryFromDbToCoraConverterTest {
 
 	@Test
 	public void testConvertCountryTwoRow() {
-		Map<String, String> rowFromDb = new HashMap<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("alpha2code", "NO");
 		rowFromDb.put("svText", "Norge");
 		rowsFromDb.add(rowFromDb);

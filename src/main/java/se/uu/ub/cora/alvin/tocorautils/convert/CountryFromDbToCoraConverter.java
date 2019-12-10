@@ -50,10 +50,10 @@ public class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 
 	@Override
 	public List<List<CoraJsonRecord>> convertToJsonFromRowsFromDb(
-			List<Map<String, String>> rowsFromDb) {
+			List<Map<String, Object>> rowsFromDb) {
 		List<List<CoraJsonRecord>> convertedRows = new ArrayList<>();
 
-		for (Map<String, String> rowFromDb : rowsFromDb) {
+		for (Map<String, Object> rowFromDb : rowsFromDb) {
 			handleRow(convertedRows, rowFromDb);
 		}
 		convertedRows.add(createItemCollectionForCreatedCollectionItems());
@@ -61,12 +61,12 @@ public class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 	}
 
 	protected void handleRow(List<List<CoraJsonRecord>> convertedRows,
-			Map<String, String> rowFromDb) {
+			Map<String, Object> rowFromDb) {
 		convertToJsonFromRow(convertedRows, rowFromDb);
 	}
 
 	protected void convertToJsonFromRow(List<List<CoraJsonRecord>> convertedRows,
-			Map<String, String> rowFromDb) {
+			Map<String, Object> rowFromDb) {
 		collectionItems = new ArrayList<>();
 		List<CoraJsonRecord> convertedRow = new ArrayList<>();
 		convertTexts(rowFromDb, convertedRow);
@@ -74,7 +74,7 @@ public class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 		convertedRows.add(convertedRow);
 	}
 
-	private void convertTexts(Map<String, String> rowFromDb, List<CoraJsonRecord> convertedRow) {
+	private void convertTexts(Map<String, Object> rowFromDb, List<CoraJsonRecord> convertedRow) {
 		List<ClientDataGroup> texts = getConstructedTextDataGroupsToCreate(rowFromDb);
 		for (ClientDataGroup text : texts) {
 			String json = convertText(text);
@@ -83,7 +83,7 @@ public class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 	}
 
 	protected List<ClientDataGroup> getConstructedTextDataGroupsToCreate(
-			Map<String, String> rowFromDb) {
+			Map<String, Object> rowFromDb) {
 		TextFromCountryConstructor textConstructor = new TextFromCountryConstructor();
 		return textConstructor.constructFromDbRow(rowFromDb);
 	}
@@ -94,12 +94,12 @@ public class CountryFromDbToCoraConverter implements FromDbToCoraConverter {
 		return converter.toJson();
 	}
 
-	protected ClientDataGroup getConstructedItemToCreate(Map<String, String> rowFromDb) {
+	protected ClientDataGroup getConstructedItemToCreate(Map<String, Object> rowFromDb) {
 		CollectionItemConstructor itemConstructor = new CountryCollectionItemConstructor();
 		return itemConstructor.convert(rowFromDb);
 	}
 
-	private void convertItem(Map<String, String> rowFromDb, List<CoraJsonRecord> convertedRow) {
+	private void convertItem(Map<String, Object> rowFromDb, List<CoraJsonRecord> convertedRow) {
 		ClientDataGroup itemDataGroup = getConstructedItemToCreate(rowFromDb);
 		String id = itemDataGroup.getFirstGroupWithNameInData("recordInfo")
 				.getFirstAtomicValueWithNameInData("id");
