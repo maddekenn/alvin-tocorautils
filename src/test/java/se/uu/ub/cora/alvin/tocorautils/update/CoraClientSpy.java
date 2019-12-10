@@ -53,7 +53,7 @@ public class CoraClientSpy implements CoraClient {
 	}
 
 	@Override
-	public ClientDataRecord readAsRecord(String recordType, String recordId) {
+	public ClientDataRecord readAsDataRecord(String recordType, String recordId) {
 		readAsRecordRecordType.add(recordType);
 		readAsRecordRecordId.add(recordId);
 		if (recordType.equals("metadataItemCollection")

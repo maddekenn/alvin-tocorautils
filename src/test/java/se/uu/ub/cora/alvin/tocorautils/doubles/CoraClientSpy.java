@@ -80,7 +80,7 @@ public class CoraClientSpy implements CoraClient {
 	}
 
 	@Override
-	public ClientDataRecord readAsRecord(String recordType, String recordId) {
+	public ClientDataRecord readAsDataRecord(String recordType, String recordId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

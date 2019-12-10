@@ -11,14 +11,14 @@ public class HistoricItemUpdater {
 	public HistoricItemUpdater(CoraClient coraClient) {
 		this.coraClient = coraClient;
 
-		ClientDataRecord itemCollection = coraClient.readAsRecord("metadataItemCollection",
+		ClientDataRecord itemCollection = coraClient.readAsDataRecord("metadataItemCollection",
 				"historicCountryCollection");
 		ClientDataGroup collectionItemReferences = itemCollection.getClientDataGroup()
 				.getFirstGroupWithNameInData("collectionItemReferences");
 		for (ClientDataGroup item : collectionItemReferences.getAllGroupsWithNameInData("ref")) {
 			String firstAtomicValueWithNameInData = item
 					.getFirstAtomicValueWithNameInData("linkedRecordId");
-			coraClient.readAsRecord("genericCollectionItem", firstAtomicValueWithNameInData);
+			coraClient.readAsDataRecord("genericCollectionItem", firstAtomicValueWithNameInData);
 		}
 	}
 }
