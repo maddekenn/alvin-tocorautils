@@ -66,4 +66,9 @@ public class HistoricItemUpdater {
 		collectionItem.removeFirstChildWithNameInData(NAME_IN_DATA);
 		collectionItem.addChild(ClientDataAtomic.withNameInDataAndValue(NAME_IN_DATA, newCode));
 	}
+
+	public CoraClient getCoraClient() {
+		// needed for test
+		return coraClient;
+	}
 }
