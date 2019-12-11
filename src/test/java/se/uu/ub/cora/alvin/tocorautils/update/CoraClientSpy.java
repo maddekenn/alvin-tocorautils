@@ -9,6 +9,7 @@ import java.util.List;
 
 import se.uu.ub.cora.clientdata.Action;
 import se.uu.ub.cora.clientdata.ActionLink;
+import se.uu.ub.cora.clientdata.ClientDataAtomic;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.ClientDataRecord;
 import se.uu.ub.cora.clientdata.ClientDataRecordLink;
@@ -21,7 +22,12 @@ public class CoraClientSpy implements CoraClient {
 	List<String> readRecordId = new ArrayList<>();
 	List<String> readAsRecordRecordType = new ArrayList<>();
 	List<String> readAsRecordRecordId = new ArrayList<>();
+	List<String> updateRecordTypes = new ArrayList<>();
+	List<String> updateRecordIds = new ArrayList<>();
 	boolean extraLastItem = false;
+	public ClientDataGroup dataGroupSentToUpdate;
+	public List<ClientDataRecord> recordsReturnedFromRead = new ArrayList<>();
+	public List<ClientDataGroup> dataGroupsSentToUpdate = new ArrayList<>();
 
 	@Override
 	public String create(String recordType, String recordId1) {
@@ -74,7 +80,18 @@ public class CoraClientSpy implements CoraClient {
 				collectionItemReferences
 						.addChild(createRefWithItemName("extraLastItemHistoricCountryItem"));
 			}
-
+			recordsReturnedFromRead.add(clientDataRecord);
+			return clientDataRecord;
+		}
+		if (recordType.equals("genericCollectionItem")) {
+			ClientDataGroup clientDataGroup = ClientDataGroup.withNameInData("metadata");
+			clientDataGroup.addAttributeByIdWithValue("type", "collectionItem");
+			String nameInData = recordId.substring(0, recordId.indexOf("HistoricCountryItem"));
+			clientDataGroup
+					.addChild(ClientDataAtomic.withNameInDataAndValue("nameInData", nameInData));
+			ClientDataRecord clientDataRecord = ClientDataRecord
+					.withClientDataGroup(clientDataGroup);
+			recordsReturnedFromRead.add(clientDataRecord);
 			return clientDataRecord;
 		}
 		return null;
@@ -129,14 +146,23 @@ public class CoraClientSpy implements CoraClient {
 	}
 
 	@Override
-	public String update(String recordType, String recordId1, String json) {
-		// TODO Auto-generated method stub
+	public String update(String recordType, String recordId, String json) {
+		updateRecordTypes.add(recordType);
+		updateRecordIds.add(recordId);
 		return null;
 	}
 
 	@Override
 	public String create(String recordType, ClientDataGroup dataGroup) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String update(String recordType, String recordId, ClientDataGroup dataGroup) {
+		dataGroupsSentToUpdate.add(dataGroup);
+		updateRecordTypes.add(recordType);
+		updateRecordIds.add(recordId);
 		return null;
 	}
 

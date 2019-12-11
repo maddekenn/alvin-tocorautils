@@ -1,10 +1,12 @@
 package se.uu.ub.cora.alvin.tocorautils.update;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.alvin.tocorautils.doubles.CoraClientFactorySpy;
+import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.javaclient.cora.CoraClientFactory;
 
 public class HistoricItemUpdaterTest {
@@ -53,6 +55,20 @@ public class HistoricItemUpdaterTest {
 		assertEquals(coraClientSpy.readAsRecordRecordId.get(2), "britainHistoricCountryItem");
 		assertEquals(coraClientSpy.readAsRecordRecordId.get(3), "extraLastItemHistoricCountryItem");
 		assertEquals(coraClientSpy.readAsRecordRecordId.size(), 4);
+	}
+
+	@Test
+	public void testUpdate() {
+		CoraClientSpy coraClientSpy = new CoraClientSpy();
+		HistoricItemUpdater historicItemUpdater = new HistoricItemUpdater(coraClientSpy);
+		ClientDataGroup firstUpdatedItem = coraClientSpy.dataGroupsSentToUpdate.get(0);
+		ClientDataGroup secondUpdatedItem = coraClientSpy.dataGroupsSentToUpdate.get(1);
+
+		assertSame(coraClientSpy.recordsReturnedFromRead.get(1).getClientDataGroup(),
+				firstUpdatedItem);
+		assertSame(coraClientSpy.recordsReturnedFromRead.get(2).getClientDataGroup(),
+				secondUpdatedItem);
+		assertEquals(coraClientSpy.updateRecordTypes.size(), 2);
 
 	}
 }
