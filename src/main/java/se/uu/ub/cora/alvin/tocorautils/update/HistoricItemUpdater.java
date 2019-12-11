@@ -23,23 +23,20 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.ClientDataRecord;
 import se.uu.ub.cora.javaclient.cora.CoraClient;
 
-public class HistoricItemUpdater {
+public class HistoricItemUpdater implements ClientUpdater {
 
 	private static final String NAME_IN_DATA = "nameInData";
 	private CoraClient coraClient;
 
-	public HistoricItemUpdater(CoraClient coraClient) {
+	private HistoricItemUpdater(CoraClient coraClient) {
 		this.coraClient = coraClient;
-
-		ClientDataRecord itemCollection = coraClient.readAsDataRecord("metadataItemCollection",
-				"historicCountryCollection");
-		ClientDataGroup collectionItemReferences = itemCollection.getClientDataGroup()
-				.getFirstGroupWithNameInData("collectionItemReferences");
-		loopAndUpdateAllItems(coraClient, collectionItemReferences);
 	}
 
-	private void loopAndUpdateAllItems(CoraClient coraClient,
-			ClientDataGroup collectionItemReferences) {
+	public static ClientUpdater usingCoraClient(CoraClient coraClient) {
+		return new HistoricItemUpdater(coraClient);
+	}
+
+	private void updateAllItems(CoraClient coraClient, ClientDataGroup collectionItemReferences) {
 		for (ClientDataGroup itemRef : collectionItemReferences.getAllGroupsWithNameInData("ref")) {
 			String linkedRecordId = itemRef.getFirstAtomicValueWithNameInData("linkedRecordId");
 			updateOneItem(coraClient, linkedRecordId);
@@ -71,4 +68,14 @@ public class HistoricItemUpdater {
 		// needed for test
 		return coraClient;
 	}
+
+	@Override
+	public void update() {
+		ClientDataRecord itemCollection = coraClient.readAsDataRecord("metadataItemCollection",
+				"historicCountryCollection");
+		ClientDataGroup collectionItemReferences = itemCollection.getClientDataGroup()
+				.getFirstGroupWithNameInData("collectionItemReferences");
+		updateAllItems(coraClient, collectionItemReferences);
+	}
+
 }

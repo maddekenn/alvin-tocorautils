@@ -28,6 +28,8 @@ import java.lang.reflect.Modifier;
 import org.testng.annotations.Test;
 
 import se.uu.ub.cora.javaclient.CoraClientImp;
+import se.uu.ub.cora.javaclient.apptoken.AppTokenClientFactoryImp;
+import se.uu.ub.cora.javaclient.rest.RestClientFactoryImp;
 
 public class HistoricItemUpdaterRunnerTest {
 	@Test
@@ -43,12 +45,28 @@ public class HistoricItemUpdaterRunnerTest {
 	@Test
 	public void testMainMethod() throws ClassNotFoundException, NoSuchMethodException,
 			IllegalAccessException, InvocationTargetException, InstantiationException {
-		String args[] = new String[] { "someApptokenUrl", "someBaseUrl", "someUserId",
-				"someAppToken" };
+		String args[] = new String[] { "http://localhost:8080/apptoken", "someBaseUrl",
+				"someUserId", "someAppToken",
+				"se.uu.ub.cora.alvin.tocorautils.update.ClientUpdaterSpy" };
 		HistoricItemUpdaterRunner.main(args);
-		HistoricItemUpdater historicItemUpdater = HistoricItemUpdaterRunner.historicItemUpdater;
+		assertTrue(HistoricItemUpdaterRunner.historicItemUpdater instanceof ClientUpdaterSpy);
+
+		ClientUpdaterSpy historicItemUpdater = (ClientUpdaterSpy) HistoricItemUpdaterRunner.historicItemUpdater;
+		assertTrue(historicItemUpdater.getCoraClient() instanceof CoraClientImp);
 		CoraClientImp coraClient = (CoraClientImp) historicItemUpdater.getCoraClient();
+
+		AppTokenClientFactoryImp appTokenClientFactory = (AppTokenClientFactoryImp) coraClient
+				.getAppTokenClientFactory();
+		assertEquals(appTokenClientFactory.getAppTokenVerifierUrl(),
+				"http://localhost:8080/apptoken");
+
+		RestClientFactoryImp restClientFactory = (RestClientFactoryImp) coraClient
+				.getRestClientFactory();
+		assertEquals(restClientFactory.getBaseUrl(), "someBaseUrl");
+
 		assertEquals(coraClient.getUserId(), "someUserId");
-		// assertTrue(historicItemUpdater.getCoraClient() instanceof CoraClientImp);
+		assertEquals(coraClient.getAppToken(), "someAppToken");
+
+		assertTrue(historicItemUpdater.updateWasCalled);
 	}
 }

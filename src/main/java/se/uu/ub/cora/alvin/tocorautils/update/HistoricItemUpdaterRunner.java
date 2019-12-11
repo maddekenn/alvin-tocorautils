@@ -19,40 +19,41 @@
 package se.uu.ub.cora.alvin.tocorautils.update;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import se.uu.ub.cora.javaclient.cora.CoraClient;
 import se.uu.ub.cora.javaclient.cora.CoraClientFactoryImp;
 
 public class HistoricItemUpdaterRunner {
 
-	protected static HistoricItemUpdater historicItemUpdater;
+	protected static ClientUpdater historicItemUpdater;
 
 	private HistoricItemUpdaterRunner() {
 
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException, InstantiationException {
-		// CoraClientDependencies coraClientDependencies = new CoraClientDependencies(null, null,
-		// null,
-		// null, null, null);
-
+			IllegalAccessException, InvocationTargetException {
 		String appTokenUrl = args[0];
-		String coraUrl = args[1];
+		String baseUrl = args[1];
 		String userId = args[2];
 		String appToken = args[3];
+		String updaterClassName = args[4];
 
 		CoraClientFactoryImp clientFactoryImp = CoraClientFactoryImp
-				.usingAppTokenVerifierUrlAndBaseUrl("", "");
+				.usingAppTokenVerifierUrlAndBaseUrl(appTokenUrl, baseUrl);
 		CoraClient coraClient = clientFactoryImp.factor(userId, appToken);
-		// this.appTokenClientFactory = coraClientDependencies.appTokenClientFactory;
-		// this.restClientFactory = coraClientDependencies.restClientFactory;
-		// this.dataToJsonConverterFactory = coraClientDependencies.dataToJsonConverterFactory;
-		// this.jsonToDataConverterFactory = coraClientDependencies.jsonToDataConverterFactory;
-		// this.userId = coraClientDependencies.userId;
-		// this.appToken = coraClientDependencies.appToken;
 
-		// CoraClient coraClient = clientFactoryImp.factor("", null);
-		historicItemUpdater = new HistoricItemUpdater(coraClient);
+		historicItemUpdater = createClientUpdater(updaterClassName, coraClient);
+		historicItemUpdater.update();
+	}
+
+	private static ClientUpdater createClientUpdater(String updaterClassName, CoraClient coraClient)
+			throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException,
+			InvocationTargetException {
+		Class<?>[] cArg = new Class[1];
+		cArg[0] = CoraClient.class;
+		Method constructor = Class.forName(updaterClassName).getMethod("usingCoraClient", cArg);
+		return (ClientUpdater) constructor.invoke(null, coraClient);
 	}
 }

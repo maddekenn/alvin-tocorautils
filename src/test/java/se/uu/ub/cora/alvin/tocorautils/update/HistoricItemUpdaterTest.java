@@ -14,15 +14,17 @@ public class HistoricItemUpdaterTest {
 	String userId = "someUserId";
 	String appToken = "someApptoken";
 	private CoraClientSpy coraClientSpy;
+	private ClientUpdater historicItemUpdater;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		coraClientSpy = new CoraClientSpy();
+		historicItemUpdater = HistoricItemUpdater.usingCoraClient(coraClientSpy);
 	}
 
 	@Test
 	public void testGivenCoraClientIsUsed() throws Exception {
-		new HistoricItemUpdater(coraClientSpy);
+		historicItemUpdater.update();
 		assertCorrectRead();
 		assertEquals(coraClientSpy.readAsRecordRecordId.size(), 4);
 	}
@@ -40,7 +42,7 @@ public class HistoricItemUpdaterTest {
 	@Test
 	public void testGivenCoraClientIsUsed2() throws Exception {
 		coraClientSpy.extraLastItem = true;
-		new HistoricItemUpdater(coraClientSpy);
+		historicItemUpdater.update();
 		assertCorrectRead();
 		assertEquals(coraClientSpy.readAsRecordRecordId.get(4), "extraLastItemHistoricCountryItem");
 		assertEquals(coraClientSpy.readAsRecordRecordId.size(), 5);
@@ -48,7 +50,7 @@ public class HistoricItemUpdaterTest {
 
 	@Test
 	public void testUpdate() {
-		new HistoricItemUpdater(coraClientSpy);
+		historicItemUpdater.update();
 		ClientDataGroup firstUpdatedItem = coraClientSpy.dataGroupsSentToUpdate.get(0);
 		String firstUpdatedType = coraClientSpy.updateRecordTypes.get(0);
 		String firstUpdatedId = coraClientSpy.updateRecordIds.get(0);
@@ -73,7 +75,7 @@ public class HistoricItemUpdaterTest {
 
 	@Test
 	public void testTransformationOCodeNoTransformationNeeded() throws Exception {
-		new HistoricItemUpdater(coraClientSpy);
+		historicItemUpdater.update();
 		ClientDataGroup updatedItem = coraClientSpy.dataGroupsSentToUpdate.get(0);
 		String code = updatedItem.getFirstAtomicValueWithNameInData("nameInData");
 		assertEquals(code, "gaul");
@@ -81,7 +83,7 @@ public class HistoricItemUpdaterTest {
 
 	@Test
 	public void testTransformationOCodeCamelCase() throws Exception {
-		new HistoricItemUpdater(coraClientSpy);
+		historicItemUpdater.update();
 		ClientDataGroup updatedItem = coraClientSpy.dataGroupsSentToUpdate.get(1);
 		String code = updatedItem.getFirstAtomicValueWithNameInData("nameInData");
 		assertEquals(code, "roman_republic");
@@ -89,7 +91,7 @@ public class HistoricItemUpdaterTest {
 
 	@Test
 	public void testTransformationOCodeCamelCaseMultiple() throws Exception {
-		new HistoricItemUpdater(coraClientSpy);
+		historicItemUpdater.update();
 		ClientDataGroup updatedItem = coraClientSpy.dataGroupsSentToUpdate.get(2);
 		String code = updatedItem.getFirstAtomicValueWithNameInData("nameInData");
 		assertEquals(code, "kingdom_of_the_north");
