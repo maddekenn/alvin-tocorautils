@@ -22,9 +22,11 @@ import se.uu.ub.cora.clientdata.ClientDataAtomic;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.ClientDataRecord;
 import se.uu.ub.cora.javaclient.cora.CoraClient;
+import se.uu.ub.cora.logger.Logger;
+import se.uu.ub.cora.logger.LoggerProvider;
 
 public class HistoricItemUpdater implements ClientUpdater {
-
+	private Logger logger = LoggerProvider.getLoggerForClass(HistoricItemUpdater.class);
 	private static final String NAME_IN_DATA = "nameInData";
 	private CoraClient coraClient;
 
@@ -62,6 +64,8 @@ public class HistoricItemUpdater implements ClientUpdater {
 
 		collectionItem.removeFirstChildWithNameInData(NAME_IN_DATA);
 		collectionItem.addChild(ClientDataAtomic.withNameInDataAndValue(NAME_IN_DATA, newCode));
+
+		logger.logInfoUsingMessage("Changing: " + code + " to:" + newCode);
 	}
 
 	public CoraClient getCoraClient() {
@@ -71,11 +75,14 @@ public class HistoricItemUpdater implements ClientUpdater {
 
 	@Override
 	public void update() {
+		logger.logInfoUsingMessage("Starting update of historicItems....");
+
 		ClientDataRecord itemCollection = coraClient.readAsDataRecord("metadataItemCollection",
 				"historicCountryCollection");
 		ClientDataGroup collectionItemReferences = itemCollection.getClientDataGroup()
 				.getFirstGroupWithNameInData("collectionItemReferences");
 		updateAllItems(coraClient, collectionItemReferences);
+		logger.logInfoUsingMessage("....finished update of historicItems!");
 	}
 
 }

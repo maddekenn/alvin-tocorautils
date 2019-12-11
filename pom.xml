@@ -32,6 +32,8 @@
 	<name>Alvin to Cora utils</name>
 
 	<properties>
+		<logger.version>2.0.0</logger.version>
+		<coralog4j.version>2.0.0</coralog4j.version>
 		<clientdata.version>2.1.0</clientdata.version>
 		<sqldatabase.version>2.2.0</sqldatabase.version>
 		<json.version>2.0.1</json.version>
@@ -47,6 +49,17 @@
 
 
 	<dependencies>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>logger</artifactId>
+			<version>${logger.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${coralog4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>se.uu.ub.cora</groupId>
 			<artifactId>cora-clientdata</artifactId>
