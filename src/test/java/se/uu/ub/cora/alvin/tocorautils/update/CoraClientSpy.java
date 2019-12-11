@@ -75,7 +75,10 @@ public class CoraClientSpy implements CoraClient {
 			clientDataGroup.addChild(collectionItemReferences);
 
 			collectionItemReferences.addChild(createRefWithItemName("gaulHistoricCountryItem"));
-			collectionItemReferences.addChild(createRefWithItemName("britainHistoricCountryItem"));
+			collectionItemReferences
+					.addChild(createRefWithItemName("romanRepublicHistoricCountryItem"));
+			collectionItemReferences
+					.addChild(createRefWithItemName("kingdomOfTheNorthHistoricCountryItem"));
 			if (extraLastItem) {
 				collectionItemReferences
 						.addChild(createRefWithItemName("extraLastItemHistoricCountryItem"));

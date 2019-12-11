@@ -18,12 +18,14 @@
  */
 package se.uu.ub.cora.alvin.tocorautils.update;
 
+import se.uu.ub.cora.clientdata.ClientDataAtomic;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 import se.uu.ub.cora.clientdata.ClientDataRecord;
 import se.uu.ub.cora.javaclient.cora.CoraClient;
 
 public class HistoricItemUpdater {
 
+	private static final String NAME_IN_DATA = "nameInData";
 	private CoraClient coraClient;
 
 	public HistoricItemUpdater(CoraClient coraClient) {
@@ -33,12 +35,35 @@ public class HistoricItemUpdater {
 				"historicCountryCollection");
 		ClientDataGroup collectionItemReferences = itemCollection.getClientDataGroup()
 				.getFirstGroupWithNameInData("collectionItemReferences");
-		for (ClientDataGroup item : collectionItemReferences.getAllGroupsWithNameInData("ref")) {
-			String itemRecordId = item.getFirstAtomicValueWithNameInData("linkedRecordId");
-			ClientDataRecord collectionItemRecord = coraClient
-					.readAsDataRecord("genericCollectionItem", itemRecordId);
-			ClientDataGroup collectionItem = collectionItemRecord.getClientDataGroup();
-			coraClient.update("genericCollectionItem", itemRecordId, collectionItem);
+		loopAndUpdateAllItems(coraClient, collectionItemReferences);
+	}
+
+	private void loopAndUpdateAllItems(CoraClient coraClient,
+			ClientDataGroup collectionItemReferences) {
+		for (ClientDataGroup itemRef : collectionItemReferences.getAllGroupsWithNameInData("ref")) {
+			String linkedRecordId = itemRef.getFirstAtomicValueWithNameInData("linkedRecordId");
+			updateOneItem(coraClient, linkedRecordId);
 		}
+	}
+
+	private void updateOneItem(CoraClient coraClient, String linkedRecordId) {
+		ClientDataGroup collectionItem = readItemFromServer(coraClient, linkedRecordId);
+		updateCodeInItem(collectionItem);
+		coraClient.update("genericCollectionItem", linkedRecordId, collectionItem);
+	}
+
+	private ClientDataGroup readItemFromServer(CoraClient coraClient, String linkedRecordId) {
+		ClientDataRecord collectionItemRecord = coraClient.readAsDataRecord("genericCollectionItem",
+				linkedRecordId);
+		return collectionItemRecord.getClientDataGroup();
+	}
+
+	private void updateCodeInItem(ClientDataGroup collectionItem) {
+		String code = collectionItem.getFirstAtomicValueWithNameInData(NAME_IN_DATA);
+		String regEx = "([a-z])([A-Z])";
+		String newCode = code.replaceAll(regEx, "$1_$2").toLowerCase();
+
+		collectionItem.removeFirstChildWithNameInData(NAME_IN_DATA);
+		collectionItem.addChild(ClientDataAtomic.withNameInDataAndValue(NAME_IN_DATA, newCode));
 	}
 }
