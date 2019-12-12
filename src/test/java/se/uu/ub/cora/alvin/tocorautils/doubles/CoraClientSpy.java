@@ -21,8 +21,10 @@ package se.uu.ub.cora.alvin.tocorautils.doubles;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.client.CoraClient;
-import se.uu.ub.cora.client.CoraClientException;
+import se.uu.ub.cora.clientdata.ClientDataGroup;
+import se.uu.ub.cora.clientdata.ClientDataRecord;
+import se.uu.ub.cora.javaclient.cora.CoraClient;
+import se.uu.ub.cora.javaclient.cora.CoraClientException;
 
 public class CoraClientSpy implements CoraClient {
 
@@ -67,6 +69,24 @@ public class CoraClientSpy implements CoraClient {
 
 	@Override
 	public String readIncomingLinks(String recordType, String recordId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String create(String recordType, ClientDataGroup dataGroup) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ClientDataRecord readAsDataRecord(String recordType, String recordId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String update(String recordType, String recordId, ClientDataGroup dataGroup) {
 		// TODO Auto-generated method stub
 		return null;
 	}

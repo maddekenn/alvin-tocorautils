@@ -17,7 +17,7 @@ import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 
 public class HistoricCountryFromDbToCoraConverterTest {
-	List<Map<String, String>> rowsFromDb = new ArrayList<>();
+	List<Map<String, Object>> rowsFromDb = new ArrayList<>();
 	CoraClientSpy coraClient;
 	private JsonBuilderFactory jsonFactory;
 	private HistoricCountryFromDbToCoraConverter historicCountryFromDbToCoraConverter;
@@ -26,7 +26,7 @@ public class HistoricCountryFromDbToCoraConverterTest {
 	@BeforeMethod
 	public void beforeMethod() {
 		rowsFromDb = new ArrayList<>();
-		Map<String, String> rowFromDb = new HashMap<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("code", "duchy_of_saxe-coburg-meiningen");
 		rowFromDb.put("svText", "Hertigdömet Sachsen-Coburg-Meiningen");
 		rowFromDb.put("enText", "Duchy of Saxe-Coburg-Meiningen");
@@ -68,8 +68,8 @@ public class HistoricCountryFromDbToCoraConverterTest {
 
 		ClientDataGroup countryCollection = (ClientDataGroup) dataToJsonConverterFactory.dataElements
 				.get(3);
-		assertCorrectCollectionWithOneRefSentToFactory(countryCollection, "historicCountryCollection",
-				3, "historicCountry");
+		assertCorrectCollectionWithOneRefSentToFactory(countryCollection,
+				"historicCountryCollection", 3, "historicCountry");
 	}
 
 	private void assertCorrectFirstTextsAndItem() {
@@ -127,7 +127,7 @@ public class HistoricCountryFromDbToCoraConverterTest {
 
 	@Test
 	public void testConvertCountryTwoRow() {
-		Map<String, String> rowFromDb = new HashMap<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("code", "archbishopric_salzburg");
 		rowFromDb.put("svText", "Ärkebiskopsdömet Salzburg");
 		rowFromDb.put("enText", "Archbishopric of Salzburg");
@@ -187,7 +187,7 @@ public class HistoricCountryFromDbToCoraConverterTest {
 
 	@Test
 	public void testConvertCountryTwoRowCharactersShouldBeReplaced() {
-		Map<String, String> rowFromDb = new HashMap<>();
+		Map<String, Object> rowFromDb = new HashMap<>();
 		rowFromDb.put("code", "lordship_trcka_lípa");
 		rowFromDb.put("svText", "Herradöme Trčka von Lípa");
 		rowFromDb.put("enText", "Lordship of Trčka von Lípa");

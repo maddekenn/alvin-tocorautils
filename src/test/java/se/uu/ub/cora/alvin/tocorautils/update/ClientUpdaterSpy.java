@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Uppsala University Library
+ * Copyright 2019 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,37 +16,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.alvin.tocorautils.doubles;
+package se.uu.ub.cora.alvin.tocorautils.update;
 
 import se.uu.ub.cora.javaclient.cora.CoraClient;
-import se.uu.ub.cora.javaclient.cora.CoraClientFactory;
 
-public class CoraClientFactorySpy implements CoraClientFactory {
+public class ClientUpdaterSpy implements ClientUpdater {
+	boolean updateWasCalled = false;
+	CoraClient coraClient;
 
-	public CoraClientSpy factored;
-	public String userId;
-	public String appToken;
-
-	public CoraClientFactorySpy() {
+	public ClientUpdaterSpy(CoraClient coraClient) {
+		this.coraClient = coraClient;
 		// TODO Auto-generated constructor stub
 	}
 
-	public CoraClientFactorySpy(String appTokenVerifierUrl, String baseUrl) {
-		// TODO Auto-generated constructor stub
+	public static ClientUpdaterSpy usingCoraClient(CoraClient coraClient) {
+		return new ClientUpdaterSpy(coraClient);
 	}
 
 	@Override
-	public CoraClient factor(String userId, String appToken) {
-		this.userId = userId;
-		this.appToken = appToken;
-		factored = new CoraClientSpy();
-		return factored;
+	public void update() {
+		updateWasCalled = true;
 	}
 
-	public static CoraClientFactory usingAppTokenVerifierUrlAndBaseUrl(String appTokenVerifierUrl,
-			String baseUrl) {
+	public CoraClient getCoraClient() {
 		// TODO Auto-generated method stub
-		return new CoraClientFactorySpy(appTokenVerifierUrl, baseUrl);
+		return coraClient;
 	}
 
 }

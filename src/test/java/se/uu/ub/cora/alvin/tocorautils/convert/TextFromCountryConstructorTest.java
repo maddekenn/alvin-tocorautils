@@ -34,7 +34,7 @@ import se.uu.ub.cora.clientdata.ClientDataAttribute;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class TextFromCountryConstructorTest {
-	private Map<String, String> rowFromDb;
+	private Map<String, Object> rowFromDb;
 
 	@BeforeMethod
 	public void beforeMethod() {

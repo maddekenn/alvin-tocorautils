@@ -21,11 +21,11 @@ package se.uu.ub.cora.alvin.tocorautils;
 import se.uu.ub.cora.alvin.tocorautils.convert.FromDbToCoraConverter;
 import se.uu.ub.cora.alvin.tocorautils.importing.CoraImporter;
 import se.uu.ub.cora.alvin.tocorautils.importing.Importer;
-import se.uu.ub.cora.client.CoraClient;
-import se.uu.ub.cora.client.CoraClientConfig;
-import se.uu.ub.cora.client.CoraClientFactory;
 import se.uu.ub.cora.connection.ParameterConnectionProviderImp;
 import se.uu.ub.cora.connection.SqlConnectionProvider;
+import se.uu.ub.cora.javaclient.CoraClientConfig;
+import se.uu.ub.cora.javaclient.cora.CoraClient;
+import se.uu.ub.cora.javaclient.cora.CoraClientFactory;
 import se.uu.ub.cora.json.builder.JsonBuilderFactory;
 import se.uu.ub.cora.json.builder.org.OrgJsonBuilderFactoryAdapter;
 import se.uu.ub.cora.sqldatabase.RecordReaderFactory;
@@ -38,7 +38,7 @@ public abstract class FromDbToCoraFactoryImp implements FromDbToCoraFactory {
 	protected final RecordReaderFactory createRecordReaderFactory(DbConfig dbConfig) {
 		SqlConnectionProvider connectionProvider = ParameterConnectionProviderImp
 				.usingUriAndUserAndPassword(dbConfig.url, dbConfig.userId, dbConfig.password);
-		return new RecordReaderFactoryImp(connectionProvider);
+		return RecordReaderFactoryImp.usingSqlConnectionProvider(connectionProvider);
 	}
 
 	protected final JsonBuilderFactory createJsonBuilderFactory() {

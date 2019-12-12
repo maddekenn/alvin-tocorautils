@@ -34,7 +34,7 @@ import se.uu.ub.cora.clientdata.ClientDataGroup;
 public class LanguageCollectionItemConstructorTest {
 	private static final String ALPHA2_ATTRIBUTE = "iso639Alpha2";
 	private static final String ALPHA3_ATTRIBUTE = "iso639Alpha3";
-	private Map<String, String> rowFromDb;
+	private Map<String, Object> rowFromDb;
 
 	@BeforeMethod
 	public void beforeMethod() {

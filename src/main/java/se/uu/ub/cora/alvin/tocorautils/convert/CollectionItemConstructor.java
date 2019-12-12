@@ -24,10 +24,10 @@ import se.uu.ub.cora.clientdata.ClientDataAtomic;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public abstract class CollectionItemConstructor {
-	Map<String, String> rowFromDb;
+	Map<String, Object> rowFromDb;
 
-	public ClientDataGroup convert(Map<String, String> rowFromDb) {
-		this.rowFromDb = rowFromDb;
+	public ClientDataGroup convert(Map<String, Object> rowFromDb2) {
+		this.rowFromDb = rowFromDb2;
 		ClientDataGroup item = createClientDataGroupWithAttribute();
 		addChildrenToClientDataGroup(item);
 		return item;
@@ -85,7 +85,7 @@ public abstract class CollectionItemConstructor {
 
 	private void addExtraDataPartWithAttributeAndValue(String key, String attribute,
 			ClientDataGroup extraData) {
-		String value = rowFromDb.get(key).trim();
+		String value = ((String) rowFromDb.get(key)).trim();
 		ClientDataGroup iso3ExtraDataPart = createExtraDataPartWithAttributeAndValue(attribute,
 				value);
 		extraData.addChild(iso3ExtraDataPart);

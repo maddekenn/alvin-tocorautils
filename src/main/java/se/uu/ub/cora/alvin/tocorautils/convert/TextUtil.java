@@ -33,8 +33,8 @@ public final class TextUtil {
 				.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	}
 
-	public static String turnStringIntoCamelCase(String stringToTurnIntoCamelCase) {
-		String[] stringSplitByNonAlpha = stringToTurnIntoCamelCase.split("\\P{Alpha}+");
+	public static String turnStringIntoCamelCase(Object object) {
+		String[] stringSplitByNonAlpha = ((String) object).split("\\P{Alpha}+");
 
 		String camelCased = Arrays.stream(stringSplitByNonAlpha)
 				.map(TextUtil::turnFirstCharacterIntoUpperCase).collect(Collectors.joining(""));

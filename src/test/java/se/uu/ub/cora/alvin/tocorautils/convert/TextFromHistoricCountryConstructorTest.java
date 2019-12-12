@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.clientdata.ClientDataGroup;
 
 public class TextFromHistoricCountryConstructorTest {
-	private Map<String, String> rowFromDb;
+	private Map<String, Object> rowFromDb;
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -79,8 +79,8 @@ public class TextFromHistoricCountryConstructorTest {
 		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
 
-//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
-//				.constructFromDbRow(rowFromDb);
+		// List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		// .constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertCorrectSwedishTextPart(text, "Hertigdömet Sachsen-Coburg-Meiningen");
@@ -94,8 +94,8 @@ public class TextFromHistoricCountryConstructorTest {
 		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
 
-//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
-//				.constructFromDbRow(rowFromDb);
+		// List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		// .constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);
@@ -111,8 +111,8 @@ public class TextFromHistoricCountryConstructorTest {
 		List<ClientDataGroup> texts = textFromHistoricCountryConstructor
 				.constructFromDbRow(rowFromDb);
 
-//		List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
-//				.constructFromDbRow(rowFromDb);
+		// List<ClientDataGroup> texts = TextFromHistoricCountryConstructor
+		// .constructFromDbRow(rowFromDb);
 		assertEquals(texts.size(), 2);
 		ClientDataGroup text = texts.get(0);
 		assertEquals(text.getAllGroupsWithNameInData("textPart").size(), 1);

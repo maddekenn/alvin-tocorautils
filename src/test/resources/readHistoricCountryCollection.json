@@ -1,0 +1,300 @@
+{
+    "record": {
+        "data": {
+            "children": [
+                {
+                    "name": "nameInData",
+                    "value": "historicCountry"
+                },
+                {
+                    "children": [
+                        {
+                            "name": "id",
+                            "value": "historicCountryCollection"
+                        },
+                        {
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "system"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "cora"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/system/cora",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "dataDivider"
+                        },
+                        {
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "recordType"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "metadataItemCollection"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/recordType/metadataItemCollection",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "type"
+                        },
+                        {
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "user"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "141414"
+                                }
+                            ],
+                            "name": "createdBy"
+                        },
+                        {
+                            "name": "tsCreated",
+                            "value": "2018-09-14 21:03:10.935"
+                        },
+                        {
+                            "repeatId": "0",
+                            "children": [
+                                {
+                                    "children": [
+                                        {
+                                            "name": "linkedRecordType",
+                                            "value": "user"
+                                        },
+                                        {
+                                            "name": "linkedRecordId",
+                                            "value": "141414"
+                                        }
+                                    ],
+                                    "name": "updatedBy"
+                                },
+                                {
+                                    "name": "tsUpdated",
+                                    "value": "2018-09-14 21:03:10.935"
+                                }
+                            ],
+                            "name": "updated"
+                        }
+                    ],
+                    "name": "recordInfo"
+                },
+                {
+                    "children": [
+                        {
+                            "repeatId": "0",
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "genericCollectionItem"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "gaulHistoricCountryItem"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/genericCollectionItem/gaulHistoricCountryItem",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "ref"
+                        },
+                        {
+                            "repeatId": "1",
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "genericCollectionItem"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "britainHistoricCountryItem"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/genericCollectionItem/britainHistoricCountryItem",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "ref"
+                        },
+                        {
+                            "repeatId": "2",
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "genericCollectionItem"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "kingdomOfMacedoniaHistoricCountryItem"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/genericCollectionItem/kingdomOfMacedoniaHistoricCountryItem",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "ref"
+                        },
+                        {
+                            "repeatId": "3",
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "genericCollectionItem"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "kingdomOfEpirusHistoricCountryItem"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/genericCollectionItem/kingdomOfEpirusHistoricCountryItem",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "ref"
+                        },
+                        {
+                            "repeatId": "4",
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "genericCollectionItem"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "achaeanLeagueHistoricCountryItem"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/genericCollectionItem/achaeanLeagueHistoricCountryItem",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "ref"
+                        },
+                        {
+                            "repeatId": "5",
+                            "children": [
+                                {
+                                    "name": "linkedRecordType",
+                                    "value": "genericCollectionItem"
+                                },
+                                {
+                                    "name": "linkedRecordId",
+                                    "value": "bosporanKingdomHistoricCountryItem"
+                                }
+                            ],
+                            "actionLinks": {
+                                "read": {
+                                    "requestMethod": "GET",
+                                    "rel": "read",
+                                    "url": "https://cora.epc.ub.uu.se/alvin/rest/record/genericCollectionItem/bosporanKingdomHistoricCountryItem",
+                                    "accept": "application/vnd.uub.record+json"
+                                }
+                            },
+                            "name": "ref"
+                        }
+                    ],
+                    "name": "collectionItemReferences"
+                },
+                {
+                    "children": [
+                        {
+                            "name": "linkedRecordType",
+                            "value": "coraText"
+                        },
+                        {
+                            "name": "linkedRecordId",
+                            "value": "historicCountryCollectionText"
+                        }
+                    ],
+                    "actionLinks": {
+                        "read": {
+                            "requestMethod": "GET",
+                            "rel": "read",
+                            "url": "https://cora.epc.ub.uu.se/alvin/rest/record/coraText/historicCountryCollectionText",
+                            "accept": "application/vnd.uub.record+json"
+                        }
+                    },
+                    "name": "textId"
+                },
+                {
+                    "children": [
+                        {
+                            "name": "linkedRecordType",
+                            "value": "coraText"
+                        },
+                        {
+                            "name": "linkedRecordId",
+                            "value": "historicCountryCollectionDefText"
+                        }
+                    ],
+                    "actionLinks": {
+                        "read": {
+                            "requestMethod": "GET",
+                            "rel": "read",
+                            "url": "https://cora.epc.ub.uu.se/alvin/rest/record/coraText/historicCountryCollectionDefText",
+                            "accept": "application/vnd.uub.record+json"
+                        }
+                    },
+                    "name": "defTextId"
+                }
+            ],
+            "name": "metadata",
+            "attributes": {
+                "type": "itemCollection"
+            }
+        },
+        "actionLinks": {
+            "read": {
+                "requestMethod": "GET",
+                "rel": "read",
+                "url": "https://cora.epc.ub.uu.se/alvin/rest/record/metadataItemCollection/historicCountryCollection",
+                "accept": "application/vnd.uub.record+json"
+            },
+            "read_incoming_links": {
+                "requestMethod": "GET",
+                "rel": "read_incoming_links",
+                "url": "https://cora.epc.ub.uu.se/alvin/rest/record/metadataItemCollection/historicCountryCollection/incomingLinks",
+                "accept": "application/vnd.uub.recordList+json"
+            }
+        }
+    }
+}

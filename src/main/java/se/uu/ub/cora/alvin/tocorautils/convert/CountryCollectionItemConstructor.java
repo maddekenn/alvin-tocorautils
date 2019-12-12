@@ -30,7 +30,7 @@ public class CountryCollectionItemConstructor extends CollectionItemConstructor 
 
 	@Override
 	protected String getId() {
-		return rowFromDb.get("alpha2code").trim().toLowerCase();
+		return ((String) rowFromDb.get("alpha2code")).trim().toLowerCase();
 	}
 
 	@Override
