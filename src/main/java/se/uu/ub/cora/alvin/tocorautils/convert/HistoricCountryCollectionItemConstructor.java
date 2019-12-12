@@ -37,7 +37,7 @@ public class HistoricCountryCollectionItemConstructor extends CollectionItemCons
 	}
 
 	private boolean dbRowContainsNoCodeToUseAsId() {
-		return !rowFromDb.containsKey("code") || "".equals(rowFromDb.get("code"));
+		return rowFromDb.get("code") == null || "".equals(rowFromDb.get("code"));
 	}
 
 	@Override

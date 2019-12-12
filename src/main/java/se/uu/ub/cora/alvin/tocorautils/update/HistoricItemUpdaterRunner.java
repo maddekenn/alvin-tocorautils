@@ -26,7 +26,7 @@ import se.uu.ub.cora.javaclient.cora.CoraClientFactoryImp;
 
 public class HistoricItemUpdaterRunner {
 
-	protected static ClientUpdater historicItemUpdater;
+	static ClientUpdater historicItemUpdater;
 
 	private HistoricItemUpdaterRunner() {
 
