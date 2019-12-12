@@ -62,7 +62,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 	}
 
 	private List<List<CoraJsonRecord>> convertAllRowsToJson(List<Map<String, Object>> rowsFromDb) {
-		List<List<CoraJsonRecord>> convertedData = new ArrayList<>();
+		List<List<CoraJsonRecord>> convertedData = new ArrayList<>(rowsFromDb.size());
 		for (Map<String, Object> rowFromDb : rowsFromDb) {
 			convertedData.add(convertToJsonFromRow(rowFromDb));
 		}
@@ -112,8 +112,7 @@ public final class LanguageFromDbToCoraConverter implements FromDbToCoraConverte
 	}
 
 	private boolean nonEmptyValueExistsForKey(Map<String, Object> rowFromDb, String key) {
-		return rowFromDb.containsKey(key) && rowFromDb.get(key) != null
-				&& !"".equals(rowFromDb.get(key));
+		return rowFromDb.get(key) != null && !"".equals(rowFromDb.get(key));
 	}
 
 	private ClientDataGroup constructText(String textId, String svText,

@@ -104,8 +104,7 @@ public class TextFromCountryConstructor {
 	}
 
 	private boolean nonEmptyValueExistsForKey(String key) {
-		return rowFromDb.containsKey(key) && rowFromDb.get(key) != null
-				&& !"".equals(rowFromDb.get(key));
+		return rowFromDb.get(key) != null && !"".equals(rowFromDb.get(key));
 	}
 
 	private void createDefText(List<ClientDataGroup> texts) {

@@ -68,11 +68,6 @@ public class HistoricItemUpdater implements ClientUpdater {
 		logger.logInfoUsingMessage("Changing: " + code + " to:" + newCode);
 	}
 
-	public CoraClient getCoraClient() {
-		// needed for test
-		return coraClient;
-	}
-
 	@Override
 	public void update() {
 		logger.logInfoUsingMessage("Starting update of historicItems....");
